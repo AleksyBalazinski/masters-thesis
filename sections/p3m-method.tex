@@ -1,0 +1,38 @@
+\section{Particle-particle particle-mesh method}
+The \PThreeM{} algorithm is a hybrid method:
+forces between distant particles are calculated using the PM method, whereas for particles lying closely together the PP method is used.
+The total force applied to particle $i$ is
+\begin{equation}\label{eq:p3m}
+    \mathbf{F}_i^\text{SR} + \mathbf{F}_i = \sum_{j \neq i}(\mathbf{f}_{ij}^\text{tot} - \mathbf{R}_{ij}) + \mathbf{F}_i,
+\end{equation}
+where $\mathbf{F}_i \approx \sum_{j\neq i} \mathbf{R}_{ij}$ is the force computed using the PM method and $\mathbf{R}_{ij} = \mathbf{R}(\mathbf{x}_i - \mathbf{x}_j)$ is a prescribed \textit{reference force}.
+The reference force is defined as the force between two particle-clouds, i.e. each particle is represented by a sphere with diameter $a$ and a given density profile.
+The two examples of reference forces described in \cite{Hockney1988} are
+\begin{equation*}
+    R(r) =
+    G\times\begin{cases}
+        \frac{1}{35  a^2}  (224  \xi - 224  \xi^3 + 70  \xi^4 + 48  \xi^5 - 21  \xi^6),                                & 0 \leq \xi \leq 1 \\
+        \frac{1}{35  a^2}  (12 / \xi^2 - 224 + 896  \xi - 840  \xi^2 + 224  \xi^3 + 70  \xi^4 - 48  \xi^5 + 7  \xi^6), & 1 < \xi \leq 2    \\
+        \frac{1}{r^2},                                                                                                 & \xi > 2
+    \end{cases}
+\end{equation*}
+where $\xi = 2r/a$ for a sphere with uniformly decreasing density and
+\begin{equation*}
+    R(r) =
+    G\times\begin{cases}
+        \frac{1}{a^2}  (8  r / a - 9  r^2 / a^2 + 2  r^4 / a^4), & r < a \\
+        \frac{1}{r^2},
+    \end{cases}
+\end{equation*}
+for a solid sphere.
+
+\subsection{Optimal Green's function}
+As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the reference force is approximated by the mesh force.
+The average deviation between the two forces can be minimized by a suitable choice of the Green's function.
+The details of the derivation are highly nontrivial and the can be found in \cite{Hockney1988};
+in this work we restrict ourselves to presenting the results (essential to the implementation) obtained therein.
+
+The optimal influence function $\hat{G}$ is given by
+\begin{equation*}
+    \hat{G}(\mathbf{k}) = \frac{\hat{\mathbf{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \hat{\mathbf{R}}(\mathbf{k}_\mathbf{n})}{|\hat{\mathbf{D}}|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
+\end{equation*}
