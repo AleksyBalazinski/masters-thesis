@@ -32,18 +32,19 @@ Letting $\bar{r} = r/R_D$ and $\bar{x}_0 = x_0 / R_D$, the integral becomes
 \begin{equation*}
     \mathbf{g} = G\sigma_0 \int_{0}^{2\pi} \int_{0}^{1} (1 - \bar{r}) \frac{(\bar{x}_0 + \bar{r}\cos\phi, \bar{r}\sin\phi)}{|(\bar{x}_0 + \bar{r}\cos\phi, \bar{r}\sin\phi)|^3}\bar{r} d\bar{r} d\phi.
 \end{equation*}
-By symmetry $g_{D,y} = 0$ and thus the radial component of the field $\mathbf{g}_D$ at distance $\bar{x}_0$ from the center is
+By symmetry $g_{D,y} = 0$ and thus the radial component of the field $\mathbf{g}_D$ at distance $R\bar{x}_0$ from the center is
 \begin{equation}\label{eq:gx-disk}
     g_{D,r} = -G\sigma_0 \int_{0}^{2\pi} \int_{0}^{1} (1 - \bar{r})\frac{\bar{x}_0 + \bar{r}\cos\phi}{(\bar{x}_0^2+\bar{r}^2+2\bar{x}_0\bar{r}\cos\phi)^{3/2}}\bar{r}d\bar{r}d\phi.
 \end{equation}
 If the disk had constant density, $\mathbf{g}_D$ could be expressed in terms of elliptic integrals \cite{Weiss2018}.
 However, to the best of the author's knowledge, the integral in \autoref{eq:gx-disk} cannot be further simplified.
-For this reason, a crude approximation with a quadratic was used: $g_{D,r} \approx a(r - h)^2 + k$, where the values $k=2.5$ and $h=0.66$ (the maximum of $g_{D,r}$ and the argument thereof) were estimated based on the graph of $g_{D,r}$ (see \autoref{fig:radial-strength-disk}).
+For this reason, a crude approximation with a quadratic function is used: $g_{D,r} \approx a(r - h)^2 + k$, where the values $k=2.5$ and $h=0.66$ (the maximum of $g_{D,r}$ and the argument thereof) were estimated based on the graph of $g_{D,r}$ (see \autoref{fig:radial-strength-disk}).
 The value of $a = -k/h^2$ can be found by setting $g_{D,r}(0) = 0$ in the approximate formula.
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.6]{img/disk-field.png}
-    \caption{Radial component of the field strength due to a disk}
+    \caption{Magnitude of the radial component of the field strength due to a disk.
+        The peak at $r=R$ for the constant density disk is in fact infinite.}
     \label{fig:radial-strength-disk}
 \end{figure}
 

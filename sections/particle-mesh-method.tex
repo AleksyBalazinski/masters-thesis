@@ -8,7 +8,7 @@ The particle-mesh method can be described as the following sequence of four step
 \end{enumerate}
 In this section, each of these steps will be described in more detail.
 
-\subsection{Mass assignment}
+\subsection{Mass assignment}\label{subsec:mass-assignment}
 The specifics of the procedure of assigning mass from particles to mesh-points depend on the density profile (or \textit{shape}) associated with the particles.
 In general, the particles need not be represented as idealized dimensionless points;
 indeed, it is possible to construct a hierarchy of shapes, where each successive member covers a larger number of mesh-points and whose application leads to smaller numerical errors.
@@ -23,7 +23,7 @@ An infinite hierarchy of shapes with this property, as described by Hockney and 
 \end{equation*}
 The three most popular assignment schemes that hail from this family (and the ones implemented in our program) are the \textit{nearest grid point} (NGP), \textit{cloud in cell} (CIC), and \textit{triangular shaped cloud} (TSC) schemes, with shapes $S$ given by
 \begin{align*}
-    S_\textrm{NGP} & = \delta(x), & S_\textrm{CIC} & = \delta(x) * \frac{1}{H} \Pi\left(\frac{x}{H}\right) = \frac{1}{H}\Pi\left(\frac{x}{H}\right), & S_\textrm{TSC} & = \frac{1}{H}\Pi\left(\frac{x}{H}\right) * \frac{1}{H}\Pi\left(\frac{x}{H}\right) = \frac{1}{H}\Lambda \left(\frac{x}{H}\right),
+    S_\text{NGP} & = \delta(x), & S_\text{CIC} & = \delta(x) * \frac{1}{H} \Pi\left(\frac{x}{H}\right) = \frac{1}{H}\Pi\left(\frac{x}{H}\right), & S_\text{TSC} & = \frac{1}{H}\Pi\left(\frac{x}{H}\right) * \frac{1}{H}\Pi\left(\frac{x}{H}\right) = \frac{1}{H}\Lambda \left(\frac{x}{H}\right),
 \end{align*}
 where $\Lambda$ is the triangle function
 \begin{equation*}
@@ -43,9 +43,9 @@ A simple rule for relating the assignment function $W$ defined above with shape 
 \end{equation*}
 This implies that
 \begin{align}\label{eq:assignment-functions}
-    W_\textrm{NGP}(x) & = \Pi\left(\frac{x}{H}\right), & W_\textrm{CIC}(x) & =  \Lambda\left(\frac{x}{H}\right), & W_\textrm{TSC}(x) & = \Pi\left(\frac{x}{H}\right) * \frac{1}{H} \Lambda\left(\frac{x}{H}\right) = (\Pi * \Lambda)\left(\frac{x}{H}\right).
+    W_\text{NGP}(x) & = \Pi\left(\frac{x}{H}\right), & W_\text{CIC}(x) & =  \Lambda\left(\frac{x}{H}\right), & W_\text{TSC}(x) & = \Pi\left(\frac{x}{H}\right) * \frac{1}{H} \Lambda\left(\frac{x}{H}\right) = (\Pi * \Lambda)\left(\frac{x}{H}\right).
 \end{align}
-Splitting the domain of integration in the expression for $W_\textrm{TSC}$ into five disjoint intervals shows that
+Splitting the domain of integration in the expression for $W_\text{TSC}$ into five disjoint intervals shows that
 \begin{equation*}
     (\Pi * \Lambda)(x) = \begin{cases}
         \frac{1}{8}(3-2|x|)^2, & \frac{1}{2} \leq |x| < \frac{3}{2} \\
@@ -70,7 +70,7 @@ or, in terms of density $\rho$,
 where $V = H^3$ is the volume of a cell and $i$ indexes the particles.
 
 Obviously, \autoref{eq:density-assignment} is not suitable for direct application in the actual algorithm.
-Instead, we iterate over all particles, identify the parent cell of each particle (and its neighborhood) and update $\rho(\mathbf{x}_\mathbf{p})$.
+Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of each particle (and its neighborhood) and update $\rho$.
 This process is illustrated in \autoref{alg:density-assignment}.
 \begin{algorithm}
     \caption{Density assignment algorithm}\label{alg:density-assignment}
@@ -82,7 +82,7 @@ This process is illustrated in \autoref{alg:density-assignment}.
         \EndFor
     \end{algorithmic}
 \end{algorithm}
-The set $C_S(\mathbf{x})$ of cells that have to be considered while assigning density, depends on the shape $S$ of the particle.
+The set $C_S(\mathbf{x}_i)$ of cells that have to be considered while assigning density from the $i$-th particle, depends on the shape $S$ of the particle.
 Specifically, we have $C_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]\}$, $C_\mathrm{CIC}(\mathbf{x}) = \{\lfloor \mathbf{x}/H \rfloor + \mathbf{t} \;|\; t_i =0,1\}$, and $C_\mathrm{TSC}(\mathbf{x}) = \{[\mathbf{x} / H] + \mathbf{t} \;|\; t_i = -1, 0, 1\}$.
 It follows that  $|C_\mathrm{NGP}(\mathbf{x})| = 1$, $|C_\mathrm{CIC}(\mathbf{x})| = 8$, and $|C_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
 
@@ -114,7 +114,7 @@ If we assume periodic boundary conditions, we can apply the discrete Fourier tra
     where  $D_H(p) = pH$.
 }
 \begin{equation}\label{eq:poisson-fourier-product}
-    \hat{\phi}(\mathbf{k}) = \hat{G}(\mathbf{k}) \hat{\phi}(\mathbf{k}).
+    \hat{\phi}(\mathbf{k}) = \hat{G}(\mathbf{k}) \hat{\rho}(\mathbf{k}).
 \end{equation}
 
 An approximation to $\hat{G}$ can be found using a discretized version of the Laplacian in \autoref{eq:poisson-discrete}.
@@ -139,15 +139,15 @@ The strength $\mathbf{g}$ of the gravitational field at mesh-point $\mathbf{x}_\
 Our implementation currently supports two types of finite differences, described below.
 
 The two-point finite difference operator $\mathbf{D}$, whose $x$ component is given by
-\begin{equation*}
+\begin{equation}\label{eq:two-point-central-diff}
     D_x(\phi)(\mathbf{x_\mathbf{p}}) = - \frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H}
-\end{equation*}
+\end{equation}
 (and analogously for the $y$ and $z$ components), is second order accurate.
 
 The fourth-order accurate finite-difference is given by
-\begin{equation*}
+\begin{equation}\label{eq:four-point-central-diff}
     D_x(\phi)(\mathbf{x}_\mathbf{p}) = -\alpha\frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H} - (1-\alpha)\frac{\phi(\mathbf{x}_{i+2,j,k}) - \phi(\mathbf{x}_{i-2,j,k})}{4H},
-\end{equation*}
+\end{equation}
 where $\alpha = 4/3$.
 
 
