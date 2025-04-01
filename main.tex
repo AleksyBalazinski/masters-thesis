@@ -7,10 +7,12 @@
 \usepackage{hyperref}
 \newcommand{\algorithmautorefname}{Algorithm}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}
 
 \renewcommand{\algorithmicforall}{\textbf{for each}}
-
+\newcommand{\algorithmicbreak}{\textbf{break}}
+\newcommand{\Break}{\State \algorithmicbreak}
+\renewcommand{\Comment}[1]{\hfill\textit{$\triangleright$ #1}}
 
 \title{Selected methods in $N$-body simulations}
 \author{Aleksy Bałaziński}

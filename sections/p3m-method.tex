@@ -114,3 +114,76 @@ For this reason $r_e$, the \textit{cutoff radius} designating the boundary of th
 This can have noticeable positive impact on performance.
 
 \subsection{Identifying close pairs of particles}
+In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the "potential mesh"), a second mesh (the \textit{chaining mesh}) is used.
+The chaining mesh is sparser compared to the potential mesh and its sole purpose is to partition the space into cells so that particles "close" to the ones in a given cell can be found efficiently.
+In this context, two particles are considered to be lying close to one another if their separation is less than the cutoff radius.
+
+The number of chaining mesh cells in a single dimension is given by $M_i = \lfloor L_i / r_e \rfloor$, where $L_i$ is the side length of the computational box ($i=1,2,3$).
+This implies that the side length of a chaining mesh cell is $HC_i = L_i / M_i \geq r_e$.
+Thus, for every particle $i$ in a given cell $\mathbf{p}$, it is sufficient to search through the immediate neighborhood of $\mathbf{p}$ to find all the particles within the cutoff radius from $i$.
+
+The chaining mesh can be implemented as a \textit{head-of-chain} (HOC) array, depicted in \autoref{fig:hoc}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.25]{img/hoc.png}
+    \caption{Head-of-chain data structure used for mapping particles to their parent cells in the chaining mesh.
+        Here $M_1=M_2=M_3 = M$.}
+    \label{fig:hoc}
+\end{figure}
+The basic version of the HOC array is very cheap to build with the whole process being linear in the number of particles.
+Hence, the array can be constructed anew at each time-step.
+Additional computational savings can be made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and using it for initializing the HOC array.
+Another noteworthy possible optimization is to sort the individual linked lists by the value of a certain particle coordinate, say the $y$ coordinate.
+This allows for an early return from the direct summation loop on the condition that $|y_i - y_j| > r_e$ while particle $i$ is sweeping through a cell containing particles $j$.
+
+\subsection{Short-range correction}
+The short-range correction, which takes place immediately after the mesh forces are found using the PM method, is at the heart of the \PThreeM{} algorithm.
+Since it is quadratic in the number of particles in each neighborhood, it is imperative that further optimizations be put in place.
+
+By the Newton's 3rd law, $\mathbf{f}^\text{SR}_{ji} = -\mathbf{f}^\text{SR}_{ij}$, which allows us to do the calculation of the short-range inter-particle force for any pair $(i, j)$ of particles only once, leading to the reduction of the total running time by half.
+In practice, the particle $i$ will update its own total short-range force $\mathbf{F}^\text{SR}_i$ as well as the total short-range force $\mathbf{F}^\text{SR}_j$ of its neighbor $j$.
+In order to avoid double-counting, the particle $i$ residing in cell $\mathbf{q}$ has to look for its neighbors in a subset $\mathcal{N}$ of the immediate neighborhood of $\mathbf{q}$.
+More specifically, define
+\begin{equation*}
+    \mathcal{N}(\mathbf{q} = (q_1, q_2, q_3)) = \{(q_1+t, q_2-1,q_3+s), (q_1+s, q_2, q_3-1), (q_1-1,q_2,q_3) \;|\; s,t = -1,0,1 \}.
+\end{equation*}
+Thus $|\mathcal{N}| = 13$, which is half of the size of the immediate neighborhood.
+
+The short-range correction part of the \PThreeM{} method is shown in \autoref{alg:short-range-correction}.
+\begin{algorithm}
+    \caption{Short-range correction}\label{alg:short-range-correction}
+    \begin{algorithmic}
+        \ForAll {chaining cell $\mathbf{q}$}
+        \ForAll {$\mathbf{q}_n \in \mathcal{N}(\mathbf{q}) \cup \{\mathbf{q}\}$}
+        \State \Call{UpdateShortRange}{$i$, $j$, $\mathbf{q}$, $\mathbf{q}_n$}
+        \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-range-forces}.
+\begin{algorithm}
+    \caption{Updating short-range forces}\label{alg:update-short-range-forces}
+    \begin{algorithmic}
+        \Procedure{UpdateShortRange}{$i$, $j$, $\mathbf{q}$, $\mathbf{q}_n$}
+        \ForAll {$i \in \text{HOC}(\mathbf{q})$}
+        \ForAll {$j \in \text{HOC}(\mathbf{q}_n)$} \Comment{If sorted linked lists are used, check here for the $|y_i - y_j| > r_e$ condition. If true, flag the $\mathbf{q}_n$ cell as completed and return.}
+        \If {$i = j$}
+        \Return
+        \EndIf
+        \State $\mathbf{r}_{ij} \gets \mathbf{r}_i - \mathbf{r}_j$
+        \If {$r_{ij} > r_e$}
+        \Return
+        \EndIf
+        \State $\mathbf{R}_{ij} \gets -m_i m_j R(r_{ij}) \hat{\mathbf{r}}_{ij}$
+        \State $\mathbf{f}^\text{tot} \gets -G m_i m_j / r_{ij}^2 \hat{\mathbf{r}}_{ij}$
+        \State $\mathbf{f}^\text{SR}_{ij} \gets \mathbf{f}^\text{tot} - \mathbf{R}_{ij}$
+        \State $\mathbf{f}^\text{SR}_{ji} \gets -\mathbf{f}^\text{SR}_{ij}$
+        \State $\mathbf{F}^\text{SR}_i \gets \mathbf{F}^\text{SR}_i + \mathbf{f}^\text{SR}_{ij}$
+        \If {$\mathbf{q}_n \neq \mathbf{q}$} \Comment{Avoid double-counting in the parent cell}
+        \State $\mathbf{F}^\text{SR}_j \gets \mathbf{F}^\text{SR}_j + \mathbf{f}^\text{SR}_{ji}$
+        \EndIf
+        \EndFor
+        \EndFor
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
