@@ -55,7 +55,7 @@ Splitting the domain of integration in the expression for $W_\text{TSC}$ into fi
 \end{equation*}
 
 Two- and three-dimensional versions of the assignment functions in \autoref{eq:assignment-functions} are products of the assignment functions in each dimension.
-For example, in the three-dimensional the assignment function $W$ is defined as
+For example, the three-dimensional assignment function $W$ is
 \begin{equation*}
     W(\mathbf{x}) = W(x)W(y)W(z).
 \end{equation*}
@@ -104,9 +104,9 @@ If we assume periodic boundary conditions, we can apply the discrete Fourier tra
     \end{equation*}
     where $x_p = pH$.
     The conversion between this form and another popular definition,
-    \begin{equation*}
+    \begin{equation}\label{eq:standard-dft}
         \widetilde{D_H}(k) = \sum_{p=0}^{N-1}D_H(p)e^{-i2\pi kp / N},
-    \end{equation*}
+    \end{equation}
     is given by
     \begin{equation*}
         \widetilde{D_H}(k) = \frac{1}{H}\hat{D}\left(\frac{2\pi}{NH}k\right),
@@ -165,7 +165,7 @@ The method is illustrated in \autoref{alg:interpolation}.
     \begin{algorithmic}
         \ForAll {particle $i$}
         \ForAll {cell $\mathbf{q}$ in $C_S(\mathbf{x}_i)$}
-        \State $\mathbf{g}(\mathbf{x}_i) \gets  \sum_\mathbf{q} W(\mathbf{x}_i - \mathbf{x}_\mathbf{q}) \mathbf{g}(\mathbf{x}_\mathbf{p})$
+        \State $\mathbf{g}(\mathbf{x}_i) \gets  \sum_\mathbf{q} W(\mathbf{x}_i - \mathbf{x}_\mathbf{q}) \mathbf{g}(\mathbf{x}_\mathbf{q})$
         \EndFor
         \EndFor
     \end{algorithmic}

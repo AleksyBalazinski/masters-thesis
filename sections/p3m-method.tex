@@ -48,18 +48,36 @@ where $j=1,2,3$.
 The quantity $\hat{U}$ is defined as $\hat{W}/V$.
 For the mass assignment scheme hierarchy described in \autoref{subsec:mass-assignment} we have
 \begin{equation*}
-    \hat{U}(k) = \left(\prod_{i=1}^{3}\frac{\sin(k_i H / 2)}{k_i H / 2}\right)^{p},
+    \hat{U}(\mathbf{k}) = \left(\prod_{i=1}^{3}\frac{\sin(k_i H / 2)}{k_i H / 2}\right)^{p},
 \end{equation*}
 where $p=1,2,3,\dots$ with $p=1$ corresponding to NGP assignment, etc.
-In particular, for the TSC assignment scheme, it can be shown that the \textit{alias sum}
+In particular, for the TSC assignment scheme, it can be shown that the \textit{alias sum}\footnote{
+    To get the alias sums compatible with the DFT definition given in \autoref{eq:standard-dft}, one has to compute
+    \begin{equation*}
+        \sum_{\mathbf{n}} \tilde{U}^2(\mathbf{k}_\mathbf{n})
+        \equiv \sum_\mathbf{n}\tilde{U}^2(\mathbf{k}+\mathbf{n}N)
+        = \frac{1}{H}\sum_\mathbf{n}\hat{U}^2\left(\mathbf{k}\frac{2\pi}{NH}+\mathbf{n}\frac{2\pi}{H}\right)
+    \end{equation*}
+    instead.
+}
 \begin{equation*}
     \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n})
     \equiv \sum_{\mathbf{n}}\hat{U}^2\left(\mathbf{k} + \mathbf{n}\frac{2\pi}{H}\right)
 \end{equation*}
 evaluates to
 \begin{equation*}
-    \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n})
+    \sum_{\mathbf{n}}\hat{U}_\text{TSC}^2(\mathbf{k}_\mathbf{n})
     = \prod_{i=1}^{3} \left(1 - \sin^2\frac{k_i H}{2} + \frac{2}{15}\sin^4\frac{k_i H}{2}\right).
+\end{equation*}
+This formula can be readily derived using the partial fractions expansion of the cotangent function \cite{aigner2018proofs},
+\begin{equation*}
+    \frac{(-1)^s}{s!}\frac{d^s}{dx^s}\cot x = \sum_{n=-\infty}^{\infty} \frac{1}{(x-n\pi)^{s+1}}.
+\end{equation*}
+Using the same approach, we can obtain similar results for the CIC and NGP schemes, namely
+\begin{equation*}
+    \sum_{\mathbf{n}}\hat{U}_\text{CIC}^2 = \frac{1}{3} \prod_{i=1}^{3}  \left(1 + 2\cos^2\frac{k_i H}{2}\right)
+    \quad \text{and} \quad
+    \sum_{\mathbf{n}}\hat{U}_\text{NGP}^2 = 1.
 \end{equation*}
 The quantity $\hat{\mathbf{R}}$, the transformed reference force, is related to the shape $S$ of the particle-cloud by
 \begin{equation*}
