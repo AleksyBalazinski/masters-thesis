@@ -202,16 +202,19 @@ The schematic depiction of the interpolation is shown in \autoref{fig:sr-force-v
 \end{figure}
 If we define $\xi = r^2 / \Delta^2$ and $t=\lfloor \xi \rfloor$, then
 \begin{equation*}
-    \frac{f^\text{SR}(r)}{r} \approx T[t](1 - (\xi - t)) + F[t+1](\xi - t)
+    \frac{f^\text{SR}(r)}{r} \approx T[t]\left(1 - (\xi - t)\right) + T[t+1](\xi - t)
     = T[t] + (\xi - t) (T[t+1] - T[t]).
 \end{equation*}
 The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, completely eliminating the use of the square root operations and reducing the total number of flouting-point operations to just four.
 
 The procedure outlined in\autoref{alg:short-range-correction} can be parallelized by splitting the work done in the outmost loop between some number of threads.
 In doing so, extra care has to be taken to avoid data races.
-A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may "clash" with a different thread processing a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
+A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may "clash" with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
 However, by construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
 For example, consider a particle $i$ in cell $\mathbf{p} = (p_1, p_2, p_3)$ (in other words, $\mathbf{p}$ is the parent cell of $i$).
 If thread $t$ is currently assigned to this cell, $t$ will update the part of $\mathbf{F}^\text{SR}_i$ corresponding to updates of $i$ coming from within the same cell as the parent cell of $i$.
 Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_2, p_3)$ will update a different part of $\mathbf{F}^\text{SR}_i$, i.e. the part corresponding to updates of $i$ coming from the cell "to the right" of the parent cell of $i$.
-Since only one thread is responsible for updates coming "from the the right," no data races can occur.
+Since only one thread is responsible for updates to particle $i$ coming "from the the right," (or any other "direction") no data races can occur.
+This approach has two obvious drawbacks.
+First, memory requirements increase significantly as $13N$ additional three-dimensional vectors have to be stored.
+Second, there is no way to guarantee uniform work distribution among the threads.

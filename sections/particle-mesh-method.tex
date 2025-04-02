@@ -74,7 +74,7 @@ Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of
 This process is illustrated in \autoref{alg:density-assignment}.
 \begin{algorithm}
     \caption{Density assignment algorithm}\label{alg:density-assignment}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \ForAll {particle $i$}
         \ForAll {cell $\mathbf{q}$ in $\mathcal{C}_S(\mathbf{x}_i)$}
         \State $\rho(\mathbf{x}_\mathbf{q}) \gets \rho(\mathbf{x}_\mathbf{q}) + m_i W(\mathbf{x}_i - \mathbf{x}_\mathbf{q}) / V$
@@ -85,6 +85,7 @@ This process is illustrated in \autoref{alg:density-assignment}.
 The set $\mathcal{C}_S(\mathbf{x}_i)$ of cells that have to be considered while assigning density from the $i$-th particle, depends on the shape $S$ of the particle.
 Specifically, we have $\mathcal{C}_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]\}$, $\mathcal{C}_\mathrm{CIC}(\mathbf{x}) = \{\lfloor \mathbf{x}/H \rfloor + \mathbf{t} \;|\; t_i =0,1\}$, and $\mathcal{C}_\mathrm{TSC}(\mathbf{x}) = \{[\mathbf{x} / H] + \mathbf{t} \;|\; t_i = -1, 0, 1\}$.
 It follows that  $|\mathcal{C}_\mathrm{NGP}(\mathbf{x})| = 1$, $|\mathcal{C}_\mathrm{CIC}(\mathbf{x})| = 8$, and $|\mathcal{C}_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
+We note that \autoref{alg:density-assignment} can be parallelized if atomic increments are used in line 3.
 
 \subsection{Solving the field equation}
 The Poisson equation (\autoref{eq:poisson}) can be restated in integral form
@@ -171,3 +172,4 @@ The method is illustrated in \autoref{alg:interpolation}.
     \end{algorithmic}
 \end{algorithm}
 It is important to note that in order to retain correct physical behavior, the interpolation and mass assignment schemes must use the same shape to represent the particles.
+The procedure in \autoref{alg:interpolation} is trivially parallelized by converting the sequential loop into a parallel one.
