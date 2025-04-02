@@ -155,7 +155,14 @@ The short-range correction part of the \PThreeM{} method is shown in \autoref{al
     \begin{algorithmic}
         \ForAll {chaining cell $\mathbf{q}$}
         \ForAll {$\mathbf{q}_n \in \mathcal{N}(\mathbf{q}) \cup \{\mathbf{q}\}$}
+        \ForAll {$i \in \text{HOC}(\mathbf{q})$}
+        \ForAll {$j \in \text{HOC}(\mathbf{q}_n)$}
+        \If {$|y_i - y_j| > r_e$}
+        \Break
+        \EndIf
         \State \Call{UpdateShortRange}{$i$, $j$, $\mathbf{q}$, $\mathbf{q}_n$}
+        \EndFor
+        \EndFor
         \EndFor
         \EndFor
     \end{algorithmic}
@@ -163,17 +170,17 @@ The short-range correction part of the \PThreeM{} method is shown in \autoref{al
 The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-range-forces}.
 \begin{algorithm}
     \caption{Updating short-range forces}\label{alg:update-short-range-forces}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \Procedure{UpdateShortRange}{$i$, $j$, $\mathbf{q}$, $\mathbf{q}_n$}
-        \ForAll {$i \in \text{HOC}(\mathbf{q})$}
-        \ForAll {$j \in \text{HOC}(\mathbf{q}_n)$} \Comment{If sorted linked lists are used, check here for the $|y_i - y_j| > r_e$ condition. If true, flag the $\mathbf{q}_n$ cell as completed and return.}
         \If {$i = j$}
         \Return
         \EndIf
         \State $\mathbf{r}_{ij} \gets \mathbf{r}_i - \mathbf{r}_j$
-        \If {$r_{ij} > r_e$}
+        \If {$|\mathbf{r}_{ij}|^2 > r_e^2$}
         \Return
         \EndIf
+        \State $r_{ij} \gets |\mathbf{r}_{ij}|$
+        \State $\hat{\mathbf{r}}_{ij} \gets \mathbf{r}_{ij} / r_{ij}$
         \State $\mathbf{R}_{ij} \gets -m_i m_j R(r_{ij}) \hat{\mathbf{r}}_{ij}$
         \State $\mathbf{f}^\text{tot} \gets -G m_i m_j / r_{ij}^2 \hat{\mathbf{r}}_{ij}$
         \State $\mathbf{f}^\text{SR}_{ij} \gets \mathbf{f}^\text{tot} - \mathbf{R}_{ij}$
@@ -182,8 +189,29 @@ The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-
         \If {$\mathbf{q}_n \neq \mathbf{q}$} \Comment{Avoid double-counting in the parent cell}
         \State $\mathbf{F}^\text{SR}_j \gets \mathbf{F}^\text{SR}_j + \mathbf{f}^\text{SR}_{ji}$
         \EndIf
-        \EndFor
-        \EndFor
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
+As suggested in \cite{Hockney1988}, the computational burden of operations in lines 5-8 in \autoref{alg:update-short-range-forces} can be greatly reduced by storing the values of $f^{SR}(r) / r$ in a lookup table $T$ at uniform intervals $\Delta^2$ of $[0, r_e^2]$ and interpolating.
+The schematic depiction of the interpolation is shown in \autoref{fig:sr-force-val-interpolation}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.2]{img/interpolation.png}
+    \caption{Interpolation of short-range force values.}
+    \label{fig:sr-force-val-interpolation}
+\end{figure}
+If we define $\xi = r^2 / \Delta^2$ and $t=\lfloor \xi \rfloor$, then
+\begin{equation*}
+    \frac{f^\text{SR}(r)}{r} \approx T[t](1 - (\xi - t)) + F[t+1](\xi - t)
+    = T[t] + (\xi - t) (T[t+1] - T[t]).
+\end{equation*}
+The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, completely eliminating the use of the square root operations and reducing the total number of flouting-point operations to just four.
+
+The procedure outlined in\autoref{alg:short-range-correction} can be parallelized by splitting the work done in the outmost loop between some number of threads.
+In doing so, extra care has to be taken to avoid data races.
+A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may "clash" with a different thread processing a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
+However, by construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
+For example, consider a particle $i$ in cell $\mathbf{p} = (p_1, p_2, p_3)$ (in other words, $\mathbf{p}$ is the parent cell of $i$).
+If thread $t$ is currently assigned to this cell, $t$ will update the part of $\mathbf{F}^\text{SR}_i$ corresponding to updates of $i$ coming from within the same cell as the parent cell of $i$.
+Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_2, p_3)$ will update a different part of $\mathbf{F}^\text{SR}_i$, i.e. the part corresponding to updates of $i$ coming from the cell "to the right" of the parent cell of $i$.
+Since only one thread is responsible for updates coming "from the the right," no data races can occur.

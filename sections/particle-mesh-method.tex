@@ -76,15 +76,15 @@ This process is illustrated in \autoref{alg:density-assignment}.
     \caption{Density assignment algorithm}\label{alg:density-assignment}
     \begin{algorithmic}
         \ForAll {particle $i$}
-        \ForAll {cell $\mathbf{q}$ in $C_S(\mathbf{x}_i)$}
+        \ForAll {cell $\mathbf{q}$ in $\mathcal{C}_S(\mathbf{x}_i)$}
         \State $\rho(\mathbf{x}_\mathbf{q}) \gets \rho(\mathbf{x}_\mathbf{q}) + m_i W(\mathbf{x}_i - \mathbf{x}_\mathbf{q}) / V$
         \EndFor
         \EndFor
     \end{algorithmic}
 \end{algorithm}
-The set $C_S(\mathbf{x}_i)$ of cells that have to be considered while assigning density from the $i$-th particle, depends on the shape $S$ of the particle.
-Specifically, we have $C_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]\}$, $C_\mathrm{CIC}(\mathbf{x}) = \{\lfloor \mathbf{x}/H \rfloor + \mathbf{t} \;|\; t_i =0,1\}$, and $C_\mathrm{TSC}(\mathbf{x}) = \{[\mathbf{x} / H] + \mathbf{t} \;|\; t_i = -1, 0, 1\}$.
-It follows that  $|C_\mathrm{NGP}(\mathbf{x})| = 1$, $|C_\mathrm{CIC}(\mathbf{x})| = 8$, and $|C_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
+The set $\mathcal{C}_S(\mathbf{x}_i)$ of cells that have to be considered while assigning density from the $i$-th particle, depends on the shape $S$ of the particle.
+Specifically, we have $\mathcal{C}_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]\}$, $\mathcal{C}_\mathrm{CIC}(\mathbf{x}) = \{\lfloor \mathbf{x}/H \rfloor + \mathbf{t} \;|\; t_i =0,1\}$, and $\mathcal{C}_\mathrm{TSC}(\mathbf{x}) = \{[\mathbf{x} / H] + \mathbf{t} \;|\; t_i = -1, 0, 1\}$.
+It follows that  $|\mathcal{C}_\mathrm{NGP}(\mathbf{x})| = 1$, $|\mathcal{C}_\mathrm{CIC}(\mathbf{x})| = 8$, and $|\mathcal{C}_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
 
 \subsection{Solving the field equation}
 The Poisson equation (\autoref{eq:poisson}) can be restated in integral form
@@ -164,7 +164,7 @@ The method is illustrated in \autoref{alg:interpolation}.
     \caption{Field strength interpolation}\label{alg:interpolation}
     \begin{algorithmic}
         \ForAll {particle $i$}
-        \ForAll {cell $\mathbf{q}$ in $C_S(\mathbf{x}_i)$}
+        \ForAll {cell $\mathbf{q}$ in $\mathcal{C}_S(\mathbf{x}_i)$}
         \State $\mathbf{g}(\mathbf{x}_i) \gets  \sum_\mathbf{q} W(\mathbf{x}_i - \mathbf{x}_\mathbf{q}) \mathbf{g}(\mathbf{x}_\mathbf{q})$
         \EndFor
         \EndFor
