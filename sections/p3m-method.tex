@@ -1,6 +1,6 @@
 \section{Particle-particle particle-mesh method}
 The \PThreeM{} algorithm is a hybrid method:
-forces between distant particles are calculated using the PM method, whereas for particles lying closely together the PP method is used.
+Forces between distant particles are calculated using the PM method, whereas, for particles lying closely together, the PP method is used.
 The total force applied to particle $i$ is
 \begin{equation}\label{eq:p3m}
     \mathbf{F}_i^\text{SR} + \mathbf{F}_i = \sum_{j \neq i}(\mathbf{f}_{ij}^\text{tot} - \mathbf{R}_{ij}) + \mathbf{F}_i,
@@ -11,26 +11,26 @@ The two examples of reference forces described in \cite{Hockney1988} are
 \begin{equation*}
     R(r) =
     G\times\begin{cases}
-        \frac{1}{35  a^2}  (224  \xi - 224  \xi^3 + 70  \xi^4 + 48  \xi^5 - 21  \xi^6),                                & 0 \leq \xi \leq 1 \\
-        \frac{1}{35  a^2}  (12 / \xi^2 - 224 + 896  \xi - 840  \xi^2 + 224  \xi^3 + 70  \xi^4 - 48  \xi^5 + 7  \xi^6), & 1 < \xi \leq 2    \\
-        \frac{1}{r^2},                                                                                                 & \xi > 2
+        \frac{1}{35 a^2} (224 \xi - 224 \xi^3 + 70 \xi^4 + 48 \xi^5 - 21 \xi^6),                               & 0 \leq \xi \leq 1 \\
+        \frac{1}{35 a^2} (12 / \xi^2 - 224 + 896 \xi - 840 \xi^2 + 224 \xi^3 + 70 \xi^4 - 48 \xi^5 + 7 \xi^6), & 1 < \xi \leq 2    \\
+        \frac{1}{r^2},                                                                                         & \xi > 2
     \end{cases}
 \end{equation*}
 where $\xi = 2r/a$ for a sphere with uniformly decreasing density (shape $S_2$) and
-\begin{equation*}
+\begin{equation}\label{eq:s1-reference-force}
     R(r) =
     G\times\begin{cases}
-        \frac{1}{a^2}  (8  r / a - 9  r^2 / a^2 + 2  r^4 / a^4), & r < a \\
+        \frac{1}{a^2} (8 r / a - 9 r^2 / a^2 + 2 r^4 / a^4), & r < a \\
         \frac{1}{r^2},
     \end{cases}
-\end{equation*}
+\end{equation}
 for a solid sphere (shape $S_1$).
 
 \subsection{Optimal Green's function}
 As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the reference force is approximated by the mesh force.
-The average deviation between the two forces can be minimized by a suitable choice of the Green's function.
-The details of the derivation are highly nontrivial and the can be found in \cite{Hockney1988};
-in this work we restrict ourselves to presenting the results (essential to the implementation) obtained therein.
+The average deviation between the two forces can be minimized by a suitable choice of Green's function.
+The details of the derivation are highly nontrivial and can be found in \cite{Hockney1988};
+in this work, we restrict ourselves to presenting the results (essential to the implementation) obtained therein.
 
 The optimal influence function $\hat{G}$ is given by
 \begin{equation*}
@@ -75,7 +75,7 @@ This formula can be readily derived using the partial fractions expansion of the
 \end{equation*}
 Using the same approach, we can obtain similar results for the CIC and NGP schemes, namely
 \begin{equation*}
-    \sum_{\mathbf{n}}\hat{U}_\text{CIC}^2 = \frac{1}{3} \prod_{i=1}^{3}  \left(1 + 2\cos^2\frac{k_i H}{2}\right)
+    \sum_{\mathbf{n}}\hat{U}_\text{CIC}^2 = \frac{1}{3} \prod_{i=1}^{3} \left(1 + 2\cos^2\frac{k_i H}{2}\right)
     \quad \text{and} \quad
     \sum_{\mathbf{n}}\hat{U}_\text{NGP}^2 = 1.
 \end{equation*}
@@ -90,7 +90,7 @@ For spherically symmetric shapes $S$ we have
 \end{equation*}
 This integral, evaluated for the $S_1$ and $S_2$ shapes respectively, gives
 \begin{equation*}
-    \hat{S_1}(k) = \frac{3}{(ka/2)^3}  \left(\sin\frac{ka}{2} - \frac{ka}{2} \cos\frac{ka}{2}\right)
+    \hat{S_1}(k) = \frac{3}{(ka/2)^3} \left(\sin\frac{ka}{2} - \frac{ka}{2} \cos\frac{ka}{2}\right)
 \end{equation*}
 and
 \begin{equation*}
@@ -103,20 +103,21 @@ The result of applying the optimal Green's function in \autoref{eq:poisson-fouri
     \centering
     \includegraphics[scale=0.6]{img/optimal-green-force-4.png}
     \caption{Magnitude of the force between two masses.
-        The mesh approximation to the reference force was calculated using the PM method with TSC assignment scheme, two-point finite difference, and the Green's function optimal for the $S_1$ shape with diameter $a=4H$.
+        The mesh approximation to the reference force was calculated using the PM method with TSC assignment scheme, two-point finite difference, and Green's function optimal for the $S_1$ shape with diameter $a=4H$.
         The force resultant from the universal law of gravitation is also shown.}
     \label{fig:reference-force-approx}
 \end{figure}
 As can be seen in the figure, the PM force closely follows the reference force.
 Moreover, for $r>a$, the reference force is identical to the inverse-square force.
-It is also worth noting that the reference force (and its mesh approximation) approximate the inverse-square force accurately for $r$ slightly smaller than $a$.
+It is also worth noting that the reference force (and its mesh approximation) approximates the inverse-square force accurately for $r$ slightly smaller than $a$.
 For this reason $r_e$, the \textit{cutoff radius} designating the boundary of the region handled by the direct summation, can be chosen to be smaller than $a$ (e.g. $r_e = 0.7a$).
-This can have noticeable positive impact on performance.
+This can have a noticeable positive impact on performance.
 
 \subsection{Identifying close pairs of particles}
 In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the "potential mesh"), a second mesh (the \textit{chaining mesh}) is used.
-The chaining mesh is sparser compared to the potential mesh and its sole purpose is to partition the space into cells so that particles "close" to the ones in a given cell can be found efficiently.
-In this context, two particles are considered to be lying close to one another if their separation is less than the cutoff radius.
+The chaining mesh is sparser than the potential mesh.
+Its sole purpose is to partition the space into cells so that particles "close" to the ones in a given cell can be found efficiently.
+In this context, two particles are considered to lie close to one another if their separation is less than the cutoff radius.
 
 The number of chaining mesh cells in a single dimension is given by $M_i = \lfloor L_i / r_e \rfloor$, where $L_i$ is the side length of the computational box ($i=1,2,3$).
 This implies that the side length of a chaining mesh cell is $HC_i = L_i / M_i \geq r_e$.
@@ -130,19 +131,19 @@ The chaining mesh can be implemented as a \textit{head-of-chain} (HOC) array, de
         Here $M_1=M_2=M_3 = M$.}
     \label{fig:hoc}
 \end{figure}
-The basic version of the HOC array is very cheap to build with the whole process being linear in the number of particles.
-Hence, the array can be constructed anew at each time-step.
-Additional computational savings can be made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and using it for initializing the HOC array.
-Another noteworthy possible optimization is to sort the individual linked lists by the value of a certain particle coordinate, say the $y$ coordinate.
+The basic version of the HOC array is very cheap to build since the whole process is linear in the number of particles.
+Hence, the array can be constructed anew at each time step.
+Additional computational savings can be made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and reusing it for the HOC array initialization.
+Another noteworthy possible optimization is to sort the individual linked lists by the value of a particle coordinate of choice, say the $y$ coordinate.
 This allows for an early return from the direct summation loop on the condition that $|y_i - y_j| > r_e$ while particle $i$ is sweeping through a cell containing particles $j$.
 
 \subsection{Short-range correction}
 The short-range correction, which takes place immediately after the mesh forces are found using the PM method, is at the heart of the \PThreeM{} algorithm.
-Since it is quadratic in the number of particles in each neighborhood, it is imperative that further optimizations be put in place.
+Since it scales with a square of the number of particles in each neighborhood, further optimizations are highly desirable.
 
-By the Newton's 3rd law, $\mathbf{f}^\text{SR}_{ji} = -\mathbf{f}^\text{SR}_{ij}$, which allows us to do the calculation of the short-range inter-particle force for any pair $(i, j)$ of particles only once, leading to the reduction of the total running time by half.
-In practice, the particle $i$ will update its own total short-range force $\mathbf{F}^\text{SR}_i$ as well as the total short-range force $\mathbf{F}^\text{SR}_j$ of its neighbor $j$.
-In order to avoid double-counting, the particle $i$ residing in cell $\mathbf{q}$ has to look for its neighbors in a subset $\mathcal{N}$ of the immediate neighborhood of $\mathbf{q}$.
+By Newton's 3rd law, $\mathbf{f}^\text{SR}_{ji} = -\mathbf{f}^\text{SR}_{ij}$, which allows us to do the calculation of the short-range inter-particle force for any pair $(i, j)$ of particles only once, leading to the reduction of the total running time by half.
+In practice, the particle $i$ will update its total short-range force $\mathbf{F}^\text{SR}_i$ as well as the total short-range force $\mathbf{F}^\text{SR}_j$ of its neighbor $j$.
+To avoid double-counting, the particle $i$ residing in cell $\mathbf{q}$ has to look for its neighbors in a subset $\mathcal{N}$ of the immediate neighborhood of $\mathbf{q}$.
 More specifically, define
 \begin{equation*}
     \mathcal{N}(\mathbf{q} = (q_1, q_2, q_3)) = \{(q_1+t, q_2-1,q_3+s), (q_1+s, q_2, q_3-1), (q_1-1,q_2,q_3) \;|\; s,t = -1,0,1 \}.
@@ -192,7 +193,7 @@ The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
-As suggested in \cite{Hockney1988}, the computational burden of operations in lines 5-8 in \autoref{alg:update-short-range-forces} can be greatly reduced by storing the values of $f^{SR}(r) / r$ in a lookup table $T$ at uniform intervals $\Delta^2$ of $[0, r_e^2]$ and interpolating.
+As suggested in \cite{Hockney1988}, the computational burden of operations in lines 5-8 in \autoref{alg:update-short-range-forces} can be greatly reduced by storing the values of $f^\text{SR}(r) / r = (f^\text{tot}(r) - R(r)) / r$ in a lookup table $T$ at uniform intervals $\Delta^2$ of $[0, r_e^2]$ and interpolating.
 The schematic depiction of the interpolation is shown in \autoref{fig:sr-force-val-interpolation}.
 \begin{figure}[htp]
     \centering
@@ -205,16 +206,16 @@ If we define $\xi = r^2 / \Delta^2$ and $t=\lfloor \xi \rfloor$, then
     \frac{f^\text{SR}(r)}{r} \approx T[t]\left(1 - (\xi - t)\right) + T[t+1](\xi - t)
     = T[t] + (\xi - t) (T[t+1] - T[t]).
 \end{equation*}
-The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, completely eliminating the use of the square root operations and reducing the total number of flouting-point operations to just four.
+The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, eliminating the use of the square root operations and reducing the total number of floating-point operations to just four.
 
 The procedure outlined in\autoref{alg:short-range-correction} can be parallelized by splitting the work done in the outmost loop between some number of threads.
 In doing so, extra care has to be taken to avoid data races.
 A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may "clash" with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
-However, by construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
+However, by the construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
 For example, consider a particle $i$ in cell $\mathbf{p} = (p_1, p_2, p_3)$ (in other words, $\mathbf{p}$ is the parent cell of $i$).
 If thread $t$ is currently assigned to this cell, $t$ will update the part of $\mathbf{F}^\text{SR}_i$ corresponding to updates of $i$ coming from within the same cell as the parent cell of $i$.
 Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_2, p_3)$ will update a different part of $\mathbf{F}^\text{SR}_i$, i.e. the part corresponding to updates of $i$ coming from the cell "to the right" of the parent cell of $i$.
-Since only one thread is responsible for updates to particle $i$ coming "from the the right," (or any other "direction") no data races can occur.
-This approach has two obvious drawbacks.
-First, memory requirements increase significantly as $13N$ additional three-dimensional vectors have to be stored.
+Since only one thread is responsible for updates to particle $i$ coming "from the right," (or any other "direction") no data races can occur.
+This approach has two drawbacks.
+First, memory requirements increase significantly as memory for $13N$ additional three-dimensional vectors has to be used.
 Second, there is no way to guarantee uniform work distribution among the threads.

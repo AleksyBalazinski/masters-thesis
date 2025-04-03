@@ -1,8 +1,8 @@
 \section{Galaxy model}
 The model of a galaxy used as a test bed for the implementation is a simple one.
-The galaxy is assumed to be composed of only two parts: a thin disk and a central bulge.
-The disk comprises a number of particles, each representing some number of stars.
-The central bulge is simulated as a fixed external gravitational field.
+The galaxy is assumed to comprise only two parts: a thin disk and a spherically symmetric halo.
+The disk comprises a large number of particles, each representing some number of stars.
+The halo is simulated as a fixed external gravitational field.
 
 \subsection{Disk}
 The disk particles are sampled from a radial distribution
@@ -19,7 +19,7 @@ and the marginal CDFs are
     F_R(r) = F(r, 2\pi) = \frac{1}{R_D^3}(3R_D r^2-2r^3) \quad \text{and} \quad F_\Phi(\phi) = F(R_D, \phi) = \frac{\phi}{2\pi}.
 \end{equation*}
 Now we use inverse transform sampling to generate initial positions $(r, \phi)$ for the particles, i.e. $\phi = 2\pi u$ and $r$ is given implicitly by $h(r) \equiv 2r^3 - 3R_D r^2 + uR_D^3 = 0$ with $u \sim U(0, 1)$.
-Straightforward calculation shows that $dh/dr < 0$ for $0 < r < R_D$ and $h(0)h(R_D) < 0$ implying that $h$ has exactly one zero between 0 and $R_D$ (which can be found for example using Newton's method).
+A straightforward calculation shows that $dh/dr < 0$ for $0 < r < R_D$ and $h(0)h(R_D) < 0$ implying that $h$ has exactly one zero between 0 and $R_D$ (which can be found for example using Newton's method).
 
 Strength of the gravitational field $\mathbf{g}$ at point $\mathbf{x}_0$ is
 \begin{equation*}
@@ -48,22 +48,22 @@ The value of $a = -k/h^2$ can be found by setting $g_{D,r}(0) = 0$ in the approx
     \label{fig:radial-strength-disk}
 \end{figure}
 
-\subsection{Central bulge}
-The density profile of the central bulge is analogous to the one used for the disk, save for the fact it is 3-dimensional, i.e.
+\subsection{Halo}
+The density profile of the halo is analogous to the one used for the disk, save for the fact it is 3-dimensional, i.e.
 \begin{equation*}
     \rho(r) =
     \begin{cases}
-        \rho_0\left(1 - \frac{r}{R_B}\right), & r \leq R_B        \\
+        \rho_0\left(1 - \frac{r}{R_H}\right), & r \leq R_H        \\
         0,                                    & \text{otherwise},
     \end{cases}
 \end{equation*}
-where $R_B$ is the radius of the bulge.
-If we let $M_B$ be the mass of the bulge, then $\rho_0 = 3M_B / (\pi R_B^3)$.
+where $R_H$ is the radius of the halo.
+If we let $M_H$ be the mass of the halo, then $\rho_0 = 3M_B / (\pi R_H^3)$.
 Application of Gauss's law shows that we have
 \begin{equation*}
-    g_{B,r} = -G M_B \times
+    g_{B,r} = -G M_H \times
     \begin{cases}
-        \frac{r}{R_B^3}r\left(4 - \frac{3r}{R_B}\right), & r \leq R_B        \\
+        \frac{r}{R_H^3}r\left(4 - \frac{3r}{R_H}\right), & r \leq R_H        \\
         \frac{1}{r^2},                                   & \text{otherwise}.
     \end{cases}
 \end{equation*}
