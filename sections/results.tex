@@ -188,3 +188,20 @@ Graphs of energy, angular momentum, and momentum components vs. time are shown i
         Time is in Myr and the quantities are expressed in units consistent with \autoref{tab:galaxy-parameters}}
     \label{fig:physical-quantities-p3m}
 \end{figure}
+
+\subsection{Performance analysis}
+The PM and \PThreeM{} methods were implemented exactly as described in the previous sections.
+The PM method was developed for both CPU and GPU architectures, using C++ and CUDA C++, respectively, while the \PThreeM{} method is currently available only in the CPU variant.
+The implementation relies on external libraries for fast Fourier transform computations: FFTW for the CPU version and cuFFT for the GPU version.
+A performance comparison of the PM method was conducted using $N = 2^{16} = 65,536$ particles on a $64 \times 64 \times 64$ mesh with the CIC assignment scheme.
+The tests were run on a system equipped with an Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz and an NVIDIA GeForce GTX 1650 GPU. Over 200 iterations, the CPU implementation consistently took around 2.3 seconds, while the GPU implementation reduced this to approximately 1.0 second (excluding data transfer time between host and device).
+Notably, the most time-consuming part of the program was unrelated to computation—writing data to disk in text format took nearly 20 seconds.
+
+For the \PThreeM{} method, performance was measured using $N=50,000$ particles on a $128 \times 128 \times 64$ mesh with the TSC assignment scheme.
+The total runtime was approximately 1 minute and 30 seconds, with the time distribution among key algorithm components as follows:
+\begin{itemize}
+    \item HOC table initialization: 12\%
+    \item Short-range force calculations: 80\%
+    \item PM step: 7.5\%
+\end{itemize}
+The code is available at \url{https://github.com/AleksyBalazinski/ParticleSimulation} under the MIT license.
