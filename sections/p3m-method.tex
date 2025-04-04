@@ -10,7 +10,7 @@ The reference force is defined as the force between two particle-clouds, i.e. ea
 The two examples of reference forces described in \cite{Hockney1988} are
 \begin{equation*}
     R(r) =
-    G\times\begin{cases}
+    G m_1 m_2 \times\begin{cases}
         \frac{1}{35 a^2} (224 \xi - 224 \xi^3 + 70 \xi^4 + 48 \xi^5 - 21 \xi^6),                               & 0 \leq \xi \leq 1 \\
         \frac{1}{35 a^2} (12 / \xi^2 - 224 + 896 \xi - 840 \xi^2 + 224 \xi^3 + 70 \xi^4 - 48 \xi^5 + 7 \xi^6), & 1 < \xi \leq 2    \\
         \frac{1}{r^2},                                                                                         & \xi > 2
@@ -19,12 +19,13 @@ The two examples of reference forces described in \cite{Hockney1988} are
 where $\xi = 2r/a$ for a sphere with uniformly decreasing density (shape $S_2$) and
 \begin{equation}\label{eq:s1-reference-force}
     R(r) =
-    G\times\begin{cases}
+    G m_1 m_2 \times\begin{cases}
         \frac{1}{a^2} (8 r / a - 9 r^2 / a^2 + 2 r^4 / a^4), & r < a \\
         \frac{1}{r^2},
     \end{cases}
 \end{equation}
 for a solid sphere (shape $S_1$).
+The reference force vector lies along the line joining the two bodies.
 
 \subsection{Optimal Green's function}
 As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the reference force is approximated by the mesh force.

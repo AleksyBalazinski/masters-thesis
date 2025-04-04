@@ -66,21 +66,21 @@ The system's evolution over 200 Myrs is shown in \autoref{fig:spiral-galaxy-evol
 \end{figure}
 
 During the simulation, total energy $E = KE + PE$, angular momentum $\mathbf{l}$, and the $z$-component of the momentum vector $\mathbf{p}$ should stay constant.
-The $x$- and $y$-components of momentum change due to the presence of an external gravitational field (halo).
+The $x$- and $y$-components of momentum change due to the presence of an external gravitational field (representing the halo).
 We can verify if this variation satisfies the expected relation
 \begin{equation}\label{eq:expected-momentum-change}
     \dot{\mathbf{p}} = \mathbf{F}^\text{ext}
 \end{equation}
-by fining the initial total momentum $\mathbf{p}(t = 0)$ and incrementing the value of $\mathbf{p}$ in each time-step by $\mathbf{F}^\text{ext}DT$.
+by finding the initial total momentum $\mathbf{p}(t = 0)$ and incrementing the value of $\mathbf{p}$ in each time-step by $\mathbf{F}^\text{ext}DT$.
 
 The exact calculation of the potential energy \cite{taylor2005classical} using the formula
 \begin{equation*}
     PE = -\sum_{i=1}^{N}\sum_{j=i+1}^{N}\frac{G m_i m_j}{r_{ij}}
 \end{equation*}
 is computationally infeasible considering the $O(N^2)$ cost.
-An approximate formulation based on the potential values at mesh points,
+An approximation based on the potential values at mesh points,
 \begin{equation*}
-    PE = \frac{V}{2}\sum_{\mathbf{p}} \rho(\mathbf{x}_\mathbf{p})\phi(\mathbf{x}_\mathbf{p}),
+    PE \approx \frac{V}{2}\sum_{\mathbf{p}} \rho(\mathbf{x}_\mathbf{p})\phi(\mathbf{x}_\mathbf{p}),
 \end{equation*}
 is used instead (for derivation refer to \cite{Hockney1988}).
 \begin{figure}[htp]
