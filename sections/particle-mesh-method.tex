@@ -128,11 +128,19 @@ Specifically, for a 7-point stencil,
          & + \frac{\phi(\mathbf{x}_{i,j,k-1}) - 2\phi(\mathbf{x}_{ijk})+\phi(\mathbf{x}_{i,j,k+1})}{H^2}.
     \end{split}.
 \end{equation*}
-After Fourier-transforming both sides, applying the shift theorem, and simplifying using Euler's formula, we arrive at an expression for $\hat{\phi}$,
+Applying the discrete Fourier transform to both sides and using the shift theorem we get
+\begin{align*}
+    4\pi G \hat{\rho}(\mathbf{k})
+     & = \frac{1}{H^2}\sum_{i=1}^{3}\left( e^{-iHk_i} + e^{iHk_i}-2 \right)\hat{\phi}(\mathbf{k})       \\
+     & = \frac{1}{H^2} \sum_{i=1}^{3}\left( e^{iHk_i/2} - e^{-iHk_i/2} \right)^2 \hat{\phi}(\mathbf{k}) \\
+     & = -\frac{4}{H^2}\sum_{i=1}^{3}\sin^2\left(\frac{Hk_i}{2}\right)\hat{\phi}(\mathbf{k}).
+\end{align*}
+and hence
 \begin{equation*}
-    \hat{\phi}(\mathbf{k}) = \underbrace{-4\pi G\frac{(H/2)^2}{\sin^2\left(\frac{Hk_1}{2}\right)+\sin^2\left(\frac{Hk_2}{2}\right)+\sin^2\left(\frac{Hk_3}{2}\right)}}_{\hat{G}(\mathbf{k})} \hat{\rho}(\mathbf{k}),
+    \hat{\phi}(\mathbf{k}) = -4\pi G\underbrace{\frac{(H/2)^2}{\sin^2(Hk_1/2) + \sin^2(Hk_2/2) + \sin^2 (Hk_3/2)}}_{\hat{G}(\mathbf{k})} \hat{\rho}(\mathbf{k}),
 \end{equation*}
 where $\hat{G}$ can be identified by comparison with \autoref{eq:poisson-fourier-product}.
+It is worth noting that the constant multiplier $(-4\pi G)$ is often left out of $\hat{G}$ (this is the convention used in \cite{Hockney1988}).
 In the implementation, values of $\hat{G}$ should be computed only once and saved for future look-up.
 
 \subsection{Field strength calculation}
@@ -140,17 +148,38 @@ The strength $\mathbf{g}$ of the gravitational field at mesh-point $\mathbf{x}_\
 Our implementation currently supports two types of finite differences, described below.
 
 The two-point finite difference operator $\mathbf{D}$, whose $x$ component is given by
-\begin{equation}\label{eq:two-point-central-diff}
-    D_x(\phi)(\mathbf{x_\mathbf{p}}) = - \frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H}
-\end{equation}
+\begin{equation*}
+    D_x(\phi)(\mathbf{x_\mathbf{p}}) = \frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H}
+\end{equation*}
 (and analogously for the $y$ and $z$ components), is second order accurate.
 
 The fourth-order accurate finite difference is given by
-\begin{equation}\label{eq:four-point-central-diff}
-    D_x(\phi)(\mathbf{x}_\mathbf{p}) = -\alpha\frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H} - (1-\alpha)\frac{\phi(\mathbf{x}_{i+2,j,k}) - \phi(\mathbf{x}_{i-2,j,k})}{4H},
-\end{equation}
+\begin{equation*}
+    D_x(\phi)(\mathbf{x}_\mathbf{p}) = \alpha\frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H} + (1-\alpha)\frac{\phi(\mathbf{x}_{i+2,j,k}) - \phi(\mathbf{x}_{i-2,j,k})}{4H},
+\end{equation*}
 where $\alpha = 4/3$.
 
+We can alternatively define the finite difference operators in terms of the delta function to get rid of the dependence on the differenced function. (Technically, the resulting quantities are functions rather than operators.)
+Consider for example the two-point finite difference in \autoref{eq:two-point-central-diff}.
+The definition can be generalized beyond mesh points by letting
+\begin{equation*}
+    D_j(\phi)(\mathbf{x}) = -\frac{\phi(\mathbf{x} + H \mathbf{e}_j)-\phi (\mathbf{x} - H \mathbf{e}_j)}{2H} = -\int \left[ \frac{\delta(\mathbf{x} + H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - H\mathbf{e}_j - \mathbf{x}')}{2H} \right]\phi(\mathbf{x}')d\mathbf{x}',
+\end{equation*}
+where $\mathbf{e}_j$ is the $j$-th standard basis vector.
+This motivates us to define
+\begin{equation}\label{eq:two-point-central-diff}
+    D_j(\mathbf{x}) = \frac{\delta(\mathbf{x} + H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - H\mathbf{e}_j - \mathbf{x}')}{2H}
+\end{equation}
+and
+\begin{equation}\label{eq:four-point-central-diff}
+    D_j(\mathbf{x}) = \frac{\delta(\mathbf{x} + H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - H\mathbf{e}_j - \mathbf{x}')}{2H} + (1-\alpha)\frac{\delta(\mathbf{x} + 2H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - 2H\mathbf{e}_j - \mathbf{x}')}{4H}
+\end{equation}
+as the two-point as four-point finite difference operators respectively.
+
+If $\phi$ denotes the gravitational potential, then the field $\mathbf{g}$ is approximated at mesh point $\mathbf{x}_\mathbf{p}$ as
+\begin{equation*}
+    \mathbf{g}(\mathbf{x}_\mathbf{p}) = -\mathbf{D}(\phi)(\mathbf{x}_\mathbf{p}).
+\end{equation*}
 
 \subsection{Interpolation}
 The value of the field strength $\mathbf{g}(\mathbf{x})$ at the position particle's position $\mathbf{x}$ is calculated by interpolating the values of $\mathbf{g}$ from the neighboring mesh-points.
