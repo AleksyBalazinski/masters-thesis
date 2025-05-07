@@ -126,7 +126,7 @@ The formula for the transform of a derivative yields
 \begin{equation*}
     \hat{g}_x(\mathbf{k}) = \frac{4\pi i k_x}{|\mathbf{k}|^2}.
 \end{equation*}
-Applying the convolution theorem twice and pulling the constant $(-4\pi G)$ out of the Green's function in \autoref{eq:optimal-greens-func} leaves us with the desired \autoref{eq:reference-force-transform}.
+Applying the convolution theorem twice and factoring the constant $(-4\pi G)$ out of the Green's function in \autoref{eq:optimal-greens-func} leaves us with the desired \autoref{eq:reference-force-transform}.
 
 Since the shapes $S$ are spherically symmetric, the calculation of $\hat{S}$ (appearing in \autoref{eq:reference-force-transform}) can be simplified.
 The Fourier transform of $S$ is
@@ -178,9 +178,9 @@ For this reason $r_e$, the \textit{cutoff radius} designating the boundary of th
 This can have a noticeable positive impact on performance.
 
 \subsection{Identifying close pairs of particles}
-In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the "potential mesh"), a second mesh (the \textit{chaining mesh}) is used.
+In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the ``potential mesh''), a second mesh (the \textit{chaining mesh}) is used.
 The chaining mesh is sparser than the potential mesh.
-Its sole purpose is to partition the space into cells so that particles "close" to the ones in a given cell can be found efficiently.
+Its sole purpose is to partition the space into cells so that particles ``close'' to the ones in a given cell can be found efficiently.
 In this context, two particles are considered to lie close to one another if their separation is less than the cutoff radius.
 
 The number of chaining mesh cells in a single dimension is given by $M_i = \lfloor L_i / r_e \rfloor$, where $L_i$ is the side length of the computational box ($i=1,2,3$).
@@ -274,12 +274,12 @@ The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the in
 
 The procedure outlined in\autoref{alg:short-range-correction} can be parallelized by splitting the work done in the outmost loop between some number of threads.
 In doing so, extra care has to be taken to avoid data races.
-A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may "clash" with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
+A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may ``clash'' with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
 However, by the construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
 For example, consider a particle $i$ in cell $\mathbf{p} = (p_1, p_2, p_3)$ (in other words, $\mathbf{p}$ is the parent cell of $i$).
 If thread $t$ is currently assigned to this cell, $t$ will update the part of $\mathbf{F}^\text{SR}_i$ corresponding to updates of $i$ coming from within the same cell as the parent cell of $i$.
-Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_2, p_3)$ will update a different part of $\mathbf{F}^\text{SR}_i$, i.e. the part corresponding to updates of $i$ coming from the cell "to the right" of the parent cell of $i$.
-Since only one thread is responsible for updates to particle $i$ coming "from the right," (or any other "direction") no data races can occur.
+Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_2, p_3)$ will update a different part of $\mathbf{F}^\text{SR}_i$, i.e. the part corresponding to updates of $i$ coming from the cell ``to the right'' of the parent cell of $i$.
+Since only one thread is responsible for updates to particle $i$ coming ``from the right,'' (or any other ``direction'') no data races can occur.
 This approach has two drawbacks.
 First, memory requirements increase significantly as memory for $13N$ additional three-dimensional vectors has to be used.
 Second, there is no way to guarantee uniform work distribution among the threads.
