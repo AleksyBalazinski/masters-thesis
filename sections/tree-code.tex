@@ -1,0 +1,81 @@
+\section{Barnes-Hut algorithm}
+The idea behind Barnes-Hut algorithm differs substantially from previously described mesh-based methods.
+The algorithm deals with gravitational forces directly instead of deriving them from the mesh-defined potential, as was the case with the PM and \PThreeM{} methods.
+Significant reduction of time complexity (from quadratic to $O(N \log N)$) is achieved by approximating ``far enough'' groups of particles by their center of mass (COM) \cite{trenti2008gravitationalnbodysimulations}.
+The grouping of particles is hierarchical in nature and is thus best understood as a tree.
+The entire set of particles comprises the top-level group, represented by the root of the tree;
+the eight children of the root node are representative of groups of particles residing in each of the octants of the computational domain, etc.
+The process of subdividing the space into eight smaller volumes at each node continues recursively until there is only one or zero particles left in a given volume.
+Nodes which satisfy this condition are the leafs of tree and are sometimes called the \textit{external nodes}.
+The remaining nodes, each of which has eight children, are called \textit{internal nodes}.
+
+\subsection{Building the tree}
+The data structure that fits the above description is called an \textit{octree}.
+An internal node of the octree stores the COM vector and the total mass of the group it represents, whereas an external node stores a reference to the actual particles (or is empty if no particle was found in its associated volume).
+The recursive procedure of building the tree is shown in \autoref{alg:bh-tree-insert}.
+\begin{algorithm}
+    \caption{Insert a particle into the Barnes-Hut tree}\label{alg:bh-tree-insert}
+    \begin{algorithmic}
+        \Function{Insert}{$n$, $p$}
+        \If{$n$ is an internal node}
+        \State Update $n.\textrm{COM}$ and total mass $n.M$ of $n$ with $p$
+        \State \Call{Insert}{child of $n$ that should contain $p$, $p$}
+        \ElsIf{$n$ is empty}
+        \State Assign $p$ to $n$
+        \Else \Comment{Occupied external node}
+        \State Subdivide $n$ into child nodes
+        \State Move existing particle $p'$ in $n$ into child that should contain $p'$
+        \State Update center of mass and total mass of $n$ with $p$ and $p'$
+        \State \Call{Insert}{child of $n$ that should contain $p$, $p$}
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Force calculation}
+The last method presented in this work is the Barnes-Hut algorithm.
+In the Barnes-Hut algorithm, the net gravitational force on a particle $p$ is calculated by summing the contributions from single particles or groups of particles while traversing the tree.
+The decision whether the force can be approximated using the information stored in an internal node $n$ depends on the relative distance from $p$ to $n.\textrm{COM}$ (the center of mass of group represented by $n$).
+The distance is relative to the \textit{width} $H$ of the node, i.e. the side length of the cubical volume encompassed by the node.
+More concretely, the approximation takes place if $n.H / |n.\mathrm{COM} - p.\mathbf{x}| < \theta$, where $\theta$ is the so-called \textit{opening angle}.
+In the extreme case when $\theta$ is set to zero, no approximations take place, and the algorithm reduces to the PP method.
+The procedure described above is illustrated in \autoref{alg:bh-find-force}.
+\begin{algorithm}
+    \caption{Compute gravitational force on a particle using Barnes-Hut approximation}
+    \label{alg:bh-find-force}
+    \begin{algorithmic}
+        \Function{FindForce}{$n$, $p$, $\theta$}
+        \If{$n$ is an external node}
+        \If{$n$ contains a particle $q \neq p$}
+        \State $p.\mathbf{F} \gets p.\mathbf{F} + \Call{Gravity}{q.\mathbf{x}, q.m, p.\mathbf{x}}$
+        \EndIf
+        \State \Return
+        \EndIf
+        \If{$n.H / |n.\text{COM} - p.\mathbf{x}| < \theta$}
+        \State $p.\mathbf{F} \gets p.\mathbf{F} + \Call{Gravity}{n.\mathrm{COM}, n.M, p.\mathbf{x}}$
+        \State \Return
+        \EndIf
+        \ForAll{child $n_c$ of $n$}
+        \State \Call{FindForce}{$n_c$, $p$, $\theta$}
+        \EndFor
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+In the implementation, the \textsc{Gravity} function calculates the gravitational force softened by $\epsilon$, i.e. it returns the value
+\begin{equation*}
+    \mathbf{F}^\textrm{soft}_{ij} = -G\frac{m_i m_j}{(r_{ij}^2 + \epsilon^2)^{3/2}}\mathbf{r}_{ij}.
+\end{equation*}
+The pairwise potential energy associated with this force is given by
+\begin{equation}\label{eq:pe-soft}
+    \Phi_{ij}^\textrm{soft} = - \frac{G m_i m_j}{\sqrt{r_ij^2 + \epsilon^2}}.
+\end{equation}
+
+We note that direct calculation of total potential energy is infeasible as $O(N^2)$ operations would be required.
+Instead, we use an approximation based on the values stored in the tree.
+The approximate value of the potential energy is accumulated for each particle using a procedure analogous to force calculation.
+Indeed, the only difference between the two is the replacement of gravitational force calculation in \autoref{alg:bh-find-force} with potential energy calculation according to \autoref{eq:pe-soft}.
+
+It is also noteworthy that the procedure outlined in \autoref{alg:bh-find-force} is embarrassingly parallel.
+In our CPU implementation, the workload is split between an arbitrary number of threads on particle-by-particle basis.
+On the other hand, the parallelization of the tree building procedure in \autoref{alg:bh-tree-insert} is far from trivial (see for example \cite{warren_salmon_1993}).
+In this work, we will not be exploring this idea further.

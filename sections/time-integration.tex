@@ -25,11 +25,17 @@ and its kinetic and potential energy are given by $KE = (1/2)ml^2\dot{\theta}$ a
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.6]{img/integrators/euler-pendulum.png}
-    \caption{Behavior of Euler's method: lack of conservation of energy and violation of Liouville's theorem.}
+    \caption{Behavior of Euler's method: lack of conservation of energy and phase space trajectories spiraling out.}
     \label{fig:euler-integrator}
 \end{figure}
 As shown in \autoref{fig:euler-integrator}, Euler's method fails to conserve total energy $PE + KE$ and produces trajectories in phase space that are not closed, contrary to expectations for periodic systems.
-Additionally, the evolution of an area element in phase space violates Liouville’s theorem, as described in \cite{taylor2005classical}, making the method unsuitable for long-term physical simulations.
+Additionally, the evolution of an area element in phase space violates Liouville's theorem, as described in \cite{taylor2005classical}, making the method unsuitable for long-term physical simulations (see \autoref{fig:area-euler-vs-leapfrog}).
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.4]{img/integrators/area-leap-vs-euler.png}
+    \caption{Area in phase space over time. Violation of Liouville's theorem by Euler's method.}
+    \label{fig:area-euler-vs-leapfrog}
+\end{figure}
 
 \subsection{Leapfrog algorithm}
 The leapfrog algorithm, given by the update rule \cite{young_leapfrog_2019}
@@ -41,11 +47,11 @@ The leapfrog algorithm, given by the update rule \cite{young_leapfrog_2019}
     \end{aligned}
 \end{equation}
 is the preferred way of integrating \autoref{eq:newtons-second}.
-When applied to the same pendulum system, it conserves energy much more faithfully and preserves the area in phase space, consistent with Liouville's theorem (see \autoref{fig:leapfrog-integrator}).
+When applied to the same pendulum system, it conserves energy much more faithfully and preserves the area in phase space, consistent with Liouville's theorem (see \autoref{fig:leapfrog-integrator} and \autoref{fig:area-euler-vs-leapfrog}).
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.6]{img/integrators/leapfrog-pendulum.png}
-    \caption{Behavior of the leapfrog algorithm: conservation of energy and consistency with the Liouville's theorem.
+    \caption{Behavior of the leapfrog algorithm: conservation of energy and phase space trajectories forming closed loops.
         Evolution of an area element in phase space is shown on the right-hand side: blue rectangle -- initial conditions for many copies of the system; black distorted quadrilateral -- their state by the end of the simulation.}
     \label{fig:leapfrog-integrator}
 \end{figure}
