@@ -31,13 +31,13 @@ The reference force vector lies along the line joining the two bodies.
 As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the reference force is approximated by the mesh force.
 The average deviation between the two forces can be minimized by a suitable choice of Green's function given (in $k$ space) by
 \begin{equation}\label{eq:optimal-greens-func}
-    \hat{\mathcal{G}}(\mathbf{k}) = \frac{\hat{\mathbf{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \hat{\mathbf{R}}(\mathbf{k}_\mathbf{n})}{|\hat{\mathbf{D}}(\mathbf{k})|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
+    \hat{\mathcal{G}}(\mathbf{k}) = \frac{\mathbf{\hat{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \mathbf{\hat{R}}(\mathbf{k}_\mathbf{n})}{|\mathbf{\hat{D}}(\mathbf{k})|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
 \end{equation}
 The derivation is mathematically involved and is detailed in \cite{Hockney1988}.
 We now proceed to examine the terms appearing in \autoref{eq:optimal-greens-func}.
 
 \subsubsection{Finite difference operator}
-The Fourier transform $\hat{\mathbf{D}}$ of the two-point finite difference operator defined in \autoref{eq:two-point-central-diff} has the components
+The Fourier transform $\mathbf{\hat{D}}$ of the two-point finite difference operator defined in \autoref{eq:two-point-central-diff} has the components
 \begin{align*}
     \hat{D}_j(\mathbf{k})
      & = \int D_j(\mathbf{x}) e^{-i\mathbf{k}\cdot \mathbf{x}} d\mathbf{x}                                                                                                                                      \\
@@ -101,9 +101,9 @@ Using the same approach, we can obtain similar results for the CIC and NGP schem
 \end{equation*}
 
 \subsubsection{Reference force}
-The quantity $\hat{\mathbf{R}}$, the transformed reference force, is related to the shape $S$ of the particle-cloud by
+The quantity $\mathbf{\hat{R}}$, the transformed reference force, is related to the shape $S$ of the particle-cloud by
 \begin{equation}\label{eq:reference-force-transform}
-    \hat{\mathbf{R}}(\mathbf{k}) = \frac{i\mathbf{k}\hat{S}^2(k)}{k^2},
+    \mathbf{\hat{R}}(\mathbf{k}) = \frac{i\mathbf{k}\hat{S}^2(k)}{k^2},
 \end{equation}
 where $k = |\mathbf{k}|$.
 This can be shown by recalling that $\mathbf{R}(\mathbf{x}_i - \mathbf{x}_j)$ is the force applied to cloud $i$ due to cloud $j$.
@@ -245,9 +245,9 @@ The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-
         \Return
         \EndIf
         \State $r_{ij} \gets |\mathbf{r}_{ij}|$
-        \State $\hat{\mathbf{r}}_{ij} \gets \mathbf{r}_{ij} / r_{ij}$
-        \State $\mathbf{R}_{ij} \gets -m_i m_j R(r_{ij}) \hat{\mathbf{r}}_{ij}$
-        \State $\mathbf{f}^\text{tot} \gets -G m_i m_j / r_{ij}^2 \hat{\mathbf{r}}_{ij}$
+        \State $\mathbf{\hat{r}}_{ij} \gets \mathbf{r}_{ij} / r_{ij}$
+        \State $\mathbf{R}_{ij} \gets -m_i m_j R(r_{ij}) \mathbf{\hat{r}}_{ij}$
+        \State $\mathbf{f}^\text{tot} \gets -G m_i m_j / r_{ij}^2 \mathbf{\hat{r}}_{ij}$
         \State $\mathbf{f}^\text{SR}_{ij} \gets \mathbf{f}^\text{tot} - \mathbf{R}_{ij}$
         \State $\mathbf{f}^\text{SR}_{ji} \gets -\mathbf{f}^\text{SR}_{ij}$
         \State $\mathbf{F}^\text{SR}_i \gets \mathbf{F}^\text{SR}_i + \mathbf{f}^\text{SR}_{ij}$
