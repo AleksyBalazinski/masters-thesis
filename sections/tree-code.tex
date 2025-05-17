@@ -15,7 +15,7 @@ An internal node of the octree stores the COM vector and the total mass of the g
 The recursive procedure of building the tree is shown in \autoref{alg:bh-tree-insert}.
 \begin{algorithm}
     \caption{Insert a particle into the Barnes-Hut tree}\label{alg:bh-tree-insert}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \Function{Insert}{$n$, $p$}
         \If{$n$ is an internal node}
         \State Update $n.\textrm{COM}$ and total mass $n.M$ of $n$ with $p$
@@ -43,7 +43,7 @@ The procedure described above is illustrated in \autoref{alg:bh-find-force}.
 \begin{algorithm}
     \caption{Compute gravitational force on a particle using Barnes-Hut approximation}
     \label{alg:bh-find-force}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \Function{FindForce}{$n$, $p$, $\theta$}
         \If{$n$ is an external node}
         \If{$n$ contains a particle $q \neq p$}

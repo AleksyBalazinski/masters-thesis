@@ -31,7 +31,7 @@ The reference force vector lies along the line joining the two bodies.
 As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the reference force is approximated by the mesh force.
 The average deviation between the two forces can be minimized by a suitable choice of Green's function given (in $k$ space) by
 \begin{equation}\label{eq:optimal-greens-func}
-    \hat{G}(\mathbf{k}) = \frac{\hat{\mathbf{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \hat{\mathbf{R}}(\mathbf{k}_\mathbf{n})}{|\hat{\mathbf{D}}(\mathbf{k})|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
+    \hat{\mathcal{G}}(\mathbf{k}) = \frac{\hat{\mathbf{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \hat{\mathbf{R}}(\mathbf{k}_\mathbf{n})}{|\hat{\mathbf{D}}(\mathbf{k})|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
 \end{equation}
 The derivation is mathematically involved and is detailed in \cite{Hockney1988}.
 We now proceed to examine the terms appearing in \autoref{eq:optimal-greens-func}.
@@ -51,7 +51,7 @@ Similarly, for the four-point finite difference (\autoref{eq:four-point-central-
 \end{equation*}
 where $j=1,2,3$.
 
-\subsubsection{Assignent function}
+\subsubsection{Assignment function}
 The quantity $\hat{U}$ is defined as $\hat{W}/V$.
 For the mass assignment scheme hierarchy described in \autoref{subsec:mass-assignment} we have
 \begin{equation*}
@@ -103,20 +103,20 @@ Using the same approach, we can obtain similar results for the CIC and NGP schem
 \subsubsection{Reference force}
 The quantity $\hat{\mathbf{R}}$, the transformed reference force, is related to the shape $S$ of the particle-cloud by
 \begin{equation}\label{eq:reference-force-transform}
-    \hat{\mathbf{R}}(\mathbf{k}) = -\frac{i\mathbf{k}\hat{S}^2(k)}{k^2},
+    \hat{\mathbf{R}}(\mathbf{k}) = \frac{i\mathbf{k}\hat{S}^2(k)}{k^2},
 \end{equation}
 where $k = |\mathbf{k}|$.
 This can be shown by recalling that $\mathbf{R}(\mathbf{x}_i - \mathbf{x}_j)$ is the force applied to cloud $i$ due to cloud $j$.
 Hence $\mathbf{R}(\mathbf{x})$ is the force on cloud centered at $\mathbf{x}$ due to a cloud at the origin.
 The force acting on mass element $d\mathbf{x}' S(\mathbf{x}' - \mathbf{x})$ of the cloud centered at $\mathbf{x}$ is therefore
 \begin{equation*}
-    G d\mathbf{x}'S(\mathbf{x}' - \mathbf{x}) \int d\mathbf{x}'' S(\mathbf{x}'')\frac{\mathbf{x}' - \mathbf{x}''}{|\mathbf{x}' - \mathbf{x}''|^3}
+    -G d\mathbf{x}'S(\mathbf{x}' - \mathbf{x}) \int d\mathbf{x}'' S(\mathbf{x}'')\frac{\mathbf{x}' - \mathbf{x}''}{|\mathbf{x}' - \mathbf{x}''|^3}
 \end{equation*}
 and the total force is
 \begin{equation}\label{eq:reference-force-clouds}
-    \mathbf{R}(\mathbf{x}) = G \int d\mathbf{x}'S(\mathbf{x}' - \mathbf{x}) \int d\mathbf{x}'' S(\mathbf{x}'')\frac{\mathbf{x}' - \mathbf{x}''}{|\mathbf{x}' - \mathbf{x}''|^3}.
+    \mathbf{R}(\mathbf{x}) = -G \int d\mathbf{x}'S(\mathbf{x}' - \mathbf{x}) \int d\mathbf{x}'' S(\mathbf{x}'')\frac{\mathbf{x}' - \mathbf{x}''}{|\mathbf{x}' - \mathbf{x}''|^3}.
 \end{equation}
-The expression on the right-hand side of \autoref{eq:reference-force-clouds} is a double convolution, $\mathbf{R} = S * (S * \mathbf{g})$, where $\mathbf{g}(\mathbf{x}) = \mathbf{x}/|\mathbf{x}|^3.$
+The expression on the right-hand side of \autoref{eq:reference-force-clouds} is a double convolution, $\mathbf{R} = -S * (S * \mathbf{g})$, where $\mathbf{g}(\mathbf{x}) = \mathbf{x}/|\mathbf{x}|^3.$
 The $x$-coordinate of $\mathbf{g}$ is $x/|\mathbf{x}|^3$ which coincides with $\partial h / \partial x$ for $h(\mathbf{x}) = -1/|\mathbf{x}|.$
 The Fourier transform of $h$ is given in \cite{gelfand1964generalized} (p. 363):
 \begin{equation*}
@@ -217,7 +217,7 @@ Thus $|\mathcal{N}| = 13$, which is half of the size of the immediate neighborho
 The short-range correction part of the \PThreeM{} method is shown in \autoref{alg:short-range-correction}.
 \begin{algorithm}
     \caption{Short-range correction}\label{alg:short-range-correction}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \ForAll {chaining cell $\mathbf{q}$}
         \ForAll {$\mathbf{q}_n \in \mathcal{N}(\mathbf{q}) \cup \{\mathbf{q}\}$}
         \ForAll {$i \in \text{HOC}(\mathbf{q})$}

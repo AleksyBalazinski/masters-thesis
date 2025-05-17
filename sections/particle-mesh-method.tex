@@ -90,13 +90,13 @@ We note that \autoref{alg:density-assignment} can be parallelized if atomic incr
 \subsection{Solving the field equation}
 The Poisson equation (\autoref{eq:poisson}) can be restated in integral form
 \begin{equation*}
-    \phi(\mathbf{x}) = \int G(\mathbf{x}-\mathbf{x}')\rho(\mathbf{x}') dV',
+    \phi(\mathbf{x}) = \int \mathcal{G}(\mathbf{x}-\mathbf{x}')\rho(\mathbf{x}') dV',
 \end{equation*}
 which has the following discrete analogue
 \begin{equation}\label{eq:poisson-discrete}
-    \phi(\mathbf{x}_\mathbf{p}) = V \sum_{\mathbf{p}'} G(\mathbf{x}_\mathbf{p} - \mathbf{x}_{\mathbf{p}'}) \rho(\mathbf{x}_{\mathbf{p}'}),
+    \phi(\mathbf{x}_\mathbf{p}) = V \sum_{\mathbf{p}'} \mathcal{G}(\mathbf{x}_\mathbf{p} - \mathbf{x}_{\mathbf{p}'}) \rho(\mathbf{x}_{\mathbf{p}'}),
 \end{equation}
-where $G$ is the Green's function (potential due to unit mass).
+where $\mathcal{G}$ is the Green's function (potential due to unit mass).
 The right-hand side of \autoref{eq:poisson-discrete} is a convolution sum that runs over a finite set of mesh points.
 If we assume periodic boundary conditions, we can apply the discrete Fourier transform to both sides and use the convolution theorem to conclude that\footnote{
     In this work, the Hockney \& Eastwood definition of DFT is used, i.e.
@@ -115,10 +115,10 @@ If we assume periodic boundary conditions, we can apply the discrete Fourier tra
     where $D_H(p) = pH$.
 }
 \begin{equation}\label{eq:poisson-fourier-product}
-    \hat{\phi}(\mathbf{k}) = \hat{G}(\mathbf{k}) \hat{\rho}(\mathbf{k}).
+    \hat{\phi}(\mathbf{k}) = \hat{\mathcal{G}}(\mathbf{k}) \hat{\rho}(\mathbf{k}).
 \end{equation}
 
-An approximation to $\hat{G}$ can be found using a discretized version of the Laplacian in \autoref{eq:poisson-discrete}.
+An approximation to $\hat{\mathcal{G}}$ can be found using a discretized version of the Laplacian in \autoref{eq:poisson-discrete}.
 Specifically, for a 7-point stencil,
 \begin{equation*}
     \begin{split}
@@ -137,11 +137,11 @@ Applying the discrete Fourier transform to both sides and using the shift theore
 \end{align*}
 and hence
 \begin{equation*}
-    \hat{\phi}(\mathbf{k}) = -4\pi G\underbrace{\frac{(H/2)^2}{\sin^2(Hk_1/2) + \sin^2(Hk_2/2) + \sin^2 (Hk_3/2)}}_{\hat{G}(\mathbf{k})} \hat{\rho}(\mathbf{k}),
+    \hat{\phi}(\mathbf{k}) = -4\pi G\underbrace{\frac{(H/2)^2}{\sin^2(Hk_1/2) + \sin^2(Hk_2/2) + \sin^2 (Hk_3/2)}}_{\hat{\mathcal{G}}(\mathbf{k})} \hat{\rho}(\mathbf{k}),
 \end{equation*}
-where $\hat{G}$ can be identified by comparison with \autoref{eq:poisson-fourier-product}.
-It is worth noting that the constant multiplier $(-4\pi G)$ is often left out of $\hat{G}$ (this is the convention used in \cite{Hockney1988}).
-In the implementation, values of $\hat{G}$ should be computed only once and saved for future look-up.
+where $\hat{\mathcal{G}}$ can be identified by comparison with \autoref{eq:poisson-fourier-product}.
+It is worth noting that the constant multiplier $(-4\pi G)$ is often left out of $\hat{\mathcal{G}}$ (this is the convention used in \cite{Hockney1988}).
+In the implementation, values of $\hat{\mathcal{G}}$ are computed only once and saved for future look-up.
 
 \subsection{Field strength calculation}
 The strength $\mathbf{g}$ of the gravitational field at mesh-point $\mathbf{x}_\mathbf{p}$ can be approximated using a central difference.
@@ -158,6 +158,18 @@ The fourth-order accurate finite difference is given by
     D_x(\phi)(\mathbf{x}_\mathbf{p}) = \alpha\frac{\phi(\mathbf{x}_{i+1,j,k}) - \phi(\mathbf{x}_{i-1,j,k})}{2H} + (1-\alpha)\frac{\phi(\mathbf{x}_{i+2,j,k}) - \phi(\mathbf{x}_{i-2,j,k})}{4H},
 \end{equation*}
 where $\alpha = 4/3$.
+
+The difference between the accuracy of both methods is illustrated in \autoref{fig:finite-diff-accuracy}.
+The figure also provides insight into how the error depends on the value of parameter $\alpha$.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.43]{img/finite-diff/finite-difference.png}
+    \caption{Left pane: Approximation error for second-order and fourth-order schemes.
+        For small values of $H$, round-off errors dominate.
+        Right pane: Approximation error vs. $\alpha$ in the improved finite difference scheme ($H = 0.1$).
+        Note that the scheme is fourth-order accurate only for $\alpha = 4/3$ (cusp in the graph).}
+    \label{fig:finite-diff-accuracy}
+\end{figure}
 
 We can alternatively define the finite difference operators in terms of the delta function to get rid of the dependence on the differenced function. (Technically, the resulting quantities are functions rather than operators.)
 Consider for example the two-point finite difference in \autoref{eq:two-point-central-diff}.
@@ -192,7 +204,7 @@ Instead, we use an algorithm analogous to \autoref{alg:density-assignment} to on
 The method is illustrated in \autoref{alg:interpolation}.
 \begin{algorithm}
     \caption{Field strength interpolation}\label{alg:interpolation}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \ForAll {particle $i$}
         \ForAll {cell $\mathbf{q}$ in $\mathcal{C}_S(\mathbf{x}_i)$}
         \State $\mathbf{g}(\mathbf{x}_i) \gets \sum_\mathbf{q} W(\mathbf{x}_i - \mathbf{x}_\mathbf{q}) \mathbf{g}(\mathbf{x}_\mathbf{q})$
@@ -205,3 +217,55 @@ The procedure in \autoref{alg:interpolation} is trivially parallelized by conver
 
 The procedures of density assignment and interpolation presented in \autoref{alg:density-assignment} and \autoref{alg:interpolation} are high level description.
 More concrete formulations suitable for direct use in an implementation are given in \cite{Hockney1988} and \cite{Kravtsov2002PM}.
+
+\subsection{Code units}
+Implementation of the PM (and \PThreeM{}) methods can be simplified by switching to a system of dimensionless units, often called \textit{code units}.
+The natural units of time and length in a PM simulation are $H$ and $DT$, respectively.
+Hence, length in a PM code is conveniently expressed in terms of multiples of $H$, and similarly time intervals are given as a multiple of $DT$, i.e. the conversion relations are
+\begin{equation*}
+    x' = \frac{x}{H} \quad \text{and} \quad t' = \frac{t}{DT}.
+\end{equation*}
+From there, it follows that
+\begin{equation*}
+    v' = \frac{DT}{H}v \quad \text{and} \quad a' = \frac{DT^2}{H}a.
+\end{equation*}
+The expected relation $\mathbf{g}' = -\nabla' \phi'$ leads to the definition $\phi' = (DT^2 / H^2)\phi$.
+By stipulating that we have $\nabla'^2\phi = \rho'$, we get $\rho' = DT^2 \cdot 4\pi G\rho$, $m' = (DT^2\cdot 4\pi G / H^3) m$, and $G' = 1/(4\pi)$.
+
+\subsection{Properties of the calculated field}
+The field produced by the PM method is neither homogenous nor isotropic.
+Anisotropy can be observed by measuring the field generated by a particle in two different directions.
+In \autoref{fig:pm-field-properties}, the field strength due to a single source at $x = H$ is shown in two variants: when measured along the $x$-axis (blue line) and the $x=y$ line (orange line).
+The difference between these two graphs illustrates anisotropy of the calculated field.
+The figure also shows the field strength measured along the $x$-axis when the source was shifted by $H/2$ in the $-x$ direction (green line).
+Its deviation from the case when the source was placed at $x=H$ (the blue graph) exemplifies inhomogeneity of the field computed using the PM method.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.55]{img/pm/pm-field-combined.png}
+    \caption{Anisotropy and inhomogeneity of the field as calculated by the PM method (TSC assignment, second order finite difference).}
+    \label{fig:pm-field-properties}
+\end{figure}
+As expected, the PM-calculated approximation gets better with increasing distance from the source;
+the inverse-square law is reproduced accurately for $r \gtrsim 4H$.
+
+The single-source case analysis can be extended by considering the effect of choice of finite difference and mass assignment schemes on the relative error between the actual and approximated field strength.
+\autoref{fig:pm-combined} shows a comparison of (a) the relative error as a function of distance from the source for PM with second-order and fourth-order finite differences, and (b) the field strength computed using different mass assignment schemes discussed in \autoref{subsec:mass-assignment}.
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/pm/pm-finite-diff-err.png}
+        \caption{Relative error of field strength approximation in different PM variants.}
+        \label{fig:pm-finite-diff-err}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/pm/pm-mass-assignment.png}
+        \caption{Field strength calculated with the PM method using different assignment schemes.}
+        \label{fig:pm-mass-assignment-field-strength}
+    \end{subfigure}
+    \caption{Comparison of PM method performance. (a) Relative error due to finite difference accuracy. (b) Effect of mass assignment schemes on computed field strength (4-point finite difference).}
+    \label{fig:pm-combined}
+\end{figure}
+The conclusion that can be drawn from \autoref{fig:pm-combined} is that, as expected, the TSC mass assignment scheme and the four-point finite difference yield best results.
