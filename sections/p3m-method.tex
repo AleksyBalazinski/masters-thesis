@@ -162,20 +162,33 @@ and
 
 Finally, we note that the infinite sum in the numerator of \autoref{eq:optimal-greens-func} does not have a closed form but this does not pose a problem since the summand decays rapidly with $\mathbf{n}$ moving further away from zero.
 
-The result of applying the optimal Green's function in \autoref{eq:poisson-fourier-product} is shown in \autoref{fig:reference-force-approx}.
+The result of applying the optimal Green's function in \autoref{eq:poisson-fourier-product} is illustrated in \autoref{fig:reference-force-combined}\subref{fig:reference-force-approx-sub}.
+As can be seen, the PM force closely follows the reference force, especially for distances \( r > a \), where the reference force nearly matches the inverse-square law.
+Interestingly, for \( r \) slightly smaller than \( a \), the reference force, and its mesh-based PM approximation, still provides a good fit to the inverse-square behavior.
+This observation allows the cutoff radius \( r_e \), which defines the boundary for direct summation, to be chosen smaller than \( a \) (e.g., \( r_e = 0.7a \)), improving performance without sacrificing accuracy.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.6]{img/optimal-green-force-4.png}
-    \caption{Magnitude of the force between two masses.
-        The mesh approximation to the reference force was calculated using the PM method with TSC assignment scheme, two-point finite difference, and Green's function optimal for the $S_1$ shape with diameter $a=4H$.
-        The force resultant from the universal law of gravitation is also shown.}
-    \label{fig:reference-force-approx}
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/p3m/s1-vs-s2.png}
+        \caption{Approximate vs. reference force.}
+        \label{fig:reference-force-approx-sub}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/p3m/s1-vs-s2-nrmsd.png}
+        \caption{Mean-normalized RMSD error}
+        \label{fig:reference-force-error-sub}
+    \end{subfigure}
+    \caption{Comparison of PM approximation using $S_1$ and $S_2$ shape functions.
+        The mesh approximation to the reference force was computed using the PM method with a TSC assignment scheme, two-point finite difference, and Green's function optimal for each shape.
+    }
+    \label{fig:reference-force-combined}
 \end{figure}
-As can be seen in the figure, the PM force closely follows the reference force.
-Moreover, for $r>a$, the reference force is identical to the inverse-square force.
-It is also worth noting that the reference force (and its mesh approximation) approximates the inverse-square force accurately for $r$ slightly smaller than $a$.
-For this reason $r_e$, the \textit{cutoff radius} designating the boundary of the region handled by the direct summation, can be chosen to be smaller than $a$ (e.g. $r_e = 0.7a$).
-This can have a noticeable positive impact on performance.
+\autoref{fig:reference-force-combined}\subref{fig:reference-force-approx-sub} indicates that using the \( S_2 \) shape function in the PM calculation results in a force that more closely approximates the inverse-square law at small \( r \), whereas the \( S_1 \)-based method begins to show noticeable deviations.
+However, \autoref{fig:reference-force-combined}\subref{fig:reference-force-error-sub} shows that the \( S_2 \)-based approximation exhibits higher mean-normalized RMSD error compared to \( S_1 \), especially at intermediate distances.
+Therefore, the choice between \( S_1 \) and \( S_2 \) shapes involves a trade-off between accuracy near the source and overall error, making the optimal choice context-dependent.
 
 \subsection{Identifying close pairs of particles}
 In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the ``potential mesh''), a second mesh (the \textit{chaining mesh}) is used.

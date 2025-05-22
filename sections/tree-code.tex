@@ -1,7 +1,7 @@
 \section{Barnes-Hut algorithm}
 The idea behind Barnes-Hut algorithm differs substantially from previously described mesh-based methods.
 The algorithm deals with gravitational forces directly instead of deriving them from the mesh-defined potential, as was the case with the PM and \PThreeM{} methods.
-Significant reduction of time complexity (from quadratic to $O(N \log N)$) is achieved by approximating ``far enough'' groups of particles by their center of mass (COM) \cite{trenti2008gravitationalnbodysimulations}.
+Significant reduction of time complexity, from quadratic to $O(N \log N)$, is achieved by approximating the potential due to ``far enough'' groups of particles by the initial terms of its multipole expansion \cite{trenti2008gravitationalnbodysimulations}.
 The grouping of particles is hierarchical in nature and is thus best understood as a tree.
 The entire set of particles comprises the top-level group, represented by the root of the tree;
 the eight children of the root node are representative of groups of particles residing in each of the octants of the computational domain, etc.
@@ -9,9 +9,26 @@ The process of subdividing the space into eight smaller volumes at each node con
 Nodes which satisfy this condition are the leafs of tree and are sometimes called the \textit{external nodes}.
 The remaining nodes, each of which has eight children, are called \textit{internal nodes}.
 
+In the basic variant of the algorithm, the potential due to a group of particles is approximated using only the monopole term with respect to the center of mass of the group, i.e.
+\begin{equation*}
+    \phi_\text{mon}(r) = -\frac{GM}{r},
+\end{equation*}
+where $M$ is the group's total mass.
+Since the potential is expanded about the center of mass, the dipole moment $\mathbf{p} = \sum_{i} m_i \mathbf{r}_i$ vanishes.
+Hence, the next possible improvement comes from including the quadrupole term
+\begin{equation*}
+    \phi_\text{quad}(r) = -\frac{G}{2r^5} \mathbf{r} \cdot (\mathbf{Q} \mathbf{r}),
+\end{equation*}
+where $\mathbf{Q}$ is the quadrupole moment tensor defined as
+\begin{equation*}
+    Q_{ij} = \sum_{k} (3r_{ki}r_{kj} - 3r_k^2\delta_{ij})m_k.
+\end{equation*}
+In theory, we could keep on adding more terms to improve the quality of the approximation.
+In our implementation however, we restrict ourselves to the quadrupole term.
+
 \subsection{Building the tree}
-The data structure that fits the above description is called an \textit{octree}.
-An internal node of the octree stores the COM vector and the total mass of the group it represents, whereas an external node stores a reference to the actual particles (or is empty if no particle was found in its associated volume).
+The data structure that fits the description given in the introduction is called an \textit{octree}.
+An internal node of the octree stores the COM vector, the total mass of the group it represents, and the quadrupole tensor, whereas an external node stores a reference to the actual particles (or is empty if no particle was found in its associated volume).
 The recursive procedure of building the tree is shown in \autoref{alg:bh-tree-insert}.
 \begin{algorithm}
     \caption{Insert a particle into the Barnes-Hut tree}\label{alg:bh-tree-insert}
@@ -31,11 +48,16 @@ The recursive procedure of building the tree is shown in \autoref{alg:bh-tree-in
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
+The quadrupole moment tensor for each node is calculated once the whole tree is already built.
+The recursive relation used in this calculation is given in \cite{hernquist1987performance} and reads
+\begin{equation*}
+    \mathbf{Q} = \sum_{\text{child }c} \mathbf{Q}_c + \sum_{\text{child }c} m_c(3 \mathbf{R}_c \otimes \mathbf{R}_c - R_c^2 \mathbf{I}),
+\end{equation*}
+where $\mathbf{R}_c = \mathbf{x}^\text{COM}_c - \mathbf{x}^\text{COM}$ is the displacement vector from the COM of child $c$ to the COM of the parent, $\mathbf{I}$ is the identity matrix, and $\otimes$ denotes the outer product.
 
-\subsection{Force calculation}
-The last method presented in this work is the Barnes-Hut algorithm.
-In the Barnes-Hut algorithm, the net gravitational force on a particle $p$ is calculated by summing the contributions from single particles or groups of particles while traversing the tree.
-The decision whether the force can be approximated using the information stored in an internal node $n$ depends on the relative distance from $p$ to $n.\textrm{COM}$ (the center of mass of group represented by $n$).
+\subsection{Acceleration calculation}
+In the Barnes-Hut algorithm, the net acceleration of a particle $p$ is calculated by summing the contributions from single particles or groups of particles while traversing the tree.
+The decision whether the acceleration can be approximated using the information stored in an internal node $n$ depends on the relative distance from $p$ to $n.\textrm{COM}$ (the center of mass of group represented by $n$).
 The distance is relative to the \textit{width} $H$ of the node, i.e. the side length of the cubical volume encompassed by the node.
 More concretely, the approximation takes place if $n.H / |n.\mathrm{COM} - p.\mathbf{x}| < \theta$, where $\theta$ is the so-called \textit{opening angle}.
 In the extreme case when $\theta$ is set to zero, no approximations take place, and the algorithm reduces to the PP method.
@@ -44,24 +66,24 @@ The procedure described above is illustrated in \autoref{alg:bh-find-force}.
     \caption{Compute gravitational force on a particle using Barnes-Hut approximation}
     \label{alg:bh-find-force}
     \begin{algorithmic}[1]
-        \Function{FindForce}{$n$, $p$, $\theta$}
+        \Function{FindAcceleration}{$n$, $p$, $\theta$}
         \If{$n$ is an external node}
         \If{$n$ contains a particle $q \neq p$}
-        \State $p.\mathbf{F} \gets p.\mathbf{F} + \Call{Gravity}{q.\mathbf{x}, q.m, p.\mathbf{x}}$
+        \State $p.\mathbf{a} \gets p.\mathbf{a} + \Call{GravitySoft}{q.\mathbf{x}, q.m, p.\mathbf{x}} / p.\text{mass}$
         \EndIf
         \State \Return
         \EndIf
         \If{$n.H / |n.\text{COM} - p.\mathbf{x}| < \theta$}
-        \State $p.\mathbf{F} \gets p.\mathbf{F} + \Call{Gravity}{n.\mathrm{COM}, n.M, p.\mathbf{x}}$
+        \State $p.\mathbf{a} \gets p.\mathbf{a} + \Call{Gravity}{n.\mathrm{COM}, n.M, p.\mathbf{x}}$
         \State \Return
         \EndIf
         \ForAll{child $n_c$ of $n$}
-        \State \Call{FindForce}{$n_c$, $p$, $\theta$}
+        \State \Call{FindAcceleration}{$n_c$, $p$, $\theta$}
         \EndFor
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
-In the implementation, the \textsc{Gravity} function calculates the gravitational force softened by $\epsilon$, i.e. it returns the value
+In the implementation, the \textsc{GravitySoft} function calculates the gravitational force softened by $\epsilon$, i.e. it returns the value
 \begin{equation*}
     \mathbf{F}^\textrm{soft}_{ij} = -G\frac{m_i m_j}{(r_{ij}^2 + \epsilon^2)^{3/2}}\mathbf{r}_{ij}.
 \end{equation*}
@@ -69,6 +91,37 @@ The pairwise potential energy associated with this force is given by
 \begin{equation}\label{eq:pe-soft}
     \Phi_{ij}^\textrm{soft} = - \frac{G m_i m_j}{\sqrt{r_{ij}^2 + \epsilon^2}}.
 \end{equation}
+The \textsc{Gravity} function returns the approximation (up to the quadrupole term) of the acceleration due to a group of particles represented by a given node, i.e.
+\begin{equation*}
+    \mathbf{a} = -GM \frac{\mathbf{r}}{r^3} + \frac{G}{r^5}\mathbf{Q}\mathbf{r} - \frac{5G}{2}(\mathbf{r} \cdot (\mathbf{Q} \mathbf{r})) \frac{\mathbf{r}}{r^7}
+\end{equation*}
+(see \cite{hernquist1987performance}).
+
+One possible way to quantify the quality of approximation for a given value of $\theta$ is to consider the relative error of calculated force.
+We set the same initial conditions of the system for both the PP direct summation method and the Barnes-Hut algorithm, compute the deviation of Barnes-Hut forces from PP forces acting on each particle, and take the average over all particles.
+In other words, the error calculated is
+\begin{equation*}
+    \frac{1}{N}\sum_{i} \frac{|\mathbf{F}_i^\text{BH} - \mathbf{F}_i^\text{PP}|}{|\mathbf{F}_i^\text{PP}|}.
+\end{equation*}
+The dependence of the error on the opening angle $\theta$ is shown in \autoref{fig:bh-force-error}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.6]{img/error-vs-theta.png}
+    \caption{Force approximation error in Barnes-Hut algorithm.}
+    \label{fig:bh-force-error}
+\end{figure}
+The figure shows plots error vs $\theta$ plots for two cases: when only the monopole term was included in the computation and when both the monopole and quadrupole terms were included.
+As can be seen, the error for the quadrupole-based algorithm scales much better with increasing $\theta$.
+The question that naturally arises is about the additional computational cost of including the quadrupole term.
+Our tests showed that the impact on the execution time induced by the quadrupole term-related calculations is minimal.
+The results of the test (for $N = 10,000$ particles) are shown in \autoref{fig:bh-time} for $0 \leq \theta \leq 2$.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.6]{img/bh-time.png}
+    \caption{Execution time of the Barnes-Hut algorithm.}
+    \label{fig:bh-time}
+\end{figure}
+Both tests described above were conducted on a uniform disk particle distribution.
 
 We note that direct calculation of total potential energy is infeasible as $O(N^2)$ operations would be required.
 Instead, we use an approximation based on the values stored in the tree.
@@ -77,5 +130,3 @@ Indeed, the only difference between the two is the replacement of gravitational 
 
 It is also noteworthy that the procedure outlined in \autoref{alg:bh-find-force} is embarrassingly parallel.
 In our CPU implementation, the workload is split between an arbitrary number of threads on particle-by-particle basis.
-On the other hand, the parallelization of the tree building procedure in \autoref{alg:bh-tree-insert} is far from trivial (see for example \cite{warren_salmon_1993}).
-In this work, we will not be exploring this idea further.

@@ -3,8 +3,15 @@ The model of a galaxy used as a test bed for the implementation is a simple one.
 The galaxy is assumed to comprise only two parts: a thin disk and a spherically symmetric halo.
 The disk comprises a large number of particles, each representing some number of stars.
 The halo is simulated as a fixed external gravitational field.
+The schematic illustration of the model is shown in \autoref{fig:galaxy-model}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.15]{img/galaxy-model.png}
+    \caption{Spiral galaxy model (thin disk and spherical halo).}
+    \label{fig:galaxy-model}
+\end{figure}
 
-\subsection{Disk}
+\subsection{Disk}\label{subsec:disk}
 The disk particles are sampled from a radial distribution
 \begin{equation*}
     p(r) = \frac{3}{\pi R_D^2}\left(1 - \frac{r}{R_D}\right), \; z = 0,
@@ -80,3 +87,16 @@ and thus
 \end{equation*}
 with $v = \sqrt{- r g_r}$
 for counter-clockwise rotation.
+
+\subsection{Disk with a hole}
+While testing the implemented methods, we observed that for modeling systems comprising multiple galaxies it may be beneficial to replace the fixed halo with a single massive particle.
+In such case, the simulation turns out to stable if there are no particles in close vicinity to the galaxy center.
+This means that the galactic disk ought to have a hole of radius $r_0$.
+Using an approach analogous to the one used in \autoref{subsec:disk}, we obtain the following relations that can be used for sampling points $(\phi, r)$ in polar coordinates
+\begin{equation*}
+    \phi = 2\pi u \quad \text{ and } \quad 2(r^3 - r_0^3)-3R_D(r^2 - r_0^2) + (R_D-r_0)^2(2r_0 + R_D)u = 0,
+\end{equation*}
+where $u \sim U(0, 1)$.
+
+Getting rid of the external halo field simplifies the treatment of complex systems significantly, as we do not need to keep track of the movement of the halo.
+The massive particle in the galaxy center, which effectively replaces it, can be treated just as any other particle in the simulation.

@@ -32,6 +32,14 @@ where $\Lambda$ is the triangle function
         0,       & \text{otherwise}.
     \end{cases}
 \end{equation*}
+For illustrative purposes, the shape $S_\text{CIC}$ is depicted in \autoref{fig:cic-shape}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.2]{img/CIC.png}
+    \caption{The CIC shape centered at $x$ (particle position).
+        The particle is within cell $x_p$, however, the cell $x_{p+1}$ gets non-zero density contribution from the particle.}
+    \label{fig:cic-shape}
+\end{figure}
 
 In the one-dimensional case, the fraction of mass $W_p$ assigned to mesh-point $p$ from particle at position $x$ is given by
 \begin{equation*}
