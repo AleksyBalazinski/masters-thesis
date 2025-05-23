@@ -103,23 +103,29 @@ In other words, the error calculated is
 \begin{equation*}
     \frac{1}{N}\sum_{i} \frac{|\mathbf{F}_i^\text{BH} - \mathbf{F}_i^\text{PP}|}{|\mathbf{F}_i^\text{PP}|}.
 \end{equation*}
-The dependence of the error on the opening angle $\theta$ is shown in \autoref{fig:bh-force-error}.
+The dependence of the error on the opening angle $\theta$ and the corresponding execution time are shown in \autoref{fig:bh-analysis}.
+The figure includes plots for two cases: when only the monopole term is used in the Barnes-Hut approximation, and when both the monopole and quadrupole terms are included.
+As can be seen, the quadrupole-based algorithm exhibits significantly improved error scaling with increasing $\theta$.
+Naturally, this raises the question of the additional computational cost incurred by the inclusion of the quadrupole term.
+Our tests showed that this impact is minimal.
+The results (for $N = 10{,}000$ particles and $0 \leq \theta \leq 2$) support this observation.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.6]{img/error-vs-theta.png}
-    \caption{Force approximation error in Barnes-Hut algorithm.}
-    \label{fig:bh-force-error}
-\end{figure}
-The figure shows plots error vs $\theta$ plots for two cases: when only the monopole term was included in the computation and when both the monopole and quadrupole terms were included.
-As can be seen, the error for the quadrupole-based algorithm scales much better with increasing $\theta$.
-The question that naturally arises is about the additional computational cost of including the quadrupole term.
-Our tests showed that the impact on the execution time induced by the quadrupole term-related calculations is minimal.
-The results of the test (for $N = 10,000$ particles) are shown in \autoref{fig:bh-time} for $0 \leq \theta \leq 2$.
-\begin{figure}[htp]
-    \centering
-    \includegraphics[scale=0.6]{img/bh-time.png}
-    \caption{Execution time of the Barnes-Hut algorithm.}
-    \label{fig:bh-time}
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/error-vs-theta.png}
+        \caption{Force approximation error.}
+        \label{fig:bh-force-error}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.47\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh-time.png}
+        \caption{Execution time.}
+        \label{fig:bh-time}
+    \end{subfigure}
+    \caption{Comparison of error and execution time in the Barnes-Hut algorithm using monopole and quadrupole approximations.}
+    \label{fig:bh-analysis}
 \end{figure}
 Both tests described above were conducted on a uniform disk particle distribution.
 
