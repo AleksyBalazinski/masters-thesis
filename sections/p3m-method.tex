@@ -133,7 +133,7 @@ The Fourier transform of $S$ is
 \begin{equation*}
     \hat{S}(\mathbf{k}) = \int S(\mathbf{x}) e^{-i\mathbf{k} \cdot \mathbf{x}} d\mathbf{x}.
 \end{equation*}
-Observe that $\mathbf{k} \cdot \mathbf{x} = kr\cos\theta$, where $\theta$ is the angle between $\mathbf{k}$ and $\mathbf{x}$ and $r = |\mathbf{x}|$.
+Observe that $\mathbf{k} \cdot \mathbf{x} = kr\cos\theta$, where $\theta$ is the angle between $\mathbf{k}$ and $\mathbf{x}$, and $r = |\mathbf{x}|$.
 Since $S$ is invariant under rotations, $\theta$ can be chosen to be the angle between $\mathbf{x}$ and the $z$-axis.
 Thus, the integral, rewritten in spherical coordinates becomes
 \begin{equation*}
@@ -197,10 +197,10 @@ Its sole purpose is to partition the space into cells so that particles ``close'
 In this context, two particles are considered to lie close to one another if their separation is less than the cutoff radius.
 
 The number of chaining mesh cells in a single dimension is given by $M_i = \lfloor L_i / r_e \rfloor$, where $L_i$ is the side length of the computational box ($i=1,2,3$).
-This implies that the side length of a chaining mesh cell is $HC_i = L_i / M_i \geq r_e$.
+This implies that the side length of a chaining mesh cell is $\text{HC}_i = L_i / M_i \geq r_e$.
 Thus, for every particle $i$ in a given cell $\mathbf{p}$, it is sufficient to search through the immediate neighborhood of $\mathbf{p}$ to find all the particles within the cutoff radius from $i$.
 
-The chaining mesh can be implemented as a \textit{head-of-chain} (HOC) array, depicted in \autoref{fig:hoc}.
+In our program, the chaining mesh is implemented as a \textit{head-of-chain} (HOC) array, depicted in \autoref{fig:hoc}.
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.25]{img/hoc.png}
@@ -208,24 +208,40 @@ The chaining mesh can be implemented as a \textit{head-of-chain} (HOC) array, de
         Here $M_1=M_2=M_3 = M$.}
     \label{fig:hoc}
 \end{figure}
-The basic version of the HOC array is very cheap to build since the whole process is linear in the number of particles.
-Hence, the array can be constructed anew at each time step.
-Additional computational savings can be made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and reusing it for the HOC array initialization.
-Another noteworthy possible optimization is to sort the individual linked lists by the value of a particle coordinate of choice, say the $y$ coordinate.
-This allows for an early return from the direct summation loop on the condition that $|y_i - y_j| > r_e$ while particle $i$ is sweeping through a cell containing particles $j$.
+The basic version of the HOC array is very cheap to build.
+Given a particle at point $\mathbf{x} = (x, y, z)$, we can determine in which chaining mesh cell $\mathbf{c}$ it lies by simply performing integer division on each of its coordinates, i.e. $\mathbf{c} = (x / \text{HC}_1, y / \text{HC}_2, z / \text{HC}_3)$.
+Then, to get a HOC table index $i$ corresponding to $\mathbf{c}$, standard index flattening is used.
+Subsequently, a new linked-list node is allocated and inserted at the beginning of the list HOC[$i$].
+Clearly, the whole process is linear in the number of particles and the array can be constructed anew at each time step without degrading performance.
+In our implementation, additional savings are made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and reusing it for the HOC array initialization.
+
+A potential optimization discussed in \cite{Hockney1988} involves sorting each linked list by a selected particle coordinate, such as the $y$-coordinate.
+This ordering enables early termination of the direct summation loop when the condition $y_i - y_j > r_e$ is met, effectively reducing unnecessary pairwise computations as particle $i$ "sweeps through" a cell containing particles $j$.
+Our experiments indicate that constructing the linked lists in sorted order is substantially more expensive than the unsorted variant.
+This is to be expected; in the worst-case scenario where all particles are in a single chaining-mesh cell, and are inserted into the list in decreasing order of $y$ coordinates, the complexity is $O(N^2)$.
+For a system of 50{,}000 particles, incorporating $y$-sorting increased the HOC (head-of-chain) construction time from approximately 180 milliseconds to over 13{,}000 milliseconds, a 70-fold slowdown.
+Despite this added cost, we observed no significant performance improvement in the short-range correction phase of the computation.
 
 \subsection{Short-range correction}
 The short-range correction, which takes place immediately after the mesh forces are found using the PM method, is at the heart of the \PThreeM{} algorithm.
 Since it scales with a square of the number of particles in each neighborhood, further optimizations are highly desirable.
 
 By Newton's 3rd law, $\mathbf{f}^\text{SR}_{ji} = -\mathbf{f}^\text{SR}_{ij}$, which allows us to do the calculation of the short-range inter-particle force for any pair $(i, j)$ of particles only once, leading to the reduction of the total running time by half.
-In practice, the particle $i$ will update its total short-range force $\mathbf{F}^\text{SR}_i$ as well as the total short-range force $\mathbf{F}^\text{SR}_j$ of its neighbor $j$.
+Informally, the particle $i$ updates its total short-range force $\mathbf{F}^\text{SR}_i$ as well as the total short-range force $\mathbf{F}^\text{SR}_j$ of its neighbor $j$.
 To avoid double-counting, the particle $i$ residing in cell $\mathbf{q}$ has to look for its neighbors in a subset $\mathcal{N}$ of the immediate neighborhood of $\mathbf{q}$.
 More specifically, define
-\begin{equation*}
+\begin{equation}\label{eq:n-set}
     \mathcal{N}(\mathbf{q} = (q_1, q_2, q_3)) = \{(q_1+t, q_2-1,q_3+s), (q_1+s, q_2, q_3-1), (q_1-1,q_2,q_3) \;|\; s,t = -1,0,1 \}.
-\end{equation*}
+\end{equation}
 Thus $|\mathcal{N}| = 13$, which is half of the size of the immediate neighborhood.
+The set $\mathcal{N}$ given in \autoref{eq:n-set} is not easily to illustrate.
+Since for the purposes of the later discussion, it is beneficial to have a clear picture in mind, we depict its two-dimensional analog in \autoref{fig:n-set-2d}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.12]{img/q-neighborhood.png}
+    \caption{Set $\mathcal{N}$ in two dimensions.}
+    \label{fig:n-set-2d}
+\end{figure}
 
 The short-range correction part of the \PThreeM{} method is shown in \autoref{alg:short-range-correction}.
 \begin{algorithm}
@@ -245,6 +261,9 @@ The short-range correction part of the \PThreeM{} method is shown in \autoref{al
         \EndFor
     \end{algorithmic}
 \end{algorithm}
+For each chaining mesh cell $\mathbf{q}$, we compute the pair-wise interactions between the particles in $\mathbf{q}$ and the particles in the chaining mesh cells $\mathbf{q}_n$ from the reduced neighborhood $\mathcal{N}(\mathbf{q})$ \textit{plus} $\mathbf{q}$.
+The inclusion of $\mathbf{q}$ allows us to take into account forces between particles within $\mathbf{q}$.
+
 The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-range-forces}.
 \begin{algorithm}
     \caption{Updating short-range forces}\label{alg:update-short-range-forces}
@@ -270,7 +289,14 @@ The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
-As suggested in \cite{Hockney1988}, the computational burden of operations in lines 5-8 in \autoref{alg:update-short-range-forces} can be greatly reduced by storing the values of $f^\text{SR}(r) / r = (f^\text{tot}(r) - R(r)) / r$ in a lookup table $T$ at uniform intervals $\Delta^2$ of $[0, r_e^2]$ and interpolating.
+In line 2, we exclude self-forces.
+The check in line 4 assures that the correction happens only for particles with separation less than the cutoff radius $r_e$.
+The pair-wise short-range force is calculated in lines 5--10, with the calculation in line 10 exploiting the Newton's third law, as described previously.
+The accumulation of total short-range force for a given particle takes place in line 11.
+The short-range force is also added to the total short-range force of the other particle in the pair (particle $j$) but only if $\mathbf{q}_n \neq \mathbf{q}$.
+This stipulation is crucial, as otherwise we would be double counting the forces between particles within $\mathbf{q}$.
+
+As suggested in \cite{Hockney1988}, the computational burden of operations in lines 5--8 in \autoref{alg:update-short-range-forces} can be greatly reduced by storing the values of $f^\text{SR}(r) / r = (f^\text{tot}(r) - R(r)) / r$ in a lookup table $T$ at uniform intervals $\Delta^2$ of $[0, r_e^2]$ and interpolating them later.
 The schematic depiction of the interpolation is shown in \autoref{fig:sr-force-val-interpolation}.
 \begin{figure}[htp]
     \centering
@@ -285,7 +311,7 @@ If we define $\xi = r^2 / \Delta^2$ and $t=\lfloor \xi \rfloor$, then
 \end{equation*}
 The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, eliminating the use of the square root operations and reducing the total number of floating-point operations to just four.
 
-The procedure outlined in\autoref{alg:short-range-correction} can be parallelized by splitting the work done in the outmost loop between some number of threads.
+In our implementation, the procedure outlined in\autoref{alg:short-range-correction} is parallelized by splitting the work done in the outmost loop between some number of threads.
 In doing so, extra care has to be taken to avoid data races.
 A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may ``clash'' with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
 However, by the construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
@@ -293,6 +319,7 @@ For example, consider a particle $i$ in cell $\mathbf{p} = (p_1, p_2, p_3)$ (in 
 If thread $t$ is currently assigned to this cell, $t$ will update the part of $\mathbf{F}^\text{SR}_i$ corresponding to updates of $i$ coming from within the same cell as the parent cell of $i$.
 Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_2, p_3)$ will update a different part of $\mathbf{F}^\text{SR}_i$, i.e. the part corresponding to updates of $i$ coming from the cell ``to the right'' of the parent cell of $i$.
 Since only one thread is responsible for updates to particle $i$ coming ``from the right,'' (or any other ``direction'') no data races can occur.
-This approach has two drawbacks.
-First, memory requirements increase significantly as memory for $13N$ additional three-dimensional vectors has to be used.
-Second, there is no way to guarantee uniform work distribution among the threads.
+This approach presents two major drawbacks.
+First, it significantly increases memory usage, requiring storage for an additional $13N$ three-dimensional vectors.
+Second, it offers no guarantee of uniform workload distribution across threads.
+This imbalance, combined with the substantial variation in operations performed by individual threads, leads to severe thread divergence, rendering the parallelization scheme unsuitable for GPU execution.
