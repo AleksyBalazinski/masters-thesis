@@ -99,10 +99,7 @@ The \textsc{Gravity} function returns the approximation (up to the quadrupole te
 
 One possible way to quantify the quality of approximation for a given value of $\theta$ is to consider the relative error of calculated force.
 We set the same initial conditions of the system for both the PP direct summation method and the Barnes-Hut algorithm, compute the deviation of Barnes-Hut forces from PP forces acting on each particle, and take the average over all particles.
-In other words, the error calculated is
-\begin{equation*}
-    \frac{1}{N}\sum_{i} \frac{|\mathbf{F}_i^\text{BH} - \mathbf{F}_i^\text{PP}|}{|\mathbf{F}_i^\text{PP}|}.
-\end{equation*}
+In other words, the error calculated is given by the \autoref{eq:force-avg-relative-err}.
 The dependence of the error on the opening angle $\theta$ and the corresponding execution time are shown in \autoref{fig:bh-analysis}.
 The figure includes plots for two cases: when only the monopole term is used in the Barnes-Hut approximation, and when both the monopole and quadrupole terms are included.
 As can be seen, the quadrupole-based algorithm exhibits significantly improved error scaling with increasing $\theta$.
