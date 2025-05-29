@@ -417,12 +417,24 @@ The result, for different grid resolutions, is shown in \autoref{fig:pm-global-e
 For the purposes of this test, the particle positions were generated according to the uniformly decreasing density disk model.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.55]{img/pm-global-err.png}
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/pm-global-err.png}
+        \caption{PP calculation without force softening.}
+        \label{fig:pm-global-err-lap-no-soft}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/pm-global-err-soft.png}
+        \caption{PP calculation with force softening.}
+        \label{fig:pm-global-err-lap-soft}
+    \end{subfigure}
     \caption{Average force approximation error in the PM method (discrete Laplacian solver).}
     \label{fig:pm-global-err-lap}
 \end{figure}
-As can be seen in the figure, for each of the assignment schemes, the error is minimized for the four-point difference, as expected.
-A more surprising result is that the errors are seemingly not minimized in case of the TSC assignment scheme.
+As can be seen in \autoref{fig:pm-global-err-lap-no-soft}, for each of the assignment schemes, the error is minimized for the four-point difference, as expected.
+A more surprising result is that the errors are seemingly greatest for the TSC assignment scheme.
 This is easily explained by considering the graphs in \autoref{fig:pm-mass-assignment-field-strength}.
 As can be seen there, the TSC assignment scheme gives raise to a force which accurately reproduces the inverse-square law force but at the same time it severely underestimates the force close to the source.
 This behavior is expected since it stems from the mass of any individual particle being spread between multiple cells.
@@ -445,3 +457,15 @@ where $\rho^*_p$ is obtained from the density $\rho_p$ by solving the following 
 \end{equation*}
 where $p$ indexes the mesh points.
 In this work we do not investigate this matter further nor do we implement this modification in our program.
+
+Now we return to the test whose results are presented in \autoref{fig:pm-global-err-lap}.
+In the light of the above discussion, it is more reasonable to compare the quality of the results of the PM method with a \textit{softened gravitational force} defined in \cite{Zhang_2019} as
+\begin{equation}\label{eq:softened-force}
+    \mathbf{F}^\textrm{soft}_{ij} = -G\frac{m_i m_j}{(r_{ij}^2 + \epsilon^2)^{3/2}}\mathbf{r}_{ij}.
+\end{equation}
+The relative difference between the softened-forces and the PM-calculated ones is shown in \autoref{fig:pm-global-err-lap-soft}.
+The \textit{softening length} $\epsilon$ was fixed at around $1H$ in the $64 \times 64 \times 32$ mesh configuration.
+As the resolution of the mesh increases, the softening induced by the PM method becomes weaker so we should expect a minimum on the graph shown in \autoref{fig:pm-global-err-lap} corresponding to the point at which the PM-force starts to resemble the true inverse-square force more than the softened force.
+This point in our test happens to be at around 50 meshpoints per dimension.
+
+\subsection{Implementation}

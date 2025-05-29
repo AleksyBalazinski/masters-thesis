@@ -83,10 +83,7 @@ The procedure described above is illustrated in \autoref{alg:bh-find-force}.
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
-In the implementation, the \textsc{GravitySoft} function calculates the gravitational force softened by $\epsilon$, i.e. it returns the value
-\begin{equation*}
-    \mathbf{F}^\textrm{soft}_{ij} = -G\frac{m_i m_j}{(r_{ij}^2 + \epsilon^2)^{3/2}}\mathbf{r}_{ij}.
-\end{equation*}
+In the implementation, the \textsc{GravitySoft} function calculates the gravitational force softened by $\epsilon$, i.e. it returns the value given by \autoref{eq:softened-force}.
 The pairwise potential energy associated with this force is given by
 \begin{equation}\label{eq:pe-soft}
     \Phi_{ij}^\textrm{soft} = - \frac{G m_i m_j}{\sqrt{r_{ij}^2 + \epsilon^2}}.
