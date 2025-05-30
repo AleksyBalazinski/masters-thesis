@@ -95,7 +95,7 @@ Specifically, we have $\mathcal{C}_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]
 It follows that $|\mathcal{C}_\mathrm{NGP}(\mathbf{x})| = 1$, $|\mathcal{C}_\mathrm{CIC}(\mathbf{x})| = 8$, and $|\mathcal{C}_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
 We note that \autoref{alg:density-assignment} can be parallelized if atomic increments are used in line 3.
 
-\subsection{Solving the field equation}
+\subsection{Solving the field equation}\label{subsec:solving-the-field-equation}
 The Poisson equation (\autoref{eq:poisson}) can be restated in integral form
 \begin{equation*}
     \phi(\mathbf{x}) = \int \mathcal{G}(\mathbf{x}-\mathbf{x}')\rho(\mathbf{x}') dV',
@@ -411,7 +411,7 @@ The field produced by the PM method using the ``poor man's'' potential solver is
 To calculate the global approximation error of a PM simulation, we calculated the average of relative differences over all particles ($N=10{,}000$ in this case) between the forces produced by the PM method and the exact result obtained using the PP method.
 More precisely, we the error was defined as
 \begin{equation}\label{eq:force-avg-relative-err}
-    \frac{1}{N}\sum_{i} \frac{|\mathbf{F}_i^\text{BH} - \mathbf{F}_i^\text{PP}|}{|\mathbf{F}_i^\text{PP}|}.
+    \frac{1}{N}\sum_{i} \frac{|\mathbf{F}_i^\text{approx.} - \mathbf{F}_i^\text{PP}|}{|\mathbf{F}_i^\text{PP}|}.
 \end{equation}
 The result, for different grid resolutions, is shown in \autoref{fig:pm-global-err-lap} ( $30 \leq N_g \leq 70$).
 For the purposes of this test, the particle positions were generated according to the uniformly decreasing density disk model.
@@ -464,8 +464,62 @@ In the light of the above discussion, it is more reasonable to compare the quali
     \mathbf{F}^\textrm{soft}_{ij} = -G\frac{m_i m_j}{(r_{ij}^2 + \epsilon^2)^{3/2}}\mathbf{r}_{ij}.
 \end{equation}
 The relative difference between the softened-forces and the PM-calculated ones is shown in \autoref{fig:pm-global-err-lap-soft}.
-The \textit{softening length} $\epsilon$ was fixed at around $1H$ in the $64 \times 64 \times 32$ mesh configuration.
-As the resolution of the mesh increases, the softening induced by the PM method becomes weaker so we should expect a minimum on the graph shown in \autoref{fig:pm-global-err-lap} corresponding to the point at which the PM-force starts to resemble the true inverse-square force more than the softened force.
-This point in our test happens to be at around 50 meshpoints per dimension.
+The \textit{softening length} in the PP method was set at $\epsilon = H$ in each run of the test, so that it roughly matches the softening induced by the PM method (cf. \autoref{fig:pm-mass-assignment-field-strength}).
 
 \subsection{Implementation}
+\subsubsection{CPU variant}
+The most computationally involved step of the PM method is the happens in the potential solver.
+As explained in \autoref{subsec:solving-the-field-equation}, in our implementation we solve the Poisson equation for the potential using the convolution method.
+This involves taking the DFT of the grid-defined density and later the inverse DFT of the product of transformed Green's function and the transformed density.
+Since the number of grid points in a typical grid can be of the order of a million, choosing the right implementation of the FFT is of paramount importance.
+We tried incorporating a handful of popular C++ FFT libraries into the program and out of those considered, FFTW (\url{https://www.fftw.org/}) and kissfft (\url{https://github.com/mborgerding/kissfft}) provided best performance.
+The running times for FFT and inverse FFT stages of the algorithm using each of the libraries are shown in \autoref{fig:cic-shape}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.5]{img/fft_time.png}
+    \caption{Time needed to perform the DFT and inverse DFT using kissft and FFTW libraries.
+        The total grid size in the test was $(2N_g)\times (2N_g) \times N_g$, where $N_g$ is labeled as ``Grid Size'' on the horizontal axis in the graph.}
+    \label{fig:fft-time}
+\end{figure}
+As we can see, FFTW considerably outperformed kissfft, with the former achieving an average five-fold speedup over the latter.
+Interestingly, most spikes in the running time, taking place for certain grid sizes
+
+As noted in \autoref{subsec:mass-assignment}, parallelization of the mass assignment step which involves ``spreading'' the mass due to a particle over nearby cells, requires synchronization to avoid data races.
+The above requirement can be fulfilled by using mutexes or atomic operations.
+Traditionally, atomic RMW operations were supported by the C++ standard library only for the integer types, however recently C++20 introduced atomic RMW operations on floating point numbers (see \url{https://en.cppreference.com/w/cpp/atomic/atomic.html}).
+We conducted a simple benchmark on Intel Core i7-9750H CPU (three threads concurrently incrementing a global variable) to compare the performance of both approaches.
+The benchmark indicated that guarding the critical section with a mutex was around two times faster than using atomic operations.
+However, the same test run on a system with a different processor indicated that using atomic counter offers better performance, which shows that more careful benchmarking would be needed to reach a definite conclusion.
+
+\subsubsection{GPU variant}
+As explained before, the mass assignment, field calculation at mesh points, and interpolation steps of the PM method are embarrassingly parallel.
+For this reason rewriting the PM code for the GPU does not pose much difficulty.
+In our implementation we used CUDA C++ language extension to implement the method on the GPU.
+A thorough introduction to the arcana of programming NVIDIA GPU devices is given in \cite{nvidia2025cuda}.
+In this work, we only remark on the aspects directly related to our use case.
+
+The memory hierarchy of a GPU (also referred to as the \textit{device}) is organized into three main levels:
+\begin{enumerate}
+    \item global memory (accessible by all threads as well as \textit{host} (CPU); high latency),
+    \item shared memory (accessible by threads in the same threadblock typically up to 48 KB; very low latency),
+    \item local storage (per thread storage in the form of registers managed by the compiler).
+\end{enumerate}
+We recognized that one step of the PM method that could potentially benefit from transferring data to shared memory is the gradient calculation step.
+For example, if the 2-point finite difference approximation to the Laplacian is used, the potential from six cells needs to be fetched from memory.
+At the same time, there is an overlap between the potential data read by threads working on adjacent mesh cells.
+Thus, theoretically, fetching the potential data into shared memory could have positive impact on performance.
+However, our tests for the 2-point approximation, performed at early stages of the development of the program did not indicate significant improvement in the running time of the algorithm and this optimization path was not explored further.
+
+A major performance bottleneck in the GPU implementation is transferring the data between host and device.
+These data transfers are necessary if one wishes to record the state of the simulation after each timestep.
+If only the final state of the simulation is of interest, then the PM method can execute entirely on the device transferring the data to the host only once after the final iteration of the simulation.
+This is the scenario that we assumed for the purpose of comparing the CPU and GPU implementation.
+The results of the test for different particle numbers are shown in \autoref{fig:cpu-vs-gpu-pm}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.6]{img/cpu-vs-gpu.png}
+    \caption{PM method: CPU and GPU implementation running time comparison.}
+    \label{fig:cpu-vs-gpu-pm}
+\end{figure}
+In the test, the computational domain was split into $64\times 64 \times 32$ cells, and the simulation was run for 200 iterations.
+Both plots in the figure exemplify linear complexity of the PM method, with the GPU implementation providing 1200\% speedup over the CPU version.

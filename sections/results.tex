@@ -199,14 +199,7 @@ For the purposes of performance evaluation, the parts of the code responsible fo
 Since disk IO (saving simulation state) was the most time-consuming part of both the CPU and GPU implementation, only the final state of the simulation was saved in these tests.
 This means that data transfers from device to host were also not taken into account.
 The results of the test are displayed in \autoref{fig:cpu-vs-gpu-pm}.
-\begin{figure}[htp]
-    \centering
-    \includegraphics[scale=0.6]{img/cpu-vs-gpu.png}
-    \caption{PM method: CPU and GPU implementation running time comparison.}
-    \label{fig:cpu-vs-gpu-pm}
-\end{figure}
-Both plots in the figure exemplify linear complexity of the PM method.
-The GPU speedup can be estimated at around 1200\%.
+
 
 For the \PThreeM{} method, performance was measured using $N=50,000$ particles on a $128 \times 128 \times 64$ mesh with the TSC assignment scheme.
 The total runtime was approximately 1 minute and 30 seconds, with the time distribution among key algorithm components as follows:
