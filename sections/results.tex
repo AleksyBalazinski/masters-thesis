@@ -1,20 +1,26 @@
 \section{Results}
+All implemented methods were applied to three scenarios:
+\begin{enumerate}
+    \item Spiral galaxy simulation (\autoref{sec:galaxy-model}),
+    \item Globular cluster simulation (\autoref{sec:globular-cluster-model}),
+    \item Galaxy collision simulation (two galaxies modelled as ``disks with holes'', \autoref{subsec:disk-with-hole}).
+\end{enumerate}
+The choice of these scenarios hopefully well illustrates the versatility of the the methods introduced over the last couple of sections.
+
+\subsection{Spiral galaxy simulation}
 The parameters used in the simulation of a spiral galaxy are shown in \autoref{tab:galaxy-parameters}.
 \begin{table}[htp]
     \centering
     \begin{tabular}{|l|c|}
         \hline
-        \textbf{Parameter}      & \textbf{Value}           \\
+        \textbf{Parameter}   & \textbf{Value}           \\
         \hline
-        Halo radius             & 3 kpc                    \\
-        Halo mass               & $60 \times 10^9 M_\odot$ \\
-        Disk radius             & 15 kpc                   \\
-        Disk mass               & $15 \times 10^9 M_\odot$ \\
-        Disk thickness          & 0.3 kpc                  \\
-        Disk density profile    & Uniformly decreasing     \\
-        Mass assignment scheme  & TSC                      \\
-        Finite difference       & Two-point                \\
-        Time integration method & Leapfrog                 \\
+        Halo radius          & 3 kpc                    \\
+        Halo mass            & $60 \times 10^9 M_\odot$ \\
+        Disk radius          & 15 kpc                   \\
+        Disk mass            & $15 \times 10^9 M_\odot$ \\
+        Disk thickness       & 0.3 kpc                  \\
+        Disk density profile & Uniformly decreasing     \\
         \hline
     \end{tabular}
     \caption{Galaxy model parameters used in the simulation.}
@@ -24,9 +30,29 @@ The galaxy is simulated as an isolated system, however, in deriving \autoref{eq:
 The simplest way (and the one used) to obtain a free-space solution from the PM method is to extend the computational domain twice in every dimension and fill the space unused in mass distribution with zeros.
 The total size of the potential mesh used was $128 \times 128 \times 64$ with the region of interest occupying a box of size $60\, \text{kpc}\times 60\, \text{kpc}\times 30\, \text{kpc}$ located in a $64 \times 64 \times 32$ octant of the mesh.
 
-\subsection{Particle-mesh method}
-In the PM method, $N=50,000$ particles were used.
+\subsubsection{Particle-mesh method}
+In the PM method, $N=50{,}000$ particles were used.
 Cell size $H$ and time-step length were set to $60/64=0.9375$ kpc, and 1 Myr respectively.
+For convenience, the full configuration of the PM method is presented in \autoref{tab:pm-method-parameters}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parameter}      & \textbf{Value}                     \\
+        \hline
+        Effective mesh size     & $64 \times 64 \times 32$           \\
+        $H$ (cell size)         & $60/64=0.9375$ kpc                 \\
+        DT (time step)          & $1$ Myr                            \\
+        Mass assignment scheme  & TSC                                \\
+        Finite difference       & Two-point                          \\
+        Green's function        & Derived from discretized Laplacian \\
+        Time integration method & Leapfrog                           \\
+        Number of particles     & 50,000                             \\
+        \hline
+    \end{tabular}
+    \caption{PM method configuration.}
+    \label{tab:pm-method-parameters}
+\end{table}
 The system's evolution over 200 Myr is shown in \autoref{fig:spiral-galaxy-evolution-pm}.
 
 \begin{figure}[htp]
@@ -113,7 +139,7 @@ is used instead (for derivation refer to \cite{Hockney1988}).
     \label{fig:physical-quantities-pm}
 \end{figure}
 
-\subsection{Particle-particle particle-mesh method}
+\subsubsection{Particle-particle particle-mesh method}
 The \PThreeM{} based simulation uses the same parameters as the PM method.
 The reference force was calculated using the $S_1$ shape formula (\autoref{eq:s1-reference-force}) with particle diameter $a=3H$.
 The cutoff radius was set to $r_e=0.7a$.
@@ -122,6 +148,28 @@ One extra free parameter is the \textit{softening length} $\epsilon$ which modif
     F^\text{soft}_{ij}(r) = \frac{G m_i m_j}{r_{ij}^2 + \epsilon^2}.
 \end{equation*}
 In the simulation, $\epsilon$ was set arbitrarily to $1.5$ kpc.
+The full configuration of the \PThreeM{} method is conveniently shown in
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parameter}      & \textbf{Value}           \\
+        \hline
+        Effective mesh size     & $64 \times 64 \times 32$ \\
+        $H$ (cell size)         & $60/64=0.9375$ kpc       \\
+        DT (time step)          & $1$ Myr                  \\
+        Mass assignment scheme  & TSC                      \\
+        Finite difference       & Two-point                \\
+        Time integration method & Leapfrog                 \\
+        Number of particles     & 50,000                   \\
+        $a$ (particle diameter) & $3H$                     \\
+        Particle shape          & $S_1$                    \\
+        $r_e$ (cutoff radius)   & $0.7a$                   \\
+        \hline
+    \end{tabular}
+    \caption{PM method configuration.}
+    \label{tab:p3m-method-parameters}
+\end{table}
 The system's evolution is presented in \autoref{fig:spiral-galaxy-evolution-p3m}.
 \begin{figure}[htp]
     \centering
@@ -189,23 +237,213 @@ Graphs of energy, angular momentum, and momentum components vs. time are shown i
     \label{fig:physical-quantities-p3m}
 \end{figure}
 
-\subsection{Performance analysis}
-The PM and \PThreeM{} methods were implemented exactly as described in the previous sections.
-The PM method was developed for both CPU and GPU architectures, using C++ and CUDA C++, respectively.
-The implementation relies on external libraries for fast Fourier transform computations: FFTW for the CPU version and cuFFT for the GPU version.
-A performance comparison of the PM method was conducted with $N$ ranging between 50,000 and 1,000,000 over 200 iterations (TSC mass assignment and two-point finite difference).
-The tests were run on a system equipped with an Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz and an NVIDIA GeForce GTX 1650 GPU.
-For the purposes of performance evaluation, the parts of the code responsible for diagnostics collection (energy, momentum, etc.) were switched off.
-Since disk IO (saving simulation state) was the most time-consuming part of both the CPU and GPU implementation, only the final state of the simulation was saved in these tests.
-This means that data transfers from device to host were also not taken into account.
-The results of the test are displayed in \autoref{fig:cpu-vs-gpu-pm}.
+\subsubsection{Barnes-Hut algorithm}
+For the Barnes-Hut algorithm test, the initial conditions of the system remain the same as in the two previous simulations.
+The softening length $\epsilon$ was set to 1 kpc and quadrupole terms not included.
+The full configuration of the method is shown in \autoref{tab:bh-method-parameters}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parameter}            & \textbf{Value} \\
+        \hline
+        $\theta$ (opening angle)      & 1              \\
+        $\epsilon$ (softening length) & 1 pc           \\
+        DT (time step)                & $1$ Myr        \\
+        Highest multipole term        & monopole       \\
+        \hline
+    \end{tabular}
+    \caption{Barnes-Hut method configuration.}
+    \label{tab:bh-method-parameters}
+\end{table}
+The snapshots of the simulation are displayed in \autoref{fig:spiral-galaxy-evolution-bh}.
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/50myr.png}
+        \caption{$t=50\,\text{Myr}$}
+        \label{fig:spiral-galaxy-evolution-bh-sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/100myr.png}
+        \caption{$t=100\,\text{Myr}$}
+        \label{fig:spiral-galaxy-evolution-bh-sub2}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/150myr.png}
+        \caption{$t=150\,\text{Myr}$}
+        \label{fig:spiral-galaxy-evolution-bh-sub3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/200myr.png}
+        \caption{$t=200\,\text{Myr}$}
+        \label{fig:spiral-galaxy-evolution-bh-sub4}
+    \end{subfigure}
+
+    \caption{Evolution of a spiral galaxy as predicted by the Barnes-Hut algorithm.}
+    \label{fig:spiral-galaxy-evolution-bh}
+\end{figure}
+The graphs showing how the energy, momentum, and angular momentum varied over time are shown in \autoref{fig:physical-quantities-bh}.
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/energy.png}
+        \caption{Energy}
+        \label{fig:physical-quantities-bh-sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/angular-momentum.png}
+        \caption{Angular momentum}
+        \label{fig:physical-quantities-bh-sub2}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh/momentum.png}
+        \caption{Momentum; broken lines represent the expected momentum following \autoref{eq:expected-momentum-change}}
+        \label{fig:physical-quantities-bh-sub3}
+    \end{subfigure}
+
+    \caption{Fundamental physical quantities describing the system over time in the Barnes-Hut algorithm.
+        Time is in Myr and the quantities are expressed in units consistent with \autoref{tab:galaxy-parameters}}
+    \label{fig:physical-quantities-bh}
+\end{figure}
+
+\subsubsection{Commentary}
+All of the implemented methods successfully reproduced the expected structural features of a spiral galaxy.
+A region of high density is clearly localized in the center of the galaxy and characteristic spiral arms emerge around 150 Myr mark.
+The snapshots from all three simulations (\autoref{fig:spiral-galaxy-evolution-pm}, \autoref{fig:spiral-galaxy-evolution-p3m}, and \autoref{fig:spiral-galaxy-evolution-bh}) show similar evolution of the system over time, with the last snapshot of each simulation visually resembling a real-world spiral galaxy (cf. \autoref{fig:ngc-628}).
+It is worth noting however, that the system seems to evolve faster in the case of the PM-based simulation.
+For example, the spiral arms are much more articulated at $t=100$ Myr (\autoref{fig:spiral-galaxy-evolution-pm-sub2}) compared to $t=100$ Myr marks in the simulations conducted using two other methods.
+This is likely due to the ``induced softening length'' in the PM method being smaller than the softening lengths used in \PThreeM{} and Barnes-Hut methods which results in stronger forces (these problems were anticipated in \autoref{subsubsec:pm-global-picture}).
+
+Energy plots (\autoref{fig:physical-quantities-pm-sub1}, \autoref{fig:physical-quantities-p3m-sub1}, and \autoref{fig:physical-quantities-bh-sub1}) show that the total energy was conserved by each of the methods tested.
+The plots of angular momentum over time (\autoref{fig:physical-quantities-pm-sub2}, \autoref{fig:physical-quantities-p3m-sub2}, and \autoref{fig:physical-quantities-bh-sub2}) illustrate that the angular momentum was \textit{on average} constant with the variations stemming from the presence of the external halo field.
+Finally, the momentum plots (\autoref{fig:physical-quantities-pm-sub3}, \autoref{fig:physical-quantities-p3m-sub3}, and \autoref{fig:physical-quantities-bh-sub3}) demonstrate that the $z$-component of the momentum vector remains constant, while the remaining components change (again due to the external field).
+The comparison of the actual values of the momentum with the theoretical values, updated in each timestep according to \autoref{eq:expected-momentum-change}, shows that the change in the $x$- and $y$-components is correct.
 
 
-For the \PThreeM{} method, performance was measured using $N=50,000$ particles on a $128 \times 128 \times 64$ mesh with the TSC assignment scheme.
-The total runtime was approximately 1 minute and 30 seconds, with the time distribution among key algorithm components as follows:
-\begin{itemize}
-    \item HOC table initialization: 12\%
-    \item Short-range force calculations: 80\%
-    \item PM step: 7.5\%
-\end{itemize}
-The code is available at \url{https://github.com/AleksyBalazinski/ParticleSimulation} under the MIT license.
+\subsection{Globular cluster simulation}
+The globular cluster is simulated using the Plummer model with parameters set to the values in \autoref{tab:cluster-parameters}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parameter} & \textbf{Value}          \\
+        \hline
+        $a$ (spread)       & 2 pc                    \\
+        Mass               & $1 \times 10^6 M_\odot$ \\
+        Maximum radius     & 15 pc                   \\
+        \hline
+    \end{tabular}
+    \caption{Galaxy model parameters used in the simulation.}
+    \label{tab:cluster-parameters}
+\end{table}
+The \textit{maximum radius} parameter was introduced simply to confine the cluster to a predefined computational domain.
+We restrict the presentation of our results to the simulation conducted using the Barnes-Hut algorithm, since other methods yielded very similar results.
+
+\subsubsection{Barnes-Hut algorithm}
+The configuration of the Barnes-Hut algorithm used in the globular cluster simulation is given in \autoref{tab:bh-method-parameters-cluster}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parameter}            & \textbf{Value} \\
+        \hline
+        $\theta$ (opening angle)      & 0.5            \\
+        $\epsilon$ (softening length) & 0.5 pc         \\
+        DT (time step)                & $1$ kyr        \\
+        Highest multipole term        & quadrupole     \\
+        \hline
+    \end{tabular}
+    \caption{Barnes-Hut method configuration.}
+    \label{tab:bh-method-parameters-cluster}
+\end{table}
+The conservation of energy, momentum, and angular momentum during the simulation is demonstrated in \autoref{fig:physical-quantities-bh-cluster}.
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh-cluster/energy.png}
+        \caption{Energy}
+        \label{fig:physical-quantities-bh-cluster-sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh-cluster/angular-momentum.png}
+        \caption{Angular momentum}
+        \label{fig:physical-quantities-bh-cluster-sub2}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh-cluster/momentum.png}
+        \caption{Momentum; broken lines represent the expected momentum following \autoref{eq:expected-momentum-change}}
+        \label{fig:physical-quantities-bh-cluster-sub3}
+    \end{subfigure}
+
+    \caption{Fundamental physical quantities describing the system over time in the Barnes-Hut algorithm.
+        Time is in kyr and the quantities are expressed in units consistent with \autoref{tab:cluster-parameters}}
+    \label{fig:physical-quantities-bh-cluster}
+\end{figure}
+Notice that the conservation of momentum and angular momentum is possible due to a lack of any external forces (this is contrasted with the previous test -- galaxy simulation with halo modelled a fixed, external field).
+The evolution of the system (initial positions and after 200 kyr) is shown in \autoref{fig:cluster-evolution-bh}.
+\begin{figure}[htp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh-cluster/0kyr.png}
+        \caption{$t=0\,\text{kyr}$}
+        \label{fig:cluster-evolution-bh-cluster-sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/bh-cluster/200kyr.png}
+        \caption{$t=200\,\text{kyr}$}
+        \label{fig:cluster-evolution-bh-cluster-sub2}
+    \end{subfigure}
+    \caption{Evolution of a globular cluster as predicted by the Barnes-Hut algorithm.}
+    \label{fig:cluster-evolution-bh}
+\end{figure}
+As can be seen, the system remains stable and bound gravitationally.
+Also, in the initial snapshot (\autoref{fig:cluster-evolution-bh-cluster-sub1}) the effect of restricting the sampled points to a sphere of radius can be seen.
+The system bears general resemblance to real-world globular clusters (cf. \autoref{fig:messier-13}).
+
+% \subsection{Performance analysis}
+% The PM and \PThreeM{} methods were implemented exactly as described in the previous sections.
+% The PM method was developed for both CPU and GPU architectures, using C++ and CUDA C++, respectively.
+% The implementation relies on external libraries for fast Fourier transform computations: FFTW for the CPU version and cuFFT for the GPU version.
+% A performance comparison of the PM method was conducted with $N$ ranging between 50,000 and 1,000,000 over 200 iterations (TSC mass assignment and two-point finite difference).
+% The tests were run on a system equipped with an Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz and an NVIDIA GeForce GTX 1650 GPU.
+% For the purposes of performance evaluation, the parts of the code responsible for diagnostics collection (energy, momentum, etc.) were switched off.
+% Since disk IO (saving simulation state) was the most time-consuming part of both the CPU and GPU implementation, only the final state of the simulation was saved in these tests.
+% This means that data transfers from device to host were also not taken into account.
+% The results of the test are displayed in \autoref{fig:cpu-vs-gpu-pm}.
+
+
+% For the \PThreeM{} method, performance was measured using $N=50,000$ particles on a $128 \times 128 \times 64$ mesh with the TSC assignment scheme.
+% The total runtime was approximately 1 minute and 30 seconds, with the time distribution among key algorithm components as follows:
+% \begin{itemize}
+%     \item HOC table initialization: 12\%
+%     \item Short-range force calculations: 80\%
+%     \item PM step: 7.5\%
+% \end{itemize}
+% The code is available at \url{https://github.com/AleksyBalazinski/ParticleSimulation} under the MIT license.

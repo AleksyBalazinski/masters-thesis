@@ -407,7 +407,7 @@ The field produced by the PM method using the ``poor man's'' potential solver is
     \label{fig:pm-poor-man-vs-laplacian}
 \end{figure}
 
-\subsubsection{Global picture}
+\subsubsection{Global picture}\label{subsubsec:pm-global-picture}
 To calculate the global approximation error of a PM simulation, we calculated the average of relative differences over all particles ($N=10{,}000$ in this case) between the forces produced by the PM method and the exact result obtained using the PP method.
 More precisely, we the error was defined as
 \begin{equation}\label{eq:force-avg-relative-err}
@@ -464,7 +464,7 @@ In the light of the above discussion, it is more reasonable to compare the quali
     \mathbf{F}^\textrm{soft}_{ij} = -G\frac{m_i m_j}{(r_{ij}^2 + \epsilon^2)^{3/2}}\mathbf{r}_{ij}.
 \end{equation}
 The relative difference between the softened-forces and the PM-calculated ones is shown in \autoref{fig:pm-global-err-lap-soft}.
-The \textit{softening length} in the PP method was set at $\epsilon = H$ in each run of the test, so that it roughly matches the softening induced by the PM method (cf. \autoref{fig:pm-mass-assignment-field-strength}).
+The \textit{softening length} in the PP method was set at $\epsilon = H$ in each run of the test, so that it roughly matches the softening ``induced'' by the PM method (cf. \autoref{fig:pm-mass-assignment-field-strength}).
 
 \subsection{Implementation}
 \subsubsection{CPU variant}

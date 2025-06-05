@@ -1,4 +1,4 @@
-\section{Galaxy model}
+\section{Galaxy model}\label{sec:galaxy-model}
 The model of a galaxy used as a test bed for the implementation is a simple one.
 The galaxy is assumed to comprise only two parts: a thin disk and a spherically symmetric halo.
 The disk comprises a large number of particles, each representing some number of stars.
@@ -6,10 +6,29 @@ The halo is simulated as a fixed external gravitational field.
 The schematic illustration of the model is shown in \autoref{fig:galaxy-model}.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.15]{img/galaxy-model.png}
-    \caption{Spiral galaxy model (thin disk and spherical halo).}
-    \label{fig:galaxy-model}
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.12]{img/galaxy-model.png}
+        \caption{Spiral galaxy model (thin disk and spherical halo).}
+        \label{fig:galaxy-model}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[scale=0.2]{img/ngc_628.jpg}
+        \caption{Real-world spiral galaxy (NGC 3147).}
+        \label{fig:ngc-628}
+    \end{subfigure}
+
+    \vspace{0.5em}
+    {\footnotesize
+        Credit for Figure~\ref{fig:ngc-628}: NASA, ESA, and the Hubble Heritage (STScI/AURA)-ESA/Hubble Collaboration;
+        Acknowledgment: R. Chandar (University of Toledo) and J. Miller (University of Michigan). \par}
+
+    \caption{Comparison between a modeled and a real-world spiral galaxy.}
+    \label{fig:galaxy-comparison}
 \end{figure}
+\autoref{fig:ngc-628} shows an example of a real-world spiral galaxy, whose general structure we aim to reproduce.
 
 \subsection{Disk}\label{subsec:disk}
 The disk particles are sampled from a radial distribution
@@ -88,7 +107,7 @@ and thus
 with $v = \sqrt{- r g_r}$
 for counter-clockwise rotation.
 
-\subsection{Disk with a hole}
+\subsection{Disk with a hole}\label{subsec:disk-with-hole}
 While testing the implemented methods, we observed that for modeling systems comprising multiple galaxies it may be beneficial to replace the fixed halo with a single massive particle.
 In such case, the simulation turns out to stable if there are no particles in close vicinity to the galaxy center.
 This means that the galactic disk ought to have a hole of radius $r_0$.
