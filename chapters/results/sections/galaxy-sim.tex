@@ -62,7 +62,7 @@ The system's evolution over 200 Myr is shown in \autoref{fig:spiral-galaxy-evolu
         \label{fig:spiral-galaxy-evolution-pm-sub2}
     \end{subfigure}
 
-    \vspace{0.5cm}
+    \vspace{0.2cm}
 
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
@@ -116,7 +116,7 @@ is used instead (for derivation refer to \cite{Hockney1988}).
         \label{fig:physical-quantities-pm-sub2}
     \end{subfigure}
 
-    \vspace{0.5cm}
+    \vspace{0.2cm}
 
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
@@ -139,180 +139,14 @@ One extra free parameter is the \textit{softening length} $\epsilon$ which modif
     F^\text{soft}_{ij}(r) = \frac{G m_i m_j}{r_{ij}^2 + \epsilon^2}.
 \end{equation*}
 In the simulation, $\epsilon$ was set arbitrarily to $1.5$ kpc.
-The full configuration of the \PThreeM{} method is conveniently shown in
-\begin{table}[htp]
-    \centering
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Parameter}      & \textbf{Value}           \\
-        \hline
-        Effective mesh size     & $64 \times 64 \times 32$ \\
-        $H$ (cell size)         & $60/64=0.9375$ kpc       \\
-        DT (time step)          & $1$ Myr                  \\
-        Mass assignment scheme  & TSC                      \\
-        Finite difference       & Two-point                \\
-        Time integration method & Leapfrog                 \\
-        Number of particles     & 50,000                   \\
-        $a$ (particle diameter) & $3H$                     \\
-        Particle shape          & $S_1$                    \\
-        $r_e$ (cutoff radius)   & $0.7a$                   \\
-        \hline
-    \end{tabular}
-    \caption{PM method configuration.}
-    \label{tab:p3m-method-parameters}
-\end{table}
-The system's evolution is presented in \autoref{fig:spiral-galaxy-evolution-p3m}.
-\begin{figure}[htp]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/50myr.png}
-        \caption{$t=50\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-p3m-sub1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/100myr.png}
-        \caption{$t=100\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-p3m-sub2}
-    \end{subfigure}
-
-    \vspace{0.5cm}
-
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/150myr.png}
-        \caption{$t=150\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-p3m-sub3}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/200myr.png}
-        \caption{$t=200\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-p3m-sub4}
-    \end{subfigure}
-
-    \caption{Evolution of a spiral galaxy as predicted by the \PThreeM{} method.}
-    \label{fig:spiral-galaxy-evolution-p3m}
-\end{figure}
-Graphs of energy, angular momentum, and momentum components vs. time are shown in \autoref{fig:physical-quantities-p3m}.
-\begin{figure}[htp]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/energy.png}
-        \caption{Energy}
-        \label{fig:physical-quantities-p3m-sub1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/angular-momentum.png}
-        \caption{Angular momentum}
-        \label{fig:physical-quantities-p3m-sub2}
-    \end{subfigure}
-
-    \vspace{0.5cm}
-
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/p3m-galaxy/momentum.png}
-        \caption{Momentum; broken lines represent the expected momentum following \autoref{eq:expected-momentum-change}}
-        \label{fig:physical-quantities-p3m-sub3}
-    \end{subfigure}
-
-    \caption{Fundamental physical quantities describing the system over time in the \PThreeM{} simulation.
-        Time is in Myr and the quantities are expressed in units consistent with \autoref{tab:galaxy-parameters}}
-    \label{fig:physical-quantities-p3m}
-\end{figure}
+The full configuration of the \PThreeM{} method is conveniently shown in \autoref{tab:p3m-method-parameters}.
+The system's evolution is presented in \autoref{fig:spiral-galaxy-evolution-p3m} and the graphs of energy, angular momentum, and momentum components vs. time are shown in \autoref{fig:physical-quantities-p3m}.
 
 \subsection{Barnes-Hut algorithm}
 For the Barnes-Hut algorithm test, the initial conditions of the system remain the same as in the two previous simulations.
 The softening length $\epsilon$ was set to 1 kpc and quadrupole terms not included.
 The full configuration of the method is shown in \autoref{tab:bh-method-parameters}.
-\begin{table}[htp]
-    \centering
-    \begin{tabular}{|l|c|}
-        \hline
-        \textbf{Parameter}            & \textbf{Value} \\
-        \hline
-        $\theta$ (opening angle)      & 1              \\
-        $\epsilon$ (softening length) & 1 pc           \\
-        DT (time step)                & $1$ Myr        \\
-        Highest multipole term        & monopole       \\
-        \hline
-    \end{tabular}
-    \caption{Barnes-Hut method configuration.}
-    \label{tab:bh-method-parameters}
-\end{table}
-The snapshots of the simulation are displayed in \autoref{fig:spiral-galaxy-evolution-bh}.
-\begin{figure}[htp]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/50myr.png}
-        \caption{$t=50\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-bh-sub1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/100myr.png}
-        \caption{$t=100\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-bh-sub2}
-    \end{subfigure}
-
-    \vspace{0.5cm}
-
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/150myr.png}
-        \caption{$t=150\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-bh-sub3}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/200myr.png}
-        \caption{$t=200\,\text{Myr}$}
-        \label{fig:spiral-galaxy-evolution-bh-sub4}
-    \end{subfigure}
-
-    \caption{Evolution of a spiral galaxy as predicted by the Barnes-Hut algorithm.}
-    \label{fig:spiral-galaxy-evolution-bh}
-\end{figure}
-The graphs showing how the energy, momentum, and angular momentum varied over time are shown in \autoref{fig:physical-quantities-bh}.
-\begin{figure}[htp]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/energy.png}
-        \caption{Energy}
-        \label{fig:physical-quantities-bh-sub1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/angular-momentum.png}
-        \caption{Angular momentum}
-        \label{fig:physical-quantities-bh-sub2}
-    \end{subfigure}
-
-    \vspace{0.5cm}
-
-    \begin{subfigure}[b]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{chapters/results/img/bh-galaxy/momentum.png}
-        \caption{Momentum; broken lines represent the expected momentum following \autoref{eq:expected-momentum-change}}
-        \label{fig:physical-quantities-bh-sub3}
-    \end{subfigure}
-
-    \caption{Fundamental physical quantities describing the system over time in the Barnes-Hut algorithm.
-        Time is in Myr and the quantities are expressed in units consistent with \autoref{tab:galaxy-parameters}}
-    \label{fig:physical-quantities-bh}
-\end{figure}
+The snapshots of the simulation are displayed in \autoref{fig:spiral-galaxy-evolution-bh} and the graphs showing how the energy, momentum, and angular momentum varied over time are shown in \autoref{fig:physical-quantities-bh}.
 
 \subsection{Commentary}
 All of the implemented methods successfully reproduced the expected structural features of a spiral galaxy.
