@@ -98,5 +98,6 @@ Possibly at the same time, thread $t'$ assigned to cell $\mathbf{q} = (p_1+1, p_
 Since only one thread is responsible for updates to particle $i$ coming ``from the right,'' (or any other ``direction'') no data races can occur.
 This approach presents two major drawbacks.
 First, it significantly increases memory usage, requiring storage for an additional $13N$ three-dimensional vectors.
-Second, it offers no guarantee of uniform workload distribution across threads.
-This imbalance, combined with the substantial variation in operations performed by individual threads, leads to severe thread divergence, rendering the parallelization scheme unsuitable for GPU execution.
+Second it offers no guarantee of uniform workload distribution across threads.
+This imbalance, combined with the substantial variation in operations performed by individual threads, leads to severe thread divergence, rendering the parallelization scheme unsuitable for GPU execution, making it only applicable to the CPU implementation.
+Despite these shortcomings, tests performed on our machine (utilizing the maximum number of concurrent threads supported, equal to 12) yielded approximately four-fold speedup compared to the single-threaded implementation in a typical simulation.

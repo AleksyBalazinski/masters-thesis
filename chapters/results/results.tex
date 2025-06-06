@@ -11,24 +11,3 @@ The choice of these scenarios well illustrates the versatility of the the method
 \input{chapters/results/sections/cluster-sim.tex}
 \input{chapters/results/sections/collision-sim.tex}
 \input{chapters/results/sections/performance.tex}
-
-% \subsection{Performance analysis}
-% The PM and \PThreeM{} methods were implemented exactly as described in the previous sections.
-% The PM method was developed for both CPU and GPU architectures, using C++ and CUDA C++, respectively.
-% The implementation relies on external libraries for fast Fourier transform computations: FFTW for the CPU version and cuFFT for the GPU version.
-% A performance comparison of the PM method was conducted with $N$ ranging between 50,000 and 1,000,000 over 200 iterations (TSC mass assignment and two-point finite difference).
-% The tests were run on a system equipped with an Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz and an NVIDIA GeForce GTX 1650 GPU.
-% For the purposes of performance evaluation, the parts of the code responsible for diagnostics collection (energy, momentum, etc.) were switched off.
-% Since disk IO (saving simulation state) was the most time-consuming part of both the CPU and GPU implementation, only the final state of the simulation was saved in these tests.
-% This means that data transfers from device to host were also not taken into account.
-% The results of the test are displayed in \autoref{fig:cpu-vs-gpu-pm}.
-
-
-% For the \PThreeM{} method, performance was measured using $N=50,000$ particles on a $128 \times 128 \times 64$ mesh with the TSC assignment scheme.
-% The total runtime was approximately 1 minute and 30 seconds, with the time distribution among key algorithm components as follows:
-% \begin{itemize}
-%     \item HOC table initialization: 12\%
-%     \item Short-range force calculations: 80\%
-%     \item PM step: 7.5\%
-% \end{itemize}
-% The code is available at \url{https://github.com/AleksyBalazinski/ParticleSimulation} under the MIT license.

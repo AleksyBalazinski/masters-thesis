@@ -1,0 +1,14 @@
+\section{Aim and scope}
+This thesis aims to achieve three main objectives:
+\begin{enumerate}
+    \item To develop a computer program implementing the PM, \PThreeM{}, and Barnes-Hut algorithms with an emphasis on correctness and performance,
+    \item To provide an introduction to the aforementioned algorithms and describe their strengths and weaknesses through elementary error analysis and performance benchmarking using our implementation,
+    \item To implement simple models of selected astronomical systems and to test and assess the implemented methods based on these models.
+\end{enumerate}
+The subject of $N$-body simulations has been extensively researched over many years, as is clear from \autoref{sec:historical-development}, and thus making a completely novel contribution to the field is challenging.
+However, considering that our implementation is developed from scratch rather than based on any existing code, we hope to provide useful insights through the following contributions:
+\begin{enumerate}
+    \item Comparison of performance of the GPU and CPU implementations of the PM method,
+    \item Parallelization of the short-range correction part of the \PThreeM{} algorithm,
+    \item Implementation of a cache-friendly tree construction procedure in the context of the Barnes-Hut algorithm.
+\end{enumerate}

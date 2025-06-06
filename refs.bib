@@ -251,3 +251,20 @@ numpages = {19}
   note         = {Revision \#91544, Curator: Piet Hut},
   url          = {http://www.scholarpedia.org/article/N-body_simulations_(gravitational)}
 }
+
+@incollection{BURTSCHER201175,
+title = {Chapter 6 - An Efficient CUDA Implementation of the Tree-Based Barnes Hut n-Body Algorithm},
+editor = {Wen-mei W. Hwu},
+booktitle = {GPU Computing Gems Emerald Edition},
+publisher = {Morgan Kaufmann},
+address = {Boston},
+pages = {75-92},
+year = {2011},
+series = {Applications of GPU Computing Series},
+isbn = {978-0-12-384988-5},
+doi = {https://doi.org/10.1016/B978-0-12-384988-5.00006-1},
+url = {https://www.sciencedirect.com/science/article/pii/B9780123849885000061},
+author = {Martin Burtscher and Keshav Pingali},
+abstract = {Publisher Summary
+This chapter describes the first CUDA implementation of the classical Barnes Hut n-body algorithm that runs entirely on the GPU. The Barnes Hut force-calculation algorithm is widely used in n-body simulations such as modeling the motion of galaxies. It hierarchically decomposes the space around the bodies into successively smaller boxes, called cells, and computes summary information for the bodies contained in each cell, allowing the algorithm to quickly approximate the forces (e.g., gravitational, electric, or magnetic) that the n bodies induce upon each other. The Barnes Hut algorithm is challenging to implement efficiently in CUDA because it repeatedly builds and traverses an irregular tree-based data structure, it performs a lot of pointer-chasing memory operations, and it is typically expressed recursively. GPU-specific operations such as thread-voting functions are exploited to greatly improve performance and make use of fence instructions to implement lightweight synchronization without atomic operations. The main conclusion of the work is that GPUs can be used to accelerate irregular codes, not just regular codes. However, a great deal of programming effort is required to achieve good performance. The biggest performance win, though, came from turning some of the unique architectural features of GPUs, which are often regarded as performance hurdles for irregular codes, into assets. Future direction indicates workings on writing high-performing CUDA implementations for other irregular algorithms.}
+}
