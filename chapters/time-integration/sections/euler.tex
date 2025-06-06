@@ -1,4 +1,4 @@
-\subsection{Euler's method}
+\section{Euler's method}
 Possibly, the simplest numerical method that could be used is Euler's method described by the update rules
 \begin{equation}\label{eq:eulers-method}
     \begin{aligned}
@@ -17,7 +17,7 @@ The motion of the pendulum is governed by the differential equation
 and its kinetic and potential energy are given by $\textrm{KE} = (1/2)ml^2\dot{\theta}$ and $\textrm{PE} = -mgl\cos\theta$ respectively.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.6]{img/integrators/euler-pendulum.png}
+    \includegraphics[scale=0.6]{chapters/time-integration/img/euler-pendulum.png}
     \caption{Behavior of Euler's method: lack of conservation of energy and phase space trajectories spiraling out.}
     \label{fig:euler-integrator}
 \end{figure}
@@ -25,7 +25,7 @@ As shown in \autoref{fig:euler-integrator}, Euler's method fails to conserve tot
 Additionally, the evolution of an area element in phase space violates Liouville's theorem, as described in \cite{taylor2005classical}, making the method unsuitable for long-term physical simulations (see \autoref{fig:area-euler-vs-leapfrog}).
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.4]{img/integrators/area-leap-vs-euler.png}
+    \includegraphics[scale=0.4]{chapters/time-integration/img/area-leap-vs-euler.png}
     \caption{Area in phase space over time. Violation of Liouville's theorem by Euler's method.}
     \label{fig:area-euler-vs-leapfrog}
 \end{figure}

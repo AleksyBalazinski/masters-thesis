@@ -20,7 +20,7 @@ The figure also shows the field strength measured along the $x$-axis when the so
 Its deviation from the case when the source was placed at $x=H$ (the blue graph) exemplifies inhomogeneity of the field computed using the PM method.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.55]{img/pm/pm-field-combined.png}
+    \includegraphics[scale=0.55]{chapters/pm-method/img/pm-field-combined.png}
     \caption{Anisotropy and inhomogeneity of the field as calculated by the PM method (TSC assignment, second order finite difference).}
     \label{fig:pm-field-properties}
 \end{figure}
@@ -33,14 +33,14 @@ The single-source case analysis can be extended by considering the effect of cho
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{img/pm/pm-finite-diff-err.png}
+        \includegraphics[width=\linewidth]{chapters/pm-method/img/pm-finite-diff-err.png}
         \caption{Relative error of field strength approximation in different PM variants.}
         \label{fig:pm-finite-diff-err}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{img/pm/pm-mass-assignment.png}
+        \includegraphics[width=\linewidth]{chapters/pm-method/img/pm-mass-assignment.png}
         \caption{Field strength calculated with the PM method using different assignment schemes.}
         \label{fig:pm-mass-assignment-field-strength}
     \end{subfigure}
@@ -52,7 +52,7 @@ The conclusion that can be drawn from \autoref{fig:pm-combined} is that, as expe
 The field produced by the PM method using the ``poor man's'' potential solver is similar to the variant employing the discretized Laplacian Green's function described above.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.55]{img/poor-man-vs-laplacian.png}
+    \includegraphics[scale=0.55]{chapters/pm-method/img/poor-man-vs-laplacian.png}
     \caption{Field obtained potential calculated by the ``Poor man's Poisson solver'' vs. when using \autoref{eq:dft-transformed-phi}.}
     \label{fig:pm-poor-man-vs-laplacian}
 \end{figure}
@@ -69,14 +69,14 @@ For the purposes of this test, the particle positions were generated according t
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{img/pm-global-err.png}
+        \includegraphics[width=\linewidth]{chapters/pm-method/img/pm-global-err.png}
         \caption{PP calculation without force softening.}
         \label{fig:pm-global-err-lap-no-soft}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
-        \includegraphics[width=\linewidth]{img/pm-global-err-soft.png}
+        \includegraphics[width=\linewidth]{chapters/pm-method/img/pm-global-err-soft.png}
         \caption{PP calculation with force softening.}
         \label{fig:pm-global-err-lap-soft}
     \end{subfigure}

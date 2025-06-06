@@ -16,7 +16,7 @@ To make the visualization simpler, assume that the computational domain is two-d
 Then, the Z-order curve that covers all 16 cells is shown in \autoref{fig:z-order-curve}.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.5]{img/z-order.png}
+    \includegraphics[scale=0.5]{chapters/barnes-hut/img/z-order.png}
     \caption{Z-order curve.}
     \label{fig:z-order-curve}
 \end{figure}
@@ -56,8 +56,8 @@ Even though the modified algorithm still has the $O(N\log N)$ time complexity, i
 The tree construction time as a function of $N$ is shown in \autoref{fig:z-order-tree-time}.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.5]{img/tree_construction_time.png}
-    \caption{Tree construction time averaged over the number iterations of the simulation.}
+    \includegraphics[scale=0.5]{chapters/barnes-hut/img/tree_construction_time.png}
+    \caption{Tree construction time averaged over the number iterations of the simulation ($\theta = 1$).}
     \label{fig:z-order-tree-time}
 \end{figure}
 For the purposes of generating the graphs shown there, the tree construction time was measured in a spiral galaxy simulation.

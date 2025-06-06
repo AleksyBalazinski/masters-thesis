@@ -1,4 +1,4 @@
-\subsection{Leapfrog algorithm}
+\section{Leapfrog algorithm}
 The leapfrog algorithm, given by the update rule \cite{young_leapfrog_2019}
 \begin{equation}\label{eq:leapfrog}
     \begin{aligned}
@@ -11,7 +11,7 @@ is the preferred way of integrating \autoref{eq:newtons-second}.
 When applied to the same pendulum system, it conserves energy much more faithfully and preserves the area in phase space, consistent with Liouville's theorem (see \autoref{fig:leapfrog-integrator} and \autoref{fig:area-euler-vs-leapfrog}).
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.6]{img/integrators/leapfrog-pendulum.png}
+    \includegraphics[scale=0.6]{chapters/time-integration/img/leapfrog-pendulum.png}
     \caption{Behavior of the leapfrog algorithm: conservation of energy and phase space trajectories forming closed loops.
         Evolution of an area element in phase space is shown on the right-hand side: blue rectangle -- initial conditions for many copies of the system; black distorted quadrilateral -- their state by the end of the simulation.}
     \label{fig:leapfrog-integrator}

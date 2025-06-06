@@ -8,7 +8,7 @@ We tried incorporating a handful of popular C++ FFT libraries into the program a
 The running times for FFT and inverse FFT stages of the algorithm using each of the libraries are shown in \autoref{fig:cic-shape}.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.5]{img/fft_time.png}
+    \includegraphics[scale=0.5]{chapters/pm-method/img/fft_time.png}
     \caption{Time needed to perform the DFT and inverse DFT using kissft and FFTW libraries.
         The total grid size in the test was $(2N_g)\times (2N_g) \times N_g$, where $N_g$ is labeled as ``Grid Size'' on the horizontal axis in the graph.}
     \label{fig:fft-time}
@@ -49,8 +49,8 @@ This is the scenario that we assumed for the purpose of comparing the CPU and GP
 The results of the test for different particle numbers are shown in \autoref{fig:cpu-vs-gpu-pm}.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.6]{img/cpu-vs-gpu.png}
-    \caption{PM method: CPU and GPU implementation running time comparison.}
+    \includegraphics[scale=0.6]{chapters/pm-method/img/cpu-vs-gpu.png}
+    \caption{PM method: CPU and GPU implementation running time comparison (200 iterations; intermediate state not saved).}
     \label{fig:cpu-vs-gpu-pm}
 \end{figure}
 In the test, the computational domain was split into $64\times 64 \times 32$ cells, and the simulation was run for 200 iterations.

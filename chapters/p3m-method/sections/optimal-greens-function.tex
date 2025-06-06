@@ -7,7 +7,7 @@ The average deviation between the two forces can be minimized by a suitable choi
 The derivation is mathematically involved and is detailed in \cite{Hockney1988}.
 We now proceed to examine the terms appearing in \autoref{eq:optimal-greens-func}.
 
-\subsubsection{Finite difference operator}
+\subsection{Finite difference operator}
 The Fourier transform $\mathbf{\hat{D}}$ of the two-point finite difference operator defined in \autoref{eq:two-point-central-diff} has the components
 \begin{align*}
     \hat{D}_j(\mathbf{k})
@@ -22,7 +22,7 @@ Similarly, for the four-point finite difference (\autoref{eq:four-point-central-
 \end{equation*}
 where $j=1,2,3$.
 
-\subsubsection{Assignment function}
+\subsection{Assignment function}
 The quantity $\hat{U}$ is defined as $\hat{W}/V$.
 For the mass assignment scheme hierarchy described in \autoref{subsec:mass-assignment} we have
 \begin{equation*}
@@ -71,7 +71,7 @@ Using the same approach, we can obtain similar results for the CIC and NGP schem
     \sum_{\mathbf{n}}\hat{U}_\text{NGP}^2 = 1.
 \end{equation*}
 
-\subsubsection{Reference force}
+\subsection{Reference force}
 The quantity $\mathbf{\hat{R}}$, the transformed reference force, is related to the shape $S$ of the particle-cloud by
 \begin{equation}\label{eq:reference-force-transform}
     \mathbf{\hat{R}}(\mathbf{k}) = \frac{i\mathbf{k}\hat{S}^2(k)}{k^2},
@@ -141,14 +141,14 @@ This observation allows the cutoff radius \( r_e \), which defines the boundary 
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/p3m/s1-vs-s2.png}
+        \includegraphics[width=\textwidth]{chapters/p3m-method/img/s1-vs-s2.png}
         \caption{Approximate vs. reference force.}
         \label{fig:reference-force-approx-sub}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/p3m/s1-vs-s2-nrmsd.png}
+        \includegraphics[width=\textwidth]{chapters/p3m-method/img/s1-vs-s2-nrmsd.png}
         \caption{Mean-normalized RMSD error}
         \label{fig:reference-force-error-sub}
     \end{subfigure}
@@ -158,6 +158,7 @@ This observation allows the cutoff radius \( r_e \), which defines the boundary 
     \label{fig:reference-force-combined}
 \end{figure}
 
+\subsection{Error analysis}
 The \PThreeM{} method offers a high degree of flexibility in terms of specifying the ``building blocks'' of the Green's function in \autoref{eq:optimal-greens-func}.
 For example, we can be interested in learning how the choice of the assignment scheme influences the shape of the PM-approximated reference force.
 The result of a test which addresses this issue is shown in \autoref{fig:reference-force-err-schemes-combined}.
@@ -165,14 +166,14 @@ The result of a test which addresses this issue is shown in \autoref{fig:referen
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/field_different_ass.png}
+        \includegraphics[width=\textwidth]{chapters/p3m-method/img/field_different_ass.png}
         \caption{Approximate vs. reference force.}
         \label{fig:reference-force-approx-different-schemes-sub}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/no-cic.png}
+        \includegraphics[width=\textwidth]{chapters/p3m-method/img/no-cic.png}
         \caption{Mean relative error.}
         \label{fig:reference-force-error-different-schemes-sub}
     \end{subfigure}
@@ -209,7 +210,7 @@ If the system under consideration has uniform density, we note that for any give
 The relation between cutoff radius size $r_e$ and execution time is shown in \autoref{fig:p3m-time-vs-radius}.
 \begin{figure}[htp]
     \centering
-    \includegraphics[scale=0.5]{img/time-vs-radius.png}
+    \includegraphics[scale=0.5]{chapters/p3m-method/img/time-vs-radius.png}
     \caption{Execution time for different setting of cutoff radius $r_e$ in the \PThreeM{} method (single step, $N=10{,}000$).
     The times shown in the graph do not include tabulating the Green's function and the PM step.}
     \label{fig:p3m-time-vs-radius}
