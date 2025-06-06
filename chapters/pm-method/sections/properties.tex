@@ -2,7 +2,7 @@
 The accuracy of a simulation using a PM code depends on a variety of factors.
 The user can decide to use any combination of the following elements that parameterize the program:
 \begin{itemize}
-    \item mass assignment and interpolation scheme: NGP, CIC, TSC, or possibly any other scheme from the infinite hierarchy described in \autoref{subsec:mass-assignment};
+    \item mass assignment and interpolation scheme: NGP, CIC, TSC, or possibly any other scheme from the infinite hierarchy described in \autoref{sec:mass-assignment};
     \item convolution with the Green's function derived from the discretized Laplacian (\autoref{eq:dft-transformed-phi}) or the ``poor man's solver'' (\autoref{eq:poor-mans-poisson-solver});
     \item gradient approximation: two-point or four-point finite difference;
     \item grid resolution: number of meshpoints in each dimension.
@@ -28,7 +28,7 @@ As expected, the PM-calculated approximation gets better with increasing distanc
 the inverse-square law is reproduced accurately for $r \gtrsim 4H$.
 
 The single-source case analysis can be extended by considering the effect of choice of finite difference and mass assignment schemes on the relative error between the actual and approximated field strength.
-\autoref{fig:pm-combined} shows a comparison of (a) the relative error as a function of distance from the source for PM with second-order and fourth-order finite differences, and (b) the field strength computed using different mass assignment schemes discussed in \autoref{subsec:mass-assignment}.
+\autoref{fig:pm-combined} shows a comparison of (a) the relative error as a function of distance from the source for PM with second-order and fourth-order finite differences, and (b) the field strength computed using different mass assignment schemes discussed in \autoref{sec:mass-assignment}.
 \begin{figure}[htp]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}

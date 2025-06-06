@@ -24,7 +24,7 @@ where $j=1,2,3$.
 
 \subsection{Assignment function}
 The quantity $\hat{U}$ is defined as $\hat{W}/V$.
-For the mass assignment scheme hierarchy described in \autoref{subsec:mass-assignment} we have
+For the mass assignment scheme hierarchy described in \autoref{sec:mass-assignment} we have
 \begin{equation*}
     \hat{U}(\mathbf{k}) = \left(\prod_{i=1}^{3}\frac{\sin(k_i H / 2)}{k_i H / 2}\right)^{p},
 \end{equation*}
@@ -158,7 +158,7 @@ This observation allows the cutoff radius \( r_e \), which defines the boundary 
     \label{fig:reference-force-combined}
 \end{figure}
 
-\subsection{Error analysis}
+\subsection{Error analysis}\label{subsec:p3m-error-analysis}
 The \PThreeM{} method offers a high degree of flexibility in terms of specifying the ``building blocks'' of the Green's function in \autoref{eq:optimal-greens-func}.
 For example, we can be interested in learning how the choice of the assignment scheme influences the shape of the PM-approximated reference force.
 The result of a test which addresses this issue is shown in \autoref{fig:reference-force-err-schemes-combined}.

@@ -1,4 +1,4 @@
-\section{Accelerating tree construction}
+\section{Accelerating tree construction}\label{sec:accelerating-tree-construction}
 Unlike the force calculation part which is easily parallelized, the tree construction step is inherently sequential.
 An approach to parallel tree construction outlined in \cite{warren_salmon_1993} involves splitting the set of particles into load-balanced spatial groups which are then used to construct separate trees (one per thread), with the final step being the merge of the created trees.
 The merge step is highly involved and beyond the intended scope of this thesis.
