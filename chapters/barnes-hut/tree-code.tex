@@ -1,0 +1,31 @@
+\chapter{Barnes-Hut algorithm}
+The idea behind Barnes-Hut algorithm differs substantially from previously described mesh-based methods.
+The algorithm deals with gravitational forces directly instead of deriving them from the mesh-defined potential, as was the case with the PM and \PThreeM{} methods.
+Significant reduction of time complexity, from quadratic to $O(N \log N)$, is achieved by approximating the potential due to ``far enough'' groups of particles by the initial terms of its multipole expansion \cite{trenti2008gravitationalnbodysimulations}.
+The grouping of particles is hierarchical in nature and is thus best understood as a tree.
+The entire set of particles comprises the top-level group, represented by the root of the tree;
+the eight children of the root node are representative of groups of particles residing in each of the octants of the computational domain, etc.
+The process of subdividing the space into eight smaller volumes at each node continues recursively until there is only one or zero particles left in a given volume.
+Nodes which satisfy this condition are the leafs of tree and are sometimes called the \textit{external nodes}.
+The remaining nodes, each of which has eight children, are called \textit{internal nodes}.
+
+In the basic variant of the algorithm, the potential due to a group of particles is approximated using only the monopole term with respect to the center of mass of the group, i.e.
+\begin{equation*}
+    \phi_\text{mon}(r) = -\frac{GM}{r},
+\end{equation*}
+where $M$ is the group's total mass.
+Since the potential is expanded about the center of mass, the dipole moment $\mathbf{p} = \sum_{i} m_i \mathbf{r}_i$ vanishes.
+Hence, the next possible improvement comes from including the quadrupole term
+\begin{equation*}
+    \phi_\text{quad}(r) = -\frac{G}{2r^5} \mathbf{r} \cdot (\mathbf{Q} \mathbf{r}),
+\end{equation*}
+where $\mathbf{Q}$ is the quadrupole moment tensor defined as
+\begin{equation*}
+    Q_{ij} = \sum_{k} (3r_{ki}r_{kj} - 3r_k^2\delta_{ij})m_k.
+\end{equation*}
+In theory, we could keep on adding more terms to improve the quality of the approximation.
+In our implementation however, we restrict ourselves to the quadrupole term.
+
+\input{chapters/barnes-hut/sections/tree-building.tex}
+\input{chapters/barnes-hut/sections/acceleration-calc.tex}
+\input{chapters/barnes-hut/sections/accelerating-tree-constr.tex}

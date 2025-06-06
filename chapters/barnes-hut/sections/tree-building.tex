@@ -1,0 +1,35 @@
+\section{Building the tree}
+The data structure that fits the description given in the introduction is called an \textit{octree}.
+An internal node of the octree stores the COM vector, the total mass of the group it represents, and the quadrupole tensor, whereas an external node stores a reference to the actual particles (or is empty if no particle was found in its associated volume).
+The recursive procedure of building the tree is shown in \autoref{alg:bh-tree-insert}.
+\begin{algorithm}
+    \caption{Insert a particle into the Barnes-Hut tree}\label{alg:bh-tree-insert}
+    \begin{algorithmic}[1]
+        \Function{Insert}{$n$, $p$}
+        \If{$n$ is an internal node}
+        \State Update $n.\textrm{COM}$ and total mass $n.M$ of $n$ with $p$
+        \State \Call{Insert}{child of $n$ that should contain $p$, $p$}
+        \ElsIf{$n$ is empty}
+        \State Assign $p$ to $n$
+        \Else \Comment{Occupied external node}
+        \State Subdivide $n$ into child nodes
+        \State Move existing particle $p'$ in $n$ into child that should contain $p'$
+        \State Update center of mass and total mass of $n$ with $p$ and $p'$
+        \State \Call{Insert}{child of $n$ that should contain $p$, $p$}
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+The quadrupole moment tensor for each node is calculated once the whole tree is already built.
+The recursive relation used in this calculation is given in \cite{hernquist1987performance} and reads
+\begin{equation*}
+    \mathbf{Q} = \sum_{\text{child }c} \mathbf{Q}_c + \sum_{\text{child }c} m_c(3 \mathbf{R}_c \otimes \mathbf{R}_c - R_c^2 \mathbf{I}),
+\end{equation*}
+where $\mathbf{R}_c = \mathbf{x}^\text{COM}_c - \mathbf{x}^\text{COM}$ is the displacement vector from the COM of child $c$ to the COM of the parent, $\mathbf{I}$ is the identity matrix, and $\otimes$ denotes the outer product.
+
+For reasons that will become apparent later, it can be beneficial to separate the COM calculation from the tree creation part.
+In such a case, the COM is calculated recursively using the relation
+\begin{equation}\label{eq:bh-com-calculation}
+    \mathbf{x}^\text{COM} = \frac{\sum_{\text{child } c} m_c \mathbf{x}_c^\text{COM}}{\sum_{\text{child } c} m_c}
+\end{equation}
+after the tree has already been built (and obviously before the quadrupole moment calculation).

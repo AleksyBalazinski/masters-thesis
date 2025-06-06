@@ -1,0 +1,36 @@
+\chapter{Introduction}
+The dominant force over large distances is the gravitational force.
+The force exerted on a body with mass $m_2$ at the point $\mathbf{x}_2$ by a body with mass $m_1$ located at $\mathbf{x}_1$ can be expressed by the relation
+\begin{equation}\label{eq:law-of-uni-grav}
+    \mathbf{F} = -G\frac{m_1m_2}{|\mathbf{x}_{21}|^3}\mathbf{x}_{21}
+\end{equation}
+where $G$ is the gravitational constant $6.674\times 10^{-11} \mathrm{m}^3 \mathrm{kg}^{-1}\mathrm{s}^{-2}$ and $\mathbf{x}_{21} = \mathbf{x}_2 - \mathbf{x}_1$.
+Therefore, the evolution of a system of $N$ bodies is described by $N$ equations
+\begin{equation}\label{eq:pp-method}
+    \ddot{\mathbf{x}}_i = -G\sum_{j\neq i} \frac{m_j}{|\mathbf{x}_{ij}|^3}\mathbf{x}_{ij}.
+\end{equation}
+for each $i = 1,\dots, N$.
+Direct application of \autoref{eq:pp-method} is the basis of the so-called \textit{particle-particle} method.
+The method is characterized by $O(N^2)$ time complexity (more precisely, it requires $(N-1)N/2$ operations if Newton's 3rd law is used in the computation).
+Assuming that 100ns are required to perform the floating-point operations under the summation symbol, $N=30,000$, and 150 iterations, the simulation would take approximately 2 hours to complete.
+Therefore, it is evident that more efficient algorithms are needed to make simulations of this scale feasible.
+
+The \textit{particle-mesh} (PM) technique, introduced around 1985 by Hockney and Eastwood, was an early improvement over the PP method.
+In the PM approach, the space is divided into a rectangular grid (or mesh) of cells.
+Each cell is assigned a portion of the mass of nearby particles, creating a density distribution $\rho(\mathbf{x})$.
+The relation between the density and gravitational potential $\phi$, in the form of Poisson's equation
+\begin{equation}\label{eq:poisson}
+    \nabla^2\phi = 4\pi G \rho,
+\end{equation}
+is then used to obtain the potential at each cell center.
+The gravitational field $\mathbf{g}$ can then be calculated as $\mathbf{g} = -\nabla \phi$.
+Since $\mathbf{g}$ equals the acceleration due to gravity, we get $\ddot{\mathbf{x}}_i = \mathbf{g}(\mathbf{x}_i)$.
+
+The drawback of the PM method is its poor modeling of forces over short distances.
+Eastwood and Hockney proposed a remedy for this problem: the \textit{particle-particle-particle-mesh} method (or \PThreeM{} in short).
+In the \PThreeM{} method, the force on the $i$-th particle is split into two components: \textit{short-range} and \textit{long-range} force.
+The long-range force is calculated using the PM method, whereas the short-range force can be found by direct summation of the forces due to nearby particles.
+
+The computational complexity of the PM and \PThreeM{} methods depends on the implementation of the potential solver used to calculate $\phi$ from \autoref{eq:poisson}.
+For instance, if a fast Fourier transform is used, then the complexity of the PM algorithm is $O(N + N_g^3\log N_g)$, where $N_g$ is the number of cells in a single dimension of the grid (note it is linear in $N$).
+For the \PThreeM{} method, the worst-case scenario happens when all particles are clustered closely together, which causes the short-range $O(N^2)$ correction part to become dominant.

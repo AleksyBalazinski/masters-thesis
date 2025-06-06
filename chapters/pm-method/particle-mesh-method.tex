@@ -1,0 +1,17 @@
+\chapter{Particle-mesh method}
+The particle-mesh method can be described as the following sequence of four steps:
+\begin{enumerate}
+    \item Assign masses to mesh points,
+    \item Solve the field equation (\autoref{eq:poisson}) on the mesh,
+    \item Calculate the field strength at mesh-points,
+    \item Find forces applied to individual particles by interpolation.
+\end{enumerate}
+In this section, each of these steps will be described in more detail.
+
+\input{chapters/pm-method/sections/mass-assignment.tex}
+\input{chapters/pm-method/sections/field-equation.tex}
+\input{chapters/pm-method/sections/field-strength.tex}
+\input{chapters/pm-method/sections/interpolation.tex}
+\input{chapters/pm-method/sections/code-units.tex}
+\input{chapters/pm-method/sections/properties.tex}
+\input{chapters/pm-method/sections/implementation.tex}

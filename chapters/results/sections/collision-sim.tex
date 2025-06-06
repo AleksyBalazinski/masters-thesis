@@ -1,0 +1,41 @@
+\section{Galaxy collision simulation}
+We conclude showcasing the applications of our program with a simulation of collision of two galaxies.
+The parameters describing the galaxies are given in \autoref{tab:galaxy-parameters-collision}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \textbf{Parameter}   & \textbf{Galaxy 1}        & \textbf{Galaxy 2}        \\
+        \hline
+        Center position      & (40, 30, 15) kpc         & (80, 30, 15) kpc         \\
+        Halo radius          & 3 kpc                    & 2 kpc                    \\
+        Halo mass            & $60 \times 10^9 M_\odot$ & $40 \times 10^9 M_\odot$ \\
+        Disk radius          & 15 kpc                   & 10 kpc                   \\
+        Disk mass            & $15 \times 10^9 M_\odot$ & $10 \times 10^9 M_\odot$ \\
+        Disk thickness       & 0.3 kpc                  & 0.3 kpc                  \\
+        Disk density profile & Uniformly decreasing     & Uniformly decreasing     \\
+        Number of particles  & $3 \times 10^4$          & $3 \times 10^4$          \\
+        \hline
+    \end{tabular}
+    \caption{Galaxy model parameters used in the simulation.}
+    \label{tab:galaxy-parameters-collision}
+\end{table}
+\subsubsection{Barnes-Hut algorithm}
+The configuration of the algorithm is given in \autoref{tab:bh-method-parameters-collision}.
+\begin{table}[htp]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Parameter}            & \textbf{Value} \\
+        \hline
+        $\theta$ (opening angle)      & 1              \\
+        $\epsilon$ (softening length) & 1.3 kpc        \\
+        DT (time step)                & $1$ Myr        \\
+        Simulation duration           & 400 Myr        \\
+        Highest multipole term        & Monopole       \\
+        \hline
+    \end{tabular}
+    \caption{Barnes-Hut method configuration.}
+    \label{tab:bh-method-parameters-collision}
+\end{table}
+

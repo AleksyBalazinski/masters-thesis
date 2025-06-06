@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{report}
 \usepackage[utf8]{inputenc}
 \usepackage[a4paper, margin=1in]{geometry}
 \usepackage{amsmath}
@@ -27,18 +27,44 @@
 
 \newcommand{\PThreeM}{P$^3$M}
 
-\maketitle
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries Selected Methods in $N$-body Simulations\par}
+    \vspace{1.5cm}
+
+    {\Large\bfseries Aleksy Bałaziński\par}
+    \vspace{1.5cm}
+
+    {\large
+        A thesis submitted in partial fulfillment of the requirements\\
+        for the degree of\\
+        \textbf{Master of Science in Engineering}\\
+        in \textbf{Applied Computer Science}\par
+    }
+    \vspace{0.5cm}
+
+    {\large
+        Faculty of Electrical Engineering\\
+        Warsaw University of Technology
+        \par}
+
+    \vfill
+
+    {\large \today\par}
+\end{titlepage}
 
 \tableofcontents
 
-\input{sections/introduction.tex}
-\input{sections/particle-mesh-method.tex}
-\input{sections/p3m-method.tex}
-\input{sections/tree-code.tex}
-\input{sections/time-integration.tex}
-\input{sections/galaxy-model.tex}
-\input{sections/plummer-model.tex}
-\input{sections/results.tex}
+
+\input{chapters/introduction/introduction.tex}
+\input{chapters/pm-method/particle-mesh-method.tex}
+\input{chapters/p3m-method/p3m-method.tex}
+\input{chapters/barnes-hut/tree-code.tex}
+\input{chapters/time-integration/time-integration.tex}
+\input{chapters/test-models/test-models.tex}
+\input{chapters/results/results.tex}
 
 \bibliographystyle{plain}
 \bibliography{refs}
