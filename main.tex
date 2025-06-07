@@ -1,5 +1,8 @@
 \documentclass{report}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+\usepackage[english, polish]{babel}
+\usepackage{lmodern}
 \usepackage[a4paper, margin=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -10,6 +13,9 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{subcaption}
+\usepackage{ifoddpage}
+
+\selectlanguage{american}
 
 \linespread{1.5}
 
@@ -18,15 +24,39 @@
 \newcommand{\Break}{\State \algorithmicbreak}
 \newcommand{\Continue}{\State \textbf{continue}}
 \renewcommand{\Comment}[1]{\hfill\textit{$\triangleright$ #1}}
+\newcommand{\blankpageifneeded}{
+  \newpage
+  \ifodd\value{page}
+    % Do nothing
+  \else
+  \thispagestyle{empty}
+    \vspace*{\fill}
+    \begin{center}
+        \textit{This page intentionally left blank}
+    \end{center}
+    \vspace{\fill}
+    \newpage
+    \addtocounter{page}{-1}
+  \fi
+}
 
-\title{Selected Methods in $N$-body Simulations}
-\author{Aleksy Bałaziński}
-\date{\today}
+\newcommand{\blankpage}{
+  \newpage
+  \thispagestyle{empty}
+    \vspace*{\fill}
+    \begin{center}
+        \textit{This page intentionally left blank}
+    \end{center}
+    \vspace{\fill}
+    \newpage
+    \addtocounter{page}{-1}
+}
+
 
 \begin{document}
 
 \newcommand{\PThreeM}{P$^3$M}
-
+\selectlanguage{american}
 \begin{titlepage}
     \centering
     \vspace*{2cm}
@@ -53,10 +83,21 @@
     \vfill
 
     {\large \today\par}
+    \thispagestyle{empty}
 \end{titlepage}
 
+\blankpage
+\input{abstract-en.tex}
+
+\blankpage
+\selectlanguage{polish}
+\input{abstract-pol.tex}
+
+\blankpage
+\selectlanguage{american}
 \tableofcontents
 
+\blankpageifneeded
 
 \input{chapters/introduction/introduction.tex}
 \input{chapters/pm-method/particle-mesh-method.tex}

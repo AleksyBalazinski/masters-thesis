@@ -100,4 +100,14 @@ This approach presents two major drawbacks.
 First, it significantly increases memory usage, requiring storage for an additional $13N$ three-dimensional vectors.
 Second, it offers no guarantee of uniform workload distribution across threads.
 This imbalance, combined with the substantial variation in operations performed by individual threads, leads to severe thread divergence, rendering the parallelization scheme unsuitable for GPU execution, making it only applicable to the CPU implementation.
-Despite these shortcomings, tests performed on our machine (utilizing the maximum number of concurrent threads supported, equal to 12) yielded approximately four-fold speedup compared to the single-threaded implementation in a typical simulation.
+Despite these shortcomings, tests performed on our machine (utilizing the maximum number of concurrent threads supported, equal to 12) yielded more than four-fold speedup compared to the single-threaded implementation in a typical simulation.
+The results of a performance test for a typical simulation are shown in \autoref{fig:p3m-time-threads}.
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.5]{chapters/p3m-method/img/p3m_threads.png}
+    \caption{Running time per iteration of the \PThreeM{} method using different numbers of threads.}
+    \label{fig:p3m-time-threads}
+\end{figure}
+As illustrated in the figure, increasing the number of threads initially improves performance, but beyond a certain point, the gains level off.
+This is because the system reaches the limit of its physical cores (six in our case) after which additional threads do not contribute meaningfully.
+Further increasing the thread count introduces overhead from context switching, which ultimately becomes the dominant performance bottleneck.
