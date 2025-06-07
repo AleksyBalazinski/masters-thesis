@@ -1,14 +1,15 @@
 \section{Aim and scope}
-This thesis aims to achieve three main objectives:
+This thesis has three main goals:
 \begin{enumerate}
-    \item To develop a computer program implementing the PM, \PThreeM{}, and Barnes-Hut algorithms with an emphasis on correctness and performance,
-    \item To provide an introduction to the algorithms above and describe their strengths and weaknesses through elementary error analysis and performance benchmarking using our implementation,
-    \item To implement simple models of selected astronomical systems and to test and assess the implemented methods based on these models.
+    \item Developing a program implementing the PM, \PThreeM{}, and Barnes-Hut algorithms focusing on correctness and performance,
+    \item Introducing these algorithms and analyze their strengths and weaknesses via error analysis and performance benchmarks using our implementation,
+    \item Implementing simple astronomical system models to test and evaluate the methods.
 \end{enumerate}
-The subject of $N$-body simulations has been extensively researched over many years, as is clear from \autoref{sec:historical-development}, and thus making a completely novel contribution to the field is challenging.
-However, considering that our implementation is developed from scratch rather than based on any existing code, we hope to provide useful insights through the following contributions:
+The field of $N$-body simulations has been extensively studied (see \autoref{sec:historical-development}), making novel contributions challenging.
+However, since our implementation is written from scratch, we aim to provide practical insights via:
 \begin{enumerate}
-    \item Comparison of performance of the GPU and CPU implementations of the PM method,
-    \item Parallelization of the short-range correction part of the \PThreeM{} algorithm,
-    \item Implementation of a cache-friendly tree construction procedure in the context of the Barnes-Hut algorithm.
+    \item Comparing GPU and CPU implementations of the PM method,
+    \item Parallelizing the short-range correction in the \PThreeM{} method,
+    \item Implementing a cache-friendly tree construction for the Barnes-Hut algorithm.
 \end{enumerate}
+The full source code, including all algorithms and simulation models, is available at \url{https://github.com/AleksyBalazinski/ParticleSimulation}.
