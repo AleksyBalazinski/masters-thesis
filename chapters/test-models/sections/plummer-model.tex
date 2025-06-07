@@ -1,6 +1,6 @@
 \section{Globular cluster model}\label{sec:globular-cluster-model}
-A globular cluster is a formation comprising a large number stars, closely packed in a spherically symmetric form \cite{britannica2024globular}.
-In this work, we decided to use the implemented methods to simulate such structure using the Plummer model.
+A globular cluster is a formation comprising a large number of stars, closely packed in a spherically symmetric form \cite{britannica2024globular}.
+In this work, we employed the implemented methods to simulate such a structure using the Plummer model.
 The model was chosen due to its simplicity and abundance of dedicated resources.
 
 In the Plummer model, the density of a cluster is given by
@@ -22,11 +22,11 @@ which means that given a random variable $u\sim U(0, 1)$, we can generate random
 \end{equation}
 consistent with \autoref{eq:plummer-dens} (assuming equal mass of all particles).
 
-In the Plummer model, the potential is given by
+In the Plummer model, the gravitational potential is given by
 \begin{equation*}
     \phi(r) = -\frac{GM}{\sqrt{r^2 + a^2}}.
 \end{equation*}
-This allows us to find the escape velocity $v_e$ at distance $r$ from the center.
+This expression can be used to determine the escape velocity \( v_e \) at a distance \( r \) from the center of the system.
 Using the law of conservation of energy, we get
 \begin{equation*}
     \frac{1}{2}v_e + \phi(r) = 0 \Rightarrow v_e = \sqrt{-2\phi(r)}.
@@ -37,7 +37,7 @@ For any $r$, the probability distribution of $q \equiv v/v_e$ is given by \cite{
 \end{equation}
 where $N$ is a normalization constant, which can be calculated to be $N = 512 / (7\pi)$.
 The CDF of the distribution in \autoref{eq:velocity-pdf}, $G(q) = \int_0^q g(q') dq'$, can be determined using symbolic integration.
-The algebraic expression that one obtains in this way is lengthy and we will not cite it here.
+The algebraic expression that one obtains in this way is lengthy, and we will not cite it here.
 The random values of $q$, consistent with the PDF in \autoref{eq:velocity-pdf}, are again obtained using inverse transform sampling;
 the equation $G(q) = u$ is solved for $q$ by finding the roots of $G(q) - u$ using Newton's method.
 Finally, the magnitude $v$ of the velocity vector $\mathbf{v}$ is set to $v = qv_e$.
@@ -47,7 +47,7 @@ The direction of $\mathbf{v} = (v_x, v_y, v_z)$ is chosen uniformly at random, i
 \end{equation*}
 where $\theta$ and $\phi$ are generated in the same way as in \autoref{eq:plummer-random-init-pos}.
 
-The comparison of particle positions generated using the aforementioned method with an example of a real-world globular cluster is shown in \autoref{fig:globular-cluster-gen-vs-real}.
+The comparison of particle positions generated using the method above with an example of a real-world globular cluster is shown in \autoref{fig:globular-cluster-gen-vs-real}.
 \begin{figure}[htp]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}

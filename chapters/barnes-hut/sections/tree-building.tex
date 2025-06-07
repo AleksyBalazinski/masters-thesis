@@ -1,4 +1,4 @@
-\section{Building the tree}
+\section{Building the tree} % checked
 The data structure that fits the description given in the introduction is called an \textit{octree}.
 An internal node of the octree stores the COM vector, the total mass of the group it represents, and the quadrupole tensor, whereas an external node stores a reference to the actual particles (or is empty if no particle was found in its associated volume).
 The recursive procedure of building the tree is shown in \autoref{alg:bh-tree-insert}.

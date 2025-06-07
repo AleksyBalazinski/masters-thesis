@@ -28,7 +28,7 @@ The schematic illustration of the model is shown in \autoref{fig:galaxy-model}.
     \caption{Comparison between a modeled and a real-world spiral galaxy.}
     \label{fig:galaxy-comparison}
 \end{figure}
-\autoref{fig:ngc-628} shows an example of a real-world spiral galaxy, whose general structure we aim to reproduce.
+\autoref{fig:ngc-628} shows an example of a real-world spiral galaxy whose general structure we aim to reproduce.
 
 \subsection{Disk}\label{subsec:disk}
 The disk particles are sampled from a radial distribution
@@ -45,7 +45,7 @@ and the marginal CDFs are
     F_R(r) = F(r, 2\pi) = \frac{1}{R_D^3}(3R_D r^2-2r^3) \quad \text{and} \quad F_\Phi(\phi) = F(R_D, \phi) = \frac{\phi}{2\pi}.
 \end{equation*}
 Now we use inverse transform sampling to generate initial positions $(r, \phi)$ for the particles, i.e. $\phi = 2\pi u$ and $r$ is given implicitly by $h(r) \equiv 2r^3 - 3R_D r^2 + uR_D^3 = 0$ with $u \sim U(0, 1)$.
-A straightforward calculation shows that $dh/dr < 0$ for $0 < r < R_D$ and $h(0)h(R_D) < 0$ implying that $h$ has exactly one zero between 0 and $R_D$ (which can be found for example using Newton's method).
+A straightforward calculation shows that $dh/dr < 0$ for $0 < r < R_D$ and $h(0)h(R_D) < 0$, implying that $h$ has exactly one zero between 0 and $R_D$ (which can be found for example using Newton's method).
 
 Strength of the gravitational field $\mathbf{g}_D$ due to the disk at point $\mathbf{x}_0$ lying in the disk is
 \begin{equation*}
@@ -70,7 +70,7 @@ The value of $a = -k/h^2$ can be found by setting $g_{D,r}(0) = 0$ in the approx
     \centering
     \includegraphics[scale=0.6]{chapters/test-models/img/disk-field.png}
     \caption{Magnitude of the radial component of the field strength due to a disk.
-        The peak at $r=R$ for the constant density disk is in fact infinite.}
+        The peak at $r=R$ for the constant density disk is, in fact, infinite.}
     \label{fig:radial-strength-disk}
 \end{figure}
 
@@ -108,8 +108,8 @@ with $v = \sqrt{- r g_r}$
 for counter-clockwise rotation.
 
 \subsection{Disk with a hole}\label{subsec:disk-with-hole}
-While testing the implemented methods, we observed that for modeling systems comprising multiple galaxies it may be beneficial to replace the fixed halo with a single massive particle.
-In such case, the simulation turns out to stable if there are no particles in close vicinity to the galaxy center.
+While testing the implemented methods, we observed that for modeling systems comprising multiple galaxies, it may be beneficial to replace the fixed halo with a single massive particle.
+In such a case, the simulation turns out to be stable if there are no particles in close vicinity to the galaxy center.
 This means that the galactic disk ought to have a hole of radius $r_0$.
 Using an approach analogous to the one used in \autoref{subsec:disk}, we obtain the following relations that can be used for sampling points $(\phi, r)$ in polar coordinates
 \begin{equation*}

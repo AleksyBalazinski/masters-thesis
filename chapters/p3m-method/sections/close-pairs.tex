@@ -20,12 +20,12 @@ The basic version of the HOC array is very cheap to build.
 Given a particle at point $\mathbf{x} = (x, y, z)$, we can determine in which chaining mesh cell $\mathbf{c}$ it lies by simply performing integer division on each of its coordinates, i.e. $\mathbf{c} = (x / \text{HC}_1, y / \text{HC}_2, z / \text{HC}_3)$.
 Then, to get a HOC table index $i$ corresponding to $\mathbf{c}$, standard index flattening is used.
 Subsequently, a new linked-list node is allocated and inserted at the beginning of the list HOC[$i$].
-Clearly, the whole process is linear in the number of particles and the array can be constructed anew at each time step without degrading performance.
+The whole process is linear in the number of particles, and the array can be constructed anew at each time step without degrading performance.
 In our implementation, additional savings are made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and reusing it for the HOC array initialization.
 
 A potential optimization discussed in \cite{Hockney1988} involves sorting each linked list by a selected particle coordinate, such as the $y$-coordinate.
 This ordering enables early termination of the direct summation loop when the condition $y_i - y_j > r_e$ is met, effectively reducing unnecessary pairwise computations as particle $i$ "sweeps through" a cell containing particles $j$.
 Our experiments indicate that constructing the linked lists in sorted order is substantially more expensive than the unsorted variant.
-This is to be expected; in the worst-case scenario where all particles are in a single chaining-mesh cell, and are inserted into the list in decreasing order of $y$ coordinates, the complexity is $O(N^2)$.
+This is to be expected; in the worst-case scenario where all particles are in a single chaining-mesh cell and are inserted into the list in decreasing order of $y$ coordinates, the complexity is $O(N^2)$.
 For a system of 50{,}000 particles, incorporating $y$-sorting increased the HOC (head-of-chain) construction time from approximately 180 milliseconds to over 13{,}000 milliseconds, a 70-fold slowdown.
 Despite this added cost, we observed no significant performance improvement in the short-range correction phase of the computation.

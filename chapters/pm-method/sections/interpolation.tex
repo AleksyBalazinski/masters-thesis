@@ -17,8 +17,8 @@ The method is illustrated in \autoref{alg:interpolation}.
         \EndFor
     \end{algorithmic}
 \end{algorithm}
-It is important to note that in order to retain correct physical behavior, the interpolation and mass assignment schemes must use the same shape to represent the particles.
+It is important to note that to retain correct physical behavior, the interpolation and mass assignment schemes must use the same shape to represent the particles.
 The procedure in \autoref{alg:interpolation} is trivially parallelized by converting the sequential loop into a parallel one.
 
-The procedures of density assignment and interpolation presented in \autoref{alg:density-assignment} and \autoref{alg:interpolation} are high level description.
-More concrete formulations suitable for direct use in an implementation are given in \cite{Hockney1988} and \cite{Kravtsov2002PM}.
+The procedures of density assignment and interpolation presented in \autoref{alg:density-assignment} and \autoref{alg:interpolation} are high-level descriptions.
+More concrete formulations suitable for direct use in implementation are given in \cite{Hockney1988} and \cite{Kravtsov2002PM}.

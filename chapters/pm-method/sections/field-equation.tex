@@ -39,7 +39,7 @@ Specifically, for a 7-point stencil,
          & + \frac{\phi(\mathbf{x}_{i,j,k-1}) - 2\phi(\mathbf{x}_{ijk})+\phi(\mathbf{x}_{i,j,k+1})}{H^2}.
     \end{split}.
 \end{equation*}
-Applying the discrete Fourier transform to both sides and using the shift theorem we get
+Applying the discrete Fourier transform to both sides and using the shift theorem, we get
 \begin{align*}
     4\pi G \hat{\rho}(\mathbf{k})
      & = \frac{1}{H^2}\sum_{i=1}^{3}\left( e^{-iHk_i} + e^{iHk_i}-2 \right)\hat{\phi}(\mathbf{k})       \\
@@ -112,7 +112,7 @@ Hence we have $(H^2\Delta_H \bar{\psi})_j = 4\sin^2(\pi k/N) \psi_j$ which impli
 \end{equation*}
 This results tells us that for any value of $k$, $\bar{\psi}(k)$ is an eigenvector of $\Delta_H$ with eigenvalue $(4/H^2)\sin^2(\pi k/N)$.
 For $k=0,\dots, N-1$ we get $N$ linearly independent eigenvectors $\{\bar{\psi}(k)\}$ which necessarily form the basis of $\mathbb{C}^N$.
-This implies that $\Delta_H$ is diagonalizable.
+This fact implies that $\Delta_H$ is diagonalizable.
 The matrix $F$ of its eigenvectors is given by $F_{jk} = \omega^{jk}$, and the inverse is easily verified to be $F^{-1} = (1/N)F^\dagger$.
 The eigendecomposition of $\Delta_H$ is therefore
 \begin{equation*}
@@ -133,7 +133,7 @@ Indeed,
     = \frac{1}{N}\sum_{j=0}^{N-1}e^{-2\pi i jk / N}\phi_j
 \end{equation*}
 which is exactly the discrete Fourier transform of $\phi$ (using the standard definition of the DFT).
-Thus we see that the DFT of the Green's function derived in \autoref{eq:dft-transformed-phi} (or rather the one-dimensional variant thereof) is the $k$-th eigenfunction of the discretized Laplacian (with slight differences due to a different definition of the DFT being used there).
+Thus, we see that the DFT of the Green's function derived in \autoref{eq:dft-transformed-phi} (or rather the one-dimensional variant thereof) is the $k$-th eigenfunction of the discretized Laplacian (with slight differences due to a different definition of the DFT being used there).
 By following the line of reasoning presented above, we observe a deep connection between the DFT and the eigendecomposition of the discretized Laplace operator.
 
 A natural question that arises in the context of this discussion is whether a similar relation holds in the continuous case.
@@ -151,7 +151,7 @@ Applying this result to the Poisson equation yields $F^{-1}\phi = \Lambda^{-1}F^
 where the circumflex denotes the standard Fourier transform and $k = |\mathbf{k}|$.
 The function $-(2\pi k)^2$ is sometimes used instead of the Green's function $\mathcal{G}$ defined in \autoref{eq:dft-transformed-phi}.
 This approach is the basis of the ``poor man's Poisson solver'' (as dubbed by \cite{Hockney1988}).
-While implementing it, we have to take into account that in the standard definition of the DFT nonnegative frequencies correspond to $0 \leq k \leq N/2$ and negative frequencies correspond to $N/2+1 \leq k \leq N-1$ (see \cite{press2007numerical}, pp. 607--608).
+While implementing it, we have to take into account that in the standard definition of the DFT, nonnegative frequencies correspond to $0 \leq k \leq N/2$ and negative frequencies correspond to $N/2+1 \leq k \leq N-1$ (see \cite{press2007numerical}, pp. 607--608).
 This necessitates the following ``index wrapping'':
 \begin{equation*}
     k_i =

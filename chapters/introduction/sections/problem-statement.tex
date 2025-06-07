@@ -19,8 +19,8 @@ This running time characteristic $T(N)$ (running time of one simulation iteratio
     \caption{Scaling of the PP method.}
     \label{fig:pp-method-scaling}
 \end{figure}
-Obviously, the exact form of $T(N)$ depends on the implementation details and on the type of hardware used, but assuming that the code whose running time is shown in \autoref{fig:pp-method-scaling} is not tragically inefficient, we can draw some general conclusions regarding the applicability of the PP method.
+The exact form of $T(N)$ depends on the implementation details and the type of hardware used, but assuming that the code whose running time is shown in \autoref{fig:pp-method-scaling} is not tragically inefficient, we can draw some general conclusions regarding the applicability of the PP method.
 Fitting a quadratic through the points shown in the figure reveals the following approximation: $T(1{,}000N) \approx 26.1N^2 + 0.32N$ [ms].
-In a reasonable particle simulation one often deals with tens of thousands of particles (if not more) and the simulation can span hundreds of iterations.
+In a reasonable particle simulation, one often deals with tens of thousands of particles (if not more) and the simulation can span hundreds of iterations.
 Thus, assuming sensible values of $N = 50{,}000$ and 200 iterations, we get the expected running time of $\approx 3.5$ hours!
-This clearly shows that more efficient algorithms have to put in place.
+This clearly shows that more efficient algorithms have to be put in place.

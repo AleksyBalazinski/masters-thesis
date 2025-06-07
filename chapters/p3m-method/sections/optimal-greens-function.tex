@@ -1,5 +1,5 @@
 \section{Optimal Green's function}
-As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the reference force is approximated by the mesh force.
+As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the mesh force approximates the reference force.
 The average deviation between the two forces can be minimized by a suitable choice of Green's function given (in $k$ space) by
 \begin{equation}\label{eq:optimal-greens-func}
     \hat{\mathcal{G}}(\mathbf{k}) = \frac{\mathbf{\hat{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \mathbf{\hat{R}}(\mathbf{k}_\mathbf{n})}{|\mathbf{\hat{D}}(\mathbf{k})|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
@@ -50,7 +50,7 @@ can be rewritten as
      & = \prod_{i=1}^{3} \left[ \sin^6\left(\frac{k_i H}{2}\right)
         \sum_{n_i} \frac{1}{(k_i H/2 + n_i \pi)^6} \right]
 \end{align*}
-Using the the partial fractions expansion of the cotangent function \cite{aigner2018proofs},
+Using the partial fractions expansion of the cotangent function \cite{aigner2018proofs},
 \begin{equation*}
     \frac{(-1)^s}{s!}\frac{d^s}{dx^s}\cot x = \sum_{n=-\infty}^{\infty} \frac{1}{(x-n\pi)^{s+1}},
 \end{equation*}
@@ -78,7 +78,7 @@ The quantity $\mathbf{\hat{R}}$, the transformed reference force, is related to 
 \end{equation}
 where $k = |\mathbf{k}|$.
 This can be shown by recalling that $\mathbf{R}(\mathbf{x}_i - \mathbf{x}_j)$ is the force applied to cloud $i$ due to cloud $j$.
-Hence $\mathbf{R}(\mathbf{x})$ is the force on cloud centered at $\mathbf{x}$ due to a cloud at the origin.
+Hence, $\mathbf{R}(\mathbf{x})$ is the force on the cloud centered at $\mathbf{x}$ due to a cloud at the origin.
 The force acting on mass element $d\mathbf{x}' S(\mathbf{x}' - \mathbf{x})$ of the cloud centered at $\mathbf{x}$ is therefore
 \begin{equation*}
     -G d\mathbf{x}'S(\mathbf{x}' - \mathbf{x}) \int d\mathbf{x}'' S(\mathbf{x}'')\frac{\mathbf{x}' - \mathbf{x}''}{|\mathbf{x}' - \mathbf{x}''|^3}
@@ -106,7 +106,7 @@ The Fourier transform of $S$ is
 \end{equation*}
 Observe that $\mathbf{k} \cdot \mathbf{x} = kr\cos\theta$, where $\theta$ is the angle between $\mathbf{k}$ and $\mathbf{x}$, and $r = |\mathbf{x}|$.
 Since $S$ is invariant under rotations, $\theta$ can be chosen to be the angle between $\mathbf{x}$ and the $z$-axis.
-Thus, the integral, rewritten in spherical coordinates becomes
+Thus, the integral, rewritten in spherical coordinates, becomes
 \begin{equation*}
     \hat{S}(k) = \int_{0}^{2\pi}d\phi \int_{0}^{\pi} d\theta \int_{0}^{\infty}dr S(r)e^{-ikr\cos\theta}r^2\sin\theta
     = 2\pi \int_{0}^{\infty} r^2 dr \int_{0}^{\pi} d\theta e^{-ikr\cos\theta} \sin\theta.
@@ -131,11 +131,11 @@ and
     \hat{S_2}(k) = \frac{12}{(ka/2)^4}\left(2 - 2\cos\frac{ka}{2}-\frac{ka}{2}\sin\frac{ka}{2}\right).
 \end{equation*}
 
-Finally, we note that the infinite sum in the numerator of \autoref{eq:optimal-greens-func} does not have a closed form but this does not pose a problem since the summand decays rapidly with $\mathbf{n}$ moving further away from zero.
+Finally, we note that the infinite sum in the numerator of \autoref{eq:optimal-greens-func} does not have a closed form, but this does not pose a problem since the summand decays rapidly with $\mathbf{n}$ moving further away from zero.
 
 The result of applying the optimal Green's function in \autoref{eq:poisson-fourier-product} is illustrated in \autoref{fig:reference-force-combined}\subref{fig:reference-force-approx-sub}.
 As can be seen, the PM force closely follows the reference force, especially for distances \( r > a \), where the reference force nearly matches the inverse-square law.
-It is worth noting that for \( r \) slightly smaller than \( a \), the reference force and its mesh-based PM approximation, still provide a good fit to the inverse-square behavior.
+It is worth noting that for \( r \) slightly smaller than \( a \), the reference force and its mesh-based PM approximation still provide a good fit to the inverse-square behavior.
 This observation allows the cutoff radius \( r_e \), which defines the boundary for direct summation, to be chosen smaller than \( a \) (e.g., \( r_e = 0.7a \)), improving performance without sacrificing accuracy.
 \begin{figure}[htp]
     \centering
@@ -161,7 +161,7 @@ This observation allows the cutoff radius \( r_e \), which defines the boundary 
 \subsection{Error analysis}\label{subsec:p3m-error-analysis}
 The \PThreeM{} method offers a high degree of flexibility in terms of specifying the ``building blocks'' of the Green's function in \autoref{eq:optimal-greens-func}.
 For example, we can be interested in learning how the choice of the assignment scheme influences the shape of the PM-approximated reference force.
-The result of a test which addresses this issue is shown in \autoref{fig:reference-force-approx-different-schemes}.
+The result of a test that addresses this issue is shown in \autoref{fig:reference-force-approx-different-schemes}.
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.5]{chapters/p3m-method/img/field_different_ass.png}
@@ -169,22 +169,22 @@ The result of a test which addresses this issue is shown in \autoref{fig:referen
     \label{fig:reference-force-approx-different-schemes}
 \end{figure}
 The figure shows that the general characteristic of the field strength approximated by the PM method is similar to what we have already seen in \autoref{fig:pm-mass-assignment-field-strength}.
-Namely, the NGP schemes yields an unnatural, jagged shape.
+Namely, the NGP scheme yields an unnatural, jagged shape.
 The shape produced using the CIC shape matches the $S_1$ reference force more closely, although it overestimates the field strength values close to the source.
 The most accurate approximation is obtained using the TSC scheme (this is the same shape we have already seen in \autoref{fig:reference-force-approx-sub}).
 
 
-To measure the quality of PM-approximation of a given reference force, we used mean-normalized RMSD error, i.e. we calculated
+To measure the quality of PM-approximation of a given reference force, we used mean-normalized RMSD error, i.e., we calculated
 \begin{equation*}
     \frac{\sqrt{\frac{1}{n} \sum_{i=1}^{n} (F^\text{PM}(r_i) - R(r_i))^2}}{\frac{1}{n} \sum_{i=1}^{n} R(r_i)}
 \end{equation*}
 in a system with a single unit mass located on the $x$-axis.
-The forces $F^\text{PM}(r_i)$ were measured along the $x$-axis in equal-length intervals and the test was run for increasing values of particle diameter $a$.
+The forces $F^\text{PM}(r_i)$ were measured along the $x$-axis in equal-length intervals, and the test was run for increasing values of particle diameter $a$.
 The result of the test is shown in \autoref{fig:reference-force-combined}\subref{fig:reference-force-error-sub}.
 Clearly, the approximation error becomes smaller for increasing values of $a$.
-Since $r_e$ is proportional to $a$, this implies that there is a tradeoff between accuracy and the execution time.
-Increasing $a$ means that $r_e$ should increase as well which forces more particles into short-range correction regions.
-If the system under consideration has uniform density, we note that for any given particle, the short-range correction is concerned with $\sim r_e^3$ particles in its vicinity which translates into $\sim r_e^3$ operations.
+Since $r_e$ is proportional to $a$, this implies that there is a trade-off between accuracy and the execution time.
+Increasing $a$ means that $r_e$ should increase as well, which forces more particles into short-range correction regions.
+If the system under consideration has uniform density, we note that for any given particle, the short-range correction is concerned with $\sim r_e^3$ particles in its vicinity, which translates into $\sim r_e^3$ operations.
 The relation between cutoff radius size $r_e$ and execution time is shown in \autoref{fig:p3m-time-vs-radius}.
 \begin{figure}[htp]
     \centering
@@ -193,7 +193,7 @@ The relation between cutoff radius size $r_e$ and execution time is shown in \au
     The times shown in the graph do not include tabulating the Green's function and the PM step.}
     \label{fig:p3m-time-vs-radius}
 \end{figure}
-As we can see, the execution time very strongly depends on $r_e$ and this explains why choosing $r_e$ slightly even slightly less than $a$ can lead to significant improvements in performance.
+As we can see, the execution time very strongly depends on $r_e$, and this explains why choosing $r_e$ slightly, even slightly less than $a$, can lead to significant improvements in performance.
 Another conclusion that can be drawn from \autoref{fig:reference-force-error-sub} is that the \( S_2 \)-based approximation exhibits higher mean-normalized RMSD error compared to \( S_1 \).
 However, as we remarked previously, it allows for choosing $r_e \lesssim a$ without significant loss of accuracy.
 Therefore, the choice between \( S_1 \) and \( S_2 \) shapes involves a trade-off between accuracy near the source and overall error, making the optimal choice context-dependent.

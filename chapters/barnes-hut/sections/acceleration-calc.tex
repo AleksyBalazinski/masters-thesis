@@ -1,6 +1,6 @@
 \section{Acceleration calculation}
 In the Barnes-Hut algorithm, the net acceleration of a particle $p$ is calculated by summing the contributions from single particles or groups of particles while traversing the tree.
-The decision whether the acceleration can be approximated using the information stored in an internal node $n$ depends on the relative distance from $p$ to $n.\textrm{COM}$ (the center of mass of group represented by $n$).
+The decision of whether the acceleration can be approximated using the information stored in an internal node $n$ depends on the relative distance from $p$ to $n.\textrm{COM}$ (the center of mass of the group represented by $n$).
 The distance is relative to the \textit{width} $H$ of the node, i.e. the side length of the cubical volume encompassed by the node.
 More concretely, the approximation takes place if $n.H / |n.\mathrm{COM} - p.\mathbf{x}| < \theta$, where $\theta$ is the so-called \textit{opening angle}.
 In the extreme case when $\theta$ is set to zero, no approximations take place, and the algorithm reduces to the PP method.
@@ -72,4 +72,4 @@ The approximate value of the potential energy is accumulated for each particle u
 Indeed, the only difference between the two is the replacement of gravitational force calculation in \autoref{alg:bh-find-force} with potential energy calculation according to \autoref{eq:pe-soft}.
 
 It is also noteworthy that the procedure outlined in \autoref{alg:bh-find-force} is embarrassingly parallel.
-In our CPU implementation, the workload is split between an arbitrary number of threads on particle-by-particle basis.
+In our CPU implementation, the workload is split between an arbitrary number of threads on a particle-by-particle basis.

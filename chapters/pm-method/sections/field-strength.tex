@@ -27,13 +27,13 @@ The figure also provides insight into how the error depends on the value of para
 \end{figure}
 
 We can alternatively define the finite difference operators in terms of the delta function to get rid of the dependence on the differenced function. (Technically, the resulting quantities are functions rather than operators.)
-Consider for example the two-point finite difference in \autoref{eq:two-point-central-diff}.
+Consider, for example, the two-point finite difference in \autoref{eq:two-point-central-diff}.
 The definition can be generalized beyond mesh points by letting
 \begin{equation*}
     D_j(\phi)(\mathbf{x}) = -\frac{\phi(\mathbf{x} + H \mathbf{e}_j)-\phi (\mathbf{x} - H \mathbf{e}_j)}{2H} = -\int \left[ \frac{\delta(\mathbf{x} + H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - H\mathbf{e}_j - \mathbf{x}')}{2H} \right]\phi(\mathbf{x}')d\mathbf{x}',
 \end{equation*}
 where $\mathbf{e}_j$ is the $j$-th standard basis vector.
-This motivates us to define
+This generalization motivates us to define
 \begin{equation}\label{eq:two-point-central-diff}
     D_j(\mathbf{x}) = \frac{\delta(\mathbf{x} + H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - H\mathbf{e}_j - \mathbf{x}')}{2H}
 \end{equation}
@@ -41,7 +41,7 @@ and
 \begin{equation}\label{eq:four-point-central-diff}
     D_j(\mathbf{x}) = \frac{\delta(\mathbf{x} + H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - H\mathbf{e}_j - \mathbf{x}')}{2H} + (1-\alpha)\frac{\delta(\mathbf{x} + 2H\mathbf{e}_j - \mathbf{x}') - \delta(\mathbf{x} - 2H\mathbf{e}_j - \mathbf{x}')}{4H}
 \end{equation}
-as the two-point as four-point finite difference operators respectively.
+as the two-point and four-point finite difference operators, respectively.
 
 If $\phi$ denotes the gravitational potential, then the field $\mathbf{g}$ is approximated at mesh point $\mathbf{x}_\mathbf{p}$ as
 \begin{equation*}
