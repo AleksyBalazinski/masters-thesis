@@ -268,3 +268,35 @@ author = {Martin Burtscher and Keshav Pingali},
 abstract = {Publisher Summary
 This chapter describes the first CUDA implementation of the classical Barnes Hut n-body algorithm that runs entirely on the GPU. The Barnes Hut force-calculation algorithm is widely used in n-body simulations such as modeling the motion of galaxies. It hierarchically decomposes the space around the bodies into successively smaller boxes, called cells, and computes summary information for the bodies contained in each cell, allowing the algorithm to quickly approximate the forces (e.g., gravitational, electric, or magnetic) that the n bodies induce upon each other. The Barnes Hut algorithm is challenging to implement efficiently in CUDA because it repeatedly builds and traverses an irregular tree-based data structure, it performs a lot of pointer-chasing memory operations, and it is typically expressed recursively. GPU-specific operations such as thread-voting functions are exploited to greatly improve performance and make use of fence instructions to implement lightweight synchronization without atomic operations. The main conclusion of the work is that GPUs can be used to accelerate irregular codes, not just regular codes. However, a great deal of programming effort is required to achieve good performance. The biggest performance win, though, came from turning some of the unique architectural features of GPUs, which are often regarded as performance hurdles for irregular codes, into assets. Future direction indicates workings on writing high-performing CUDA implementations for other irregular algorithms.}
 }
+
+@article{barnes1986hierarchical,
+  title={A hierarchical O(N log N) force-calculation algorithm},
+  author={Barnes, Josh and Hut, Piet},
+  journal={Nature},
+  volume={324},
+  number={6096},
+  pages={446--449},
+  year={1986},
+  publisher={Nature Publishing Group},
+  doi={10.1038/324446a0},
+  url={https://doi.org/10.1038/324446a0}
+}
+
+@misc{kissfft,
+  author       = {Mark Borgerding},
+  title        = {KISS FFT: Keep It Simple, Stupid - Fast Fourier Transform Library},
+  year         = {2003},
+  howpublished = {\url{https://github.com/mborgerding/kissfft}},
+  note         = {A small, efficient, mixed-radix FFT library for C supporting fixed- and floating-point operations. Licensed under the Revised BSD License.},
+}
+
+@Article{FFTW05,
+  author = 	 {Frigo, Matteo and Johnson, Steven~G.},
+  title = 	 {The Design and Implementation of {FFTW3}},
+  journal = 	 {Proceedings of the IEEE},
+  year = 	 2005,
+  volume =	 93,
+  number =	 2,
+  pages =	 {216--231},
+  note =	 {Special issue on ``Program Generation, Optimization, and Platform Adaptation''}
+}

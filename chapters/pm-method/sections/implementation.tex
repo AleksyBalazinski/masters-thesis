@@ -3,13 +3,13 @@
 The most computationally involved step of the PM method is the potential solver.
 As explained in \autoref{sec:solving-the-field-equation}, in our implementation, we solve the Poisson equation for the potential using the convolution method.
 This approach involves taking the DFT of the grid-defined density and later the inverse DFT of the product of transformed Green's function and the transformed density.
-Since the number of grid points in a typical grid can be of the order of a million, choosing a fast enough implementation of the FFT is of paramount importance.
-We attempted to incorporate a handful of popular C++ FFT libraries into the program, and out of those considered, FFTW (\url{https://www.fftw.org/}) and kissfft (\url{https://github.com/mborgerding/kissfft}) provided the best performance.
+Since the number of grid points in a typical grid can be of the order of a million, employing a well-optimized implementation of the FFT is of paramount importance.
+We attempted to incorporate a handful of popular C++ FFT libraries into the program, and out of those considered, FFTW \cite{FFTW05} and kissfft \cite{kissfft} provided the best performance.
 The running times for FFT and inverse FFT stages of the algorithm using each of the libraries are shown in \autoref{fig:cic-shape}.
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.5]{chapters/pm-method/img/fft_time.png}
-    \caption{Time needed to perform the DFT and inverse DFT using kissft and FFTW libraries.
+    \caption{Time needed to perform the DFT and inverse DFT using kissft (red, round markers) and FFTW (blue, square markers) libraries.
         The total grid size in the test was $(2N_g)\times (2N_g) \times N_g$, where $N_g$ is labeled as ``Grid Size'' on the horizontal axis in the graph.}
     \label{fig:fft-time}
 \end{figure}
@@ -21,6 +21,7 @@ Traditionally, atomic RMW operations were supported by the C++ standard library 
 We conducted a simple benchmark on Intel Core i7-9750H CPU (three threads concurrently incrementing a global variable) to compare the performance of both approaches.
 The benchmark indicated that guarding the critical section with a mutex was around two times faster than using atomic operations.
 However, the same test run on a system with a different processor indicated that using an atomic counter offers better performance, suggesting that more careful benchmarking would be needed to reach a definitive conclusion.
+In any case, in our implementation we decided to use mutexes for synchronization.
 
 \subsection{GPU variant}\label{subsec:gpu-variant}
 As explained before, the mass assignment, field calculation at mesh points, and interpolation steps of the PM method are embarrassingly parallel.
@@ -43,7 +44,7 @@ However, our tests for the 2-point approximation, performed at the early stages 
 
 A significant performance bottleneck in the GPU implementation is the transfer of data between the host and the device.
 These data transfers are necessary if one wishes to record the state of the simulation after each timestep.
-Suppose only the final state of the simulation is of interest. In that case, the PM method can execute entirely on the device, transferring the data to the host only once after the final iteration of the simulation.
+However, assuming that only the final state of the simulation is of interest, the PM method can execute entirely on the device, transferring the data to the host only once after the final iteration of the simulation.
 This is the scenario that we assumed to compare the CPU and GPU implementation.
 The results of the test for different particle numbers are shown in \autoref{fig:cpu-vs-gpu-pm}.
 \begin{figure}[htp]

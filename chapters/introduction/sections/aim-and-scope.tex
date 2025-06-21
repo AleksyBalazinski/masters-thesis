@@ -1,15 +1,15 @@
 \section{Aim and scope}
 This thesis has three main goals:
 \begin{enumerate}
-    \item Developing a program implementing the PM, \PThreeM{}, and Barnes-Hut algorithms focusing on correctness and performance,
-    \item Introducing these algorithms and analyze their strengths and weaknesses via error analysis and performance benchmarks using our implementation,
-    \item Implementing simple astronomical system models to test and evaluate the methods.
+    \item To develop a program implementing the PM, \PThreeM{}, and Barnes-Hut algorithms focusing on correctness and performance;
+    \item To introduce these algorithms and analyze their strengths and weaknesses through error analysis and performance benchmarks using our implementation;
+    \item To implement simple astronomical system models to test and evaluate the methods.
 \end{enumerate}
 The field of $N$-body simulations has been extensively studied (see \autoref{sec:historical-development}), making novel contributions challenging.
 However, since our implementation is written from scratch, we aim to provide practical insights via:
 \begin{enumerate}
-    \item Comparing GPU and CPU implementations of the PM method,
-    \item Parallelizing the short-range correction in the \PThreeM{} method,
+    \item Comparing GPU and CPU implementations of the PM method;
+    \item Parallelizing the short-range correction in the \PThreeM{} method;
     \item Implementing a cache-friendly tree construction for the Barnes-Hut algorithm.
 \end{enumerate}
 The full source code, including all algorithms and simulation models, is available at \url{https://github.com/AleksyBalazinski/ParticleSimulation}.

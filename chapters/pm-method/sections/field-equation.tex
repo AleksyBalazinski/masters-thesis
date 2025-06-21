@@ -1,7 +1,7 @@
 \section{Solving the field equation}\label{sec:solving-the-field-equation}
 The Poisson equation (\autoref{eq:poisson}) can be restated in integral form
 \begin{equation*}
-    \phi(\mathbf{x}) = \int \mathcal{G}(\mathbf{x}-\mathbf{x}')\rho(\mathbf{x}') dV',
+    \phi(\mathbf{x}) = \int d\mathbf{x}' \mathcal{G}(\mathbf{x}-\mathbf{x}')\rho(\mathbf{x}'),
 \end{equation*}
 which has the following discrete analogue
 \begin{equation}\label{eq:poisson-discrete}
@@ -14,16 +14,7 @@ If we assume periodic boundary conditions, we can apply the discrete Fourier tra
     \begin{equation*}
         D(x_p) = \frac{1}{L}\sum_{l=0}^{N-1}\hat{D}(k)e^{ikx_p}, \quad \hat{D}(k) = H\sum_{p=0}^{N-1}D(x_p)e^{-ikx_p},
     \end{equation*}
-    where $x_p = pH$.
-    The conversion between this form and another popular definition,
-    \begin{equation}\label{eq:standard-dft}
-        \widetilde{D_H}(k) = \sum_{p=0}^{N-1}D_H(p)e^{-i2\pi kp / N},
-    \end{equation}
-    is given by
-    \begin{equation*}
-        \widetilde{D_H}(k) = \frac{1}{H}\hat{D}\left(\frac{2\pi}{NH}k\right),
-    \end{equation*}
-    where $D_H(p) = D(pH)$.
+    where $x_p = pH$ and $k=2\pi l / L$ ($L$ is the mesh period length equal to $NH$).
 }
 \begin{equation}\label{eq:poisson-fourier-product}
     \hat{\phi}(\mathbf{k}) = \hat{\mathcal{G}}(\mathbf{k}) \hat{\rho}(\mathbf{k}).
@@ -57,22 +48,22 @@ In the implementation, values of $\hat{\mathcal{G}}$ are computed only once and 
 In the one-dimensional case, the above discussion can be easily rephrased in terms of a diagonalization problem \cite{demanet2013fourier}.
 In one dimension, the Poisson equation is
 \begin{equation}\label{eq:poisson-1d}
-    \frac{d^2 \phi}{dx^2} = \rho.
+    \Delta \phi = \frac{d^2 \phi}{dx^2} = \rho.
 \end{equation}
-The interval $[a, b]$ on which we wish to find $\phi$ is assumed to be discretized into $N$ points $x_j = a + jH$, where $H = (b - a) / (N - 1)$ and $j=0,\dots, N-1$.
+The interval $[a, b]$ (of length $L = b-a$) on which we wish to find $\phi$ is assumed to be discretized into $N$ points $x_j = a + H/2 + jH$, where $H = L / N$ and $j=0,\dots, N-1$.
 Furthermore, we assume periodic boundary conditions so that $\phi(x_{-1}) = \phi(x_{N-1})$ and $\phi(x_{N}) = \phi(x_0)$.
 The approximation of $\Delta$ at $x_j$ is
 \begin{equation*}
-    (\Delta_H \phi)_j \equiv \frac{\phi_{j-1} - 2\phi_j + \phi_{j+1}}{H^2}.
+    (\Delta_H \phi)_j \equiv -\frac{\phi_{j-1} - 2\phi_j + \phi_{j+1}}{H^2}.
 \end{equation*}
-Thus, the discrete version of \autoref{eq:poisson-1d} reads $(\Delta_H \phi)_j = \rho_j$ or
+Thus, the discrete version of \autoref{eq:poisson-1d} reads $-(\Delta_H \phi)_j = \rho_j$ or
 \begin{equation*}
     \frac{\phi_{j-1}-2\phi_j + \phi_{j+1}}{H^2} = \rho_j,
 \end{equation*}
 where $\rho_j = \rho(x_j)$.
 This gives a system of $N$ equations (one per each sampled value of $\rho$) with $N$ unknowns (values of $\phi$) of the following form
 \begin{equation}\label{eq:poisson-1d-matrix}
-    \underbrace{\frac{1}{H^2}
+    -\underbrace{\frac{1}{H^2}
         \begin{bmatrix}
             2  & -1     &        &        & -1 \\
             -1 & 2      & \ddots &        &    \\
@@ -87,7 +78,7 @@ This gives a system of $N$ equations (one per each sampled value of $\rho$) with
             \phi_{N-2} \\
             \phi_{N-1}
         \end{bmatrix}}_{\bar{\phi}}
-    = -\underbrace{\begin{bmatrix}
+    = \underbrace{\begin{bmatrix}
             \rho_0     \\
             \rho_1     \\
             \vdots     \\
@@ -95,25 +86,25 @@ This gives a system of $N$ equations (one per each sampled value of $\rho$) with
             \rho_{N-1}
         \end{bmatrix}}_{\bar{\rho}}.
 \end{equation}
-Next we define $\bar{\psi}(k) \in \mathbb{C}^N$ by $\psi_j(k) \equiv e^{i2\pi jk/N} = \omega^{jk}$ for $j=0,\dots,N-1$.
+Next we define $\bar{\psi}(l) \in \mathbb{C}^N$ by $\psi_j(l) \equiv e^{i2\pi jl/N} = \omega^{jl}$ for $j=0,\dots,N-1$.
 The $j$-th row of $H^2\Delta_H \bar{\psi}$ equals
 \begin{align*}
     (H^2\Delta_H \bar{\psi})_j
      & = -\psi_{j-1} + 2\psi_j - \psi_{j+1}
-    = -\omega^{(j-1)k} + 2\omega^{jk} - \omega^{(j+1)k}     \\
-     & = -\omega^{jk}(\omega^{-k} - 2 + \omega^k)
-    = -\omega^{jk}(\omega^{k/2} - \omega^{-k/2})^2          \\
-     & = 4\omega^{jk} \sin^2\left( \frac{\pi k}{N} \right).
+    = -\omega^{(j-1)l} + 2\omega^{jl} - \omega^{(j+1)l}     \\
+     & = -\omega^{jl}(\omega^{-l} - 2 + \omega^l)
+    = -\omega^{jl}(\omega^{l/2} - \omega^{-l/2})^2          \\
+     & = 4\omega^{jl} \sin^2\left( \frac{\pi l}{N} \right).
 \end{align*}
-Hence we have $(H^2\Delta_H \bar{\psi})_j = 4\sin^2(\pi k/N) \psi_j$ which implies
+Hence we have $(H^2\Delta_H \bar{\psi})_j = 4\sin^2(\pi l/N) \psi_j$ which implies
 \begin{equation*}
-    \Delta_H \bar{\psi}(k)
-    = \frac{4}{H^2} \sin^2\left( \frac{\pi k}{N} \right) \bar{\psi}(k).
+    \Delta_H \bar{\psi}(l)
+    = \frac{4}{H^2} \sin^2\left( \frac{\pi l}{N} \right) \bar{\psi}(l).
 \end{equation*}
-This results tells us that for any value of $k$, $\bar{\psi}(k)$ is an eigenvector of $\Delta_H$ with eigenvalue $(4/H^2)\sin^2(\pi k/N)$.
-For $k=0,\dots, N-1$ we get $N$ linearly independent eigenvectors $\{\bar{\psi}(k)\}$ which necessarily form the basis of $\mathbb{C}^N$.
+This results tells us that for any value of $l$, $\bar{\psi}(l)$ is an eigenvector of $\Delta_H$ with eigenvalue $(4/H^2)\sin^2(\pi l/N)$.
+For $l=0,\dots, N-1$ we get $N$ linearly independent eigenvectors $\{\bar{\psi}(l)\}$ which necessarily form the basis of $\mathbb{C}^N$.
 This fact implies that $\Delta_H$ is diagonalizable.
-The matrix $F$ of its eigenvectors is given by $F_{jk} = \omega^{jk}$, and the inverse is easily verified to be $F^{-1} = (1/N)F^\dagger$.
+The matrix $F$ of its eigenvectors is given by $F_{jl} = (1/L) \omega^{jl}$, and the inverse is easily verified to be $F^{-1} = H F^\dagger$, where the dagger denotes Hermitian adjoint.
 The eigendecomposition of $\Delta_H$ is therefore
 \begin{equation*}
     \Delta_H = F\Lambda F^{-1},
@@ -123,38 +114,38 @@ Substitution into \autoref{eq:poisson-1d-matrix} yields $F\Lambda F^{-1} \bar{\p
 \begin{equation*}
     F^{-1}\bar{\phi} = -\Lambda^{-1}F^{-1}\bar{\rho}.
 \end{equation*}
-Evaluating the left-hand side leads to the conclusion that $F^{-1}\bar\phi$ is nothing else but the DFT of $\phi$.
+Evaluating the left-hand side leads to the conclusion that $F^{-1}\bar\phi$ is nothing but the DFT of $\bar\phi$.
 Indeed,
 \begin{equation*}
-    (F^{-1}\phi)_k
-    = \frac{1}{N}(F^\dagger \phi)_k
-    = \frac{1}{N}\sum_{j=0}^{N-1}F^\dagger_{kj}\phi_j
-    = \frac{1}{N}\sum_{j=0}^{N-1}\omega^{-kj}\phi_j
-    = \frac{1}{N}\sum_{j=0}^{N-1}e^{-2\pi i jk / N}\phi_j
+    (F^{-1}\phi)_l
+    = H (F^\dagger \phi)_l
+    = H \sum_{j=0}^{N-1}F^\dagger_{lj}\phi_j
+    = H \sum_{j=0}^{N-1}\omega^{-lj}\phi_j
+    = H \sum_{j=0}^{N-1}e^{-i2\pi jl / N}\phi_j
 \end{equation*}
-which is exactly the discrete Fourier transform of $\phi$ (using the standard definition of the DFT).
-Thus, we see that the DFT of the Green's function derived in \autoref{eq:dft-transformed-phi} (or rather the one-dimensional variant thereof) is the $k$-th eigenfunction of the discretized Laplacian (with slight differences due to a different definition of the DFT being used there).
-By following the line of reasoning presented above, we observe a deep connection between the DFT and the eigendecomposition of the discretized Laplace operator.
+which is exactly the discrete Fourier transform of $\bar\phi$.
+Thus, we see that the DFT of the Green's function, $\hat{\mathcal{G}}(k) = \hat{\mathcal{G}}(2\pi l / L)$, derived in \autoref{eq:dft-transformed-phi} is the reciprocal of the $l$-th eigenfunction of the discretized Laplacian $(-\Delta_H)$.
+Following the line of reasoning presented above, we observe a deep connection between the DFT and the eigendecomposition of the discretized Laplace operator.
 
 A natural question that arises in the context of this discussion is whether a similar relation holds in the continuous case.
 The answer turns out to be positive;
-assuming free-space boundary conditions, the complex exponential $e^{2\pi i \mathbf{k} \cdot \mathbf{x}}$ (kernel of the inverse Fourier transform) is an eigenfunction of the Laplace operator (with eigenvalue $-(2\pi k)^2$) and the Fourier transform allows for a ``diagonalization'' of the Laplacian \cite{demanet2013fourier}.
+assuming free-space boundary conditions, the complex exponential $e^{i \mathbf{k} \cdot \mathbf{x}}$ (kernel of the inverse Fourier transform) is an eigenfunction of the Laplace operator (with eigenvalue $-k^2$) and the Fourier transform allows for a diagonalization of the Laplacian \cite{demanet2013fourier}.
 More precisely, we have
 \begin{equation*}
     \Delta = F \Lambda F^{-1},
 \end{equation*}
-where $F$ is the inverse FT, and $\Lambda = -(2\pi k)^2$.
+where $F$ is the inverse FT, and $\Lambda = -k^2$.
 Applying this result to the Poisson equation yields $F^{-1}\phi = \Lambda^{-1}F^{-1}\rho$ or
 \begin{equation}\label{eq:poor-mans-poisson-solver}
-    \hat\phi = -\frac{1}{4\pi^2 k^2} \hat\rho,
+    \hat\phi = -\frac{1}{k^2} \hat\rho,
 \end{equation}
-where the circumflex denotes the standard Fourier transform and $k = |\mathbf{k}|$.
-The function $-(2\pi k)^2$ is sometimes used instead of the Green's function $\mathcal{G}$ defined in \autoref{eq:dft-transformed-phi}.
+where the circumflex denotes the Fourier transform and $k = |\mathbf{k}|$.
+The function $(-1/k^2)$ is sometimes used instead of the transformed Green's function $\hat{\mathcal{G}}$ defined in \autoref{eq:dft-transformed-phi}.
 This approach is the basis of the ``poor man's Poisson solver'' (as dubbed by \cite{Hockney1988}).
-While implementing it, we have to take into account that in the standard definition of the DFT, nonnegative frequencies correspond to $0 \leq k \leq N/2$ and negative frequencies correspond to $N/2+1 \leq k \leq N-1$ (see \cite{press2007numerical}, pp. 607--608).
+While implementing it, we have to take into account that in the standard definition of the DFT, nonnegative frequencies correspond to $0 \leq l \leq N/2$ and negative frequencies correspond to $N/2+1 \leq l \leq N-1$ (see \cite{press2007numerical}, pp. 607--608).
 This necessitates the following ``index wrapping'':
 \begin{equation*}
-    k_i =
+    l_i =
     \begin{cases}
         i     & \text{if } i \leq \frac{N}{2} \\
         i - N & \text{if } i > \frac{N}{2}

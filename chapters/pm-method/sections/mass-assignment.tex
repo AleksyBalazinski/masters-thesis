@@ -15,7 +15,7 @@ The three most popular assignment schemes that hail from this family (and the on
 \begin{align*}
     S_\text{NGP} & = \delta(x), & S_\text{CIC} & = \delta(x) * \frac{1}{H} \Pi\left(\frac{x}{H}\right) = \frac{1}{H}\Pi\left(\frac{x}{H}\right), & S_\text{TSC} & = \frac{1}{H}\Pi\left(\frac{x}{H}\right) * \frac{1}{H}\Pi\left(\frac{x}{H}\right) = \frac{1}{H}\Lambda \left(\frac{x}{H}\right),
 \end{align*}
-where $\Lambda$ is the triangle function
+where $\delta$ is the Dirac delta function, the asterisk denotes convolution, $H$ is the cell width, and $\Lambda$ is the triangle function
 \begin{equation*}
     \Lambda(x) = \begin{cases}
         1 - |x|, & |x| < 1           \\
@@ -33,11 +33,11 @@ For illustrative purposes, the shape $S_\text{CIC}$ is depicted in \autoref{fig:
 
 In the one-dimensional case, the fraction of mass $W_p$ assigned to mesh-point $p$ from particle at position $x$ is given by
 \begin{equation*}
-    W(x-x_p) = W_p(x) = \int_{x_p-H/2}^{x_p+H/2} S(x'-x)dx'.
+    W(x-x_p) = W_p(x) = \int_{x_p-H/2}^{x_p+H/2} dx' S(x'-x).
 \end{equation*}
 A simple rule for relating the assignment function $W$ defined above with shape $S$ can be found by noticing that
 \begin{equation*}
-    W(x) = \int_{-H/2}^{H/2}S(x'-x)dx' = \int_{-\infty}^\infty \Pi\left(\frac{x'}{H}\right)S(x'-x)dx' = \Pi\left(\frac{x}{H}\right) * S(x).
+    W(x) = \int_{-H/2}^{H/2}dx' S(x'-x) = \int_{-\infty}^\infty dx' \Pi\left(\frac{x'}{H}\right)S(x'-x) = \Pi\left(\frac{x}{H}\right) * S(x).
 \end{equation*}
 This implies that
 \begin{align}\label{eq:assignment-functions}
@@ -68,7 +68,7 @@ or, in terms of density $\rho$,
 where $V = H^3$ is the volume of a cell and $i$ indexes the particles.
 
 Obviously, \autoref{eq:density-assignment} is not suitable for direct application in the actual algorithm.
-Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of each particle (and its neighborhood) and update $\rho$.
+Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of each particle (and the neighborhood of $\mathbf{p}$) and update $\rho$.
 This process is illustrated in \autoref{alg:density-assignment}.
 \begin{algorithm}
     \caption{Density assignment algorithm}\label{alg:density-assignment}
@@ -83,4 +83,4 @@ This process is illustrated in \autoref{alg:density-assignment}.
 The set $\mathcal{C}_S(\mathbf{x}_i)$ of cells that have to be considered while assigning density from the $i$-th particle depends on the shape $S$ of the particle.
 Specifically, we have $\mathcal{C}_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]\}$, $\mathcal{C}_\mathrm{CIC}(\mathbf{x}) = \{\lfloor \mathbf{x}/H \rfloor + \mathbf{t} \;|\; t_i =0,1\}$, and $\mathcal{C}_\mathrm{TSC}(\mathbf{x}) = \{[\mathbf{x} / H] + \mathbf{t} \;|\; t_i = -1, 0, 1\}$.
 It follows that $|\mathcal{C}_\mathrm{NGP}(\mathbf{x})| = 1$, $|\mathcal{C}_\mathrm{CIC}(\mathbf{x})| = 8$, and $|\mathcal{C}_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
-We note that \autoref{alg:density-assignment} can be parallelized if atomic increments are used in line 3.
+We note that \autoref{alg:density-assignment} is easily parallelized if atomic increments are used in line 3.

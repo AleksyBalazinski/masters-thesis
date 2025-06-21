@@ -1,10 +1,10 @@
 \begin{abstract}
     This thesis discusses the implementation and conducts a comparative analysis of three prominent algorithms used in gravitational $N$-body simulations: the particle-mesh (PM) method, the particle-particle particle-mesh (\PThreeM{}) method, and the Barnes-Hut algorithm.
-    The $N$-body simulations are a crucial tool in astrophysical research where they are used for modeling systems where the gravitational interactions dominate.
+    $N$-body simulations are a crucial tool in astrophysical research, where they are used to model systems where gravitational interactions dominate.
     The primary goal of the work is to develop high-performance implementations of these methods from scratch and to evaluate their accuracy and computational efficiency.
-    For the PM method, both CPU and GPU implementations are developed, with significant performance gains (up to 1200\% speedup) observed for the GPU version.
-    The short-range correction in the \PThreeM{} method is parallelized on the CPU leading to a four-fold speedup compared to a single-threaded version.
-    The thesis also discusses a cache-friendly implementation of the octree construction procedure which offers a 40\% speedup of tree construction and 15\% speedup in the overall execution time of the Barnes-Hut algorithm.
+    For the PM method, both CPU and GPU implementations have been developed, with significant performance gains (up to 1200\% speedup) observed for the GPU version.
+    The short-range correction in the \PThreeM{} method is parallelized on the CPU, leading to a four-fold speedup compared to a single-threaded version.
+    The thesis also discusses a cache-friendly implementation of the octree construction procedure, which offers a 140\% speedup in tree construction and a 115\% speedup in the overall execution time of the Barnes-Hut algorithm.
     Through a series of test simulations, including spiral galaxies, globular clusters, and galaxy collisions, the methods are benchmarked for accuracy, computational cost, and scalability.
     The findings contribute practical insights into the strengths and limitations of each method.
 

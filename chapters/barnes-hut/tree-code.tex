@@ -5,7 +5,7 @@ Significant reduction of time complexity, from quadratic to $O(N \log N)$, is ac
 The grouping of particles is hierarchical in nature and is thus best understood as a tree.
 The entire set of particles comprises the top-level group, represented by the root of the tree;
 the eight children of the root node are representative of groups of particles residing in each of the octants of the computational domain, etc.
-The process of subdividing the space into eight smaller volumes at each node continues recursively until there are only one or zero particles left in a given volume.
+The process of subdividing the space into eight smaller volumes at each node continues recursively until there is only one or zero particles left in a given volume.
 Nodes that satisfy this condition are the leaves of the tree and are sometimes called the \textit{external nodes}.
 The remaining nodes, each of which has eight children, are called \textit{internal nodes}.
 

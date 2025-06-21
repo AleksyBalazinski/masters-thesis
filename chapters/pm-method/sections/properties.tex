@@ -34,22 +34,22 @@ The single-source case analysis can be extended by considering the effect of cho
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{chapters/pm-method/img/pm-finite-diff-err.png}
-        \caption{Relative error of field strength approximation in different PM variants.}
+        \caption{Relative error of field strength approximation in different finite difference schemes.}
         \label{fig:pm-finite-diff-err}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\linewidth]{chapters/pm-method/img/pm-mass-assignment.png}
-        \caption{Field strength calculated with the PM method using different assignment schemes.}
+        \caption{Field strength calculated with the PM method using different assignment schemes (four-point finite difference).}
         \label{fig:pm-mass-assignment-field-strength}
     \end{subfigure}
-    \caption{Comparison of PM method performance. (a) Relative error due to finite difference accuracy. (b) Effect of mass assignment schemes on computed field strength (4-point finite difference).}
+    \caption{Approximation quality in the PM method.}
     \label{fig:pm-combined}
 \end{figure}
 The conclusion that can be drawn from \autoref{fig:pm-combined} is that, as expected, the TSC mass assignment scheme and the four-point finite difference yield the best results.
 
-The field produced by the PM method using the ``poor man's'' potential solver is similar to the variant employing the discretized Laplacian Green's function described above.
+The field produced by the PM method using the ``poor man's'' potential solver is similar to the one obtained using the discretized Laplacian Green's function described above (see \autoref{fig:pm-poor-man-vs-laplacian}).
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.55]{chapters/pm-method/img/poor-man-vs-laplacian.png}
@@ -59,7 +59,7 @@ The field produced by the PM method using the ``poor man's'' potential solver is
 
 \subsection{Global picture}\label{subsubsec:pm-global-picture}
 To calculate the global approximation error of a PM simulation, we calculated the average of relative differences over all particles ($N=10{,}000$ in this case) between the forces produced by the PM method and the exact result obtained using the PP method.
-More precisely, we the error was defined as
+More precisely, the error was defined as
 \begin{equation}\label{eq:force-avg-relative-err}
     \frac{1}{N}\sum_{i} \frac{|\mathbf{F}_i^\text{approx.} - \mathbf{F}_i^\text{PP}|}{|\mathbf{F}_i^\text{PP}|}.
 \end{equation}
@@ -83,15 +83,15 @@ For this test, the particle positions were generated according to the uniformly 
     \caption{Average force approximation error in the PM method (discrete Laplacian solver).}
     \label{fig:pm-global-err-lap}
 \end{figure}
-As can be seen in \autoref{fig:pm-global-err-lap-no-soft}, for each of the assignment schemes, the error is minimized for the four-point difference, as expected.
-A more surprising result is that the errors are most significant for the TSC assignment scheme.
+As can be seen in \autoref{fig:pm-global-err-lap-no-soft}, for each of the assignment schemes, the error is minimized for the four-point difference, as expected;
+a more surprising result is that the errors are most significant for the TSC assignment scheme.
 This paradox is easily explained by considering the graphs in \autoref{fig:pm-mass-assignment-field-strength}.
 As can be seen there, the TSC assignment scheme gives rise to a force that accurately reproduces the inverse-square law force, but at the same time, it severely underestimates the force close to the source.
 This behavior is expected since it stems from the mass of any individual particle being spread between multiple cells.
 The CIC and NGP schemes, on the other hand, do not reproduce the actual force with the same level of accuracy, but the underestimation close to the source is not as severe as in the case of the TSC scheme.
 In some applications, for instance, in the context of a galaxy simulation, this is a favorable feature of the TSC scheme.
-The number of stars in a galaxy can be in the order of a trillion \cite{young2006andromeda}, whereas the number of particles in our tests is in the order of tens of thousands, giving an average of around $10^{12} / 10^{4} = 10^8$ of stars per particle.
-As can be seen, it would be a grave mistake to model the force due to a single particle by the force due to a dimensionless point mass.
+The number of stars in a galaxy can be in the order of $10^{12}$ \cite{young2006andromeda}, whereas the number of particles in our tests is in the order of tens of thousands, giving an average of around $10^{12} / 10^{4} = 10^8$ of stars per particle.
+Hence, it would be a grave mistake to model the force due to a single particle by the force due to a dimensionless point mass.
 In such a case, it is a standard practice to use a softened gravitational force instead of the one given in \autoref{eq:law-of-uni-grav} \cite{10.1046/j.1365-8711.2000.03316.x}.
 By using the TSC scheme, force softening is automatically included in the calculation.
 It can be argued that obtaining the smoothness properties enjoyed by the higher-order assignment schemes should be treated as tangential to softening the force.

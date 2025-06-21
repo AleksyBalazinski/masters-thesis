@@ -28,16 +28,8 @@ For the mass assignment scheme hierarchy described in \autoref{sec:mass-assignme
 \begin{equation*}
     \hat{U}(\mathbf{k}) = \left(\prod_{i=1}^{3}\frac{\sin(k_i H / 2)}{k_i H / 2}\right)^{p},
 \end{equation*}
-where $p=1,2,3,\dots$ with $p=1$ corresponding to NGP assignment, etc.
-In particular, for the TSC assignment scheme, the \textit{alias sum}\footnote{
-    To get the alias sums compatible with the DFT definition given in \autoref{eq:standard-dft}, one has to compute
-    \begin{equation*}
-        \sum_{\mathbf{n}} \tilde{U}^2(\mathbf{k}_\mathbf{n})
-        \equiv \sum_\mathbf{n}\tilde{U}^2(\mathbf{k}+\mathbf{n}N)
-        = \frac{1}{H}\sum_\mathbf{n}\hat{U}^2\left(\mathbf{k}\frac{2\pi}{NH}+\mathbf{n}\frac{2\pi}{H}\right)
-    \end{equation*}
-    instead.
-}
+where $p=1,2,3,\dots$, with $p=1$ corresponding to NGP assignment, etc.
+In particular, for the TSC assignment scheme, the \textit{alias sum}
 \begin{equation*}
     \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n})
     \equiv \sum_{\mathbf{n}}\hat{U}^2\left(\mathbf{k} + \mathbf{n}\frac{2\pi}{H}\right)
@@ -102,7 +94,7 @@ Applying the convolution theorem twice and factoring the constant $(-4\pi G)$ ou
 Since the shapes $S$ are spherically symmetric, the calculation of $\hat{S}$ (appearing in \autoref{eq:reference-force-transform}) can be simplified.
 The Fourier transform of $S$ is
 \begin{equation*}
-    \hat{S}(\mathbf{k}) = \int S(\mathbf{x}) e^{-i\mathbf{k} \cdot \mathbf{x}} d\mathbf{x}.
+    \hat{S}(\mathbf{k}) = \int d\mathbf{x} S(\mathbf{x}) e^{-i\mathbf{k} \cdot \mathbf{x}}.
 \end{equation*}
 Observe that $\mathbf{k} \cdot \mathbf{x} = kr\cos\theta$, where $\theta$ is the angle between $\mathbf{k}$ and $\mathbf{x}$, and $r = |\mathbf{x}|$.
 Since $S$ is invariant under rotations, $\theta$ can be chosen to be the angle between $\mathbf{x}$ and the $z$-axis.
@@ -136,7 +128,7 @@ Finally, we note that the infinite sum in the numerator of \autoref{eq:optimal-g
 The result of applying the optimal Green's function in \autoref{eq:poisson-fourier-product} is illustrated in \autoref{fig:reference-force-combined}\subref{fig:reference-force-approx-sub}.
 As can be seen, the PM force closely follows the reference force, especially for distances \( r > a \), where the reference force nearly matches the inverse-square law.
 It is worth noting that for \( r \) slightly smaller than \( a \), the reference force and its mesh-based PM approximation still provide a good fit to the inverse-square behavior.
-This observation allows the cutoff radius \( r_e \), which defines the boundary for direct summation, to be chosen smaller than \( a \) (e.g., \( r_e = 0.7a \)), improving performance without sacrificing accuracy.
+This observation allows the \textit{cutoff radius} \( r_e \), which defines the boundary for direct summation, to be chosen smaller than \( a \) (e.g., \( r_e = 0.7a \)), improving performance without sacrificing accuracy.
 \begin{figure}[htp]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
@@ -184,7 +176,7 @@ The result of the test is shown in \autoref{fig:reference-force-combined}\subref
 Clearly, the approximation error becomes smaller for increasing values of $a$.
 Since $r_e$ is proportional to $a$, this implies that there is a trade-off between accuracy and the execution time.
 Increasing $a$ means that $r_e$ should increase as well, which forces more particles into short-range correction regions.
-If the system under consideration has uniform density, we note that for any given particle, the short-range correction is concerned with $\sim r_e^3$ particles in its vicinity, which translates into $\sim r_e^3$ operations.
+If in the system under consideration the particles are uniformly distributed, then for any given particle, the short-range correction is performed based on $\sim r_e^3$ particles in its vicinity, which translates into $\sim N r_e^3$ total operations.
 The relation between cutoff radius size $r_e$ and execution time is shown in \autoref{fig:p3m-time-vs-radius}.
 \begin{figure}[htp]
     \centering
@@ -193,7 +185,7 @@ The relation between cutoff radius size $r_e$ and execution time is shown in \au
     The times shown in the graph do not include tabulating the Green's function and the PM step.}
     \label{fig:p3m-time-vs-radius}
 \end{figure}
-As we can see, the execution time very strongly depends on $r_e$, and this explains why choosing $r_e$ slightly, even slightly less than $a$, can lead to significant improvements in performance.
+As we can see, the execution time very strongly depends on $r_e$, and this explains why choosing $r_e$ even slightly less than $a$, can lead to significant improvements in performance.
 Another conclusion that can be drawn from \autoref{fig:reference-force-error-sub} is that the \( S_2 \)-based approximation exhibits higher mean-normalized RMSD error compared to \( S_1 \).
 However, as we remarked previously, it allows for choosing $r_e \lesssim a$ without significant loss of accuracy.
 Therefore, the choice between \( S_1 \) and \( S_2 \) shapes involves a trade-off between accuracy near the source and overall error, making the optimal choice context-dependent.

@@ -1,13 +1,13 @@
 \section{Code units}
 Implementation of the PM (and \PThreeM{}) methods can be simplified by switching to a system of dimensionless units, often called \textit{code units}.
-The natural units of time and length in a PM simulation are $H$ and $DT$, respectively.
-Hence, length in a PM code is conveniently expressed in terms of multiples of $H$, and similarly, time intervals are given as a multiple of $DT$, i.e., the conversion relations are
+The natural units of time and length in a PM simulation are $H$ (cell width) and $\textrm{DT}$ (time step length), respectively.
+Hence, length in a PM code is conveniently expressed in terms of multiples of $H$, and similarly, time intervals are given as a multiple of $\textrm{DT}$, i.e., the conversion relations are
 \begin{equation*}
-    x' = \frac{x}{H} \quad \text{and} \quad t' = \frac{t}{DT}.
+    x' = \frac{x}{H} \quad \text{and} \quad t' = \frac{t}{\textrm{DT}}.
 \end{equation*}
 From there, it follows that
 \begin{equation*}
-    v' = \frac{DT}{H}v \quad \text{and} \quad a' = \frac{DT^2}{H}a.
+    v' = \frac{\textrm{DT}}{H}v \quad \text{and} \quad a' = \frac{\textrm{DT}^2}{H}a.
 \end{equation*}
-The expected relation $\mathbf{g}' = -\nabla' \phi'$ leads to the definition $\phi' = (DT^2 / H^2)\phi$.
-By stipulating that we have $\nabla'^2\phi = \rho'$, we get $\rho' = DT^2 \cdot 4\pi G\rho$, $m' = (DT^2\cdot 4\pi G / H^3) m$, and $G' = 1/(4\pi)$.
+The expected relation $\mathbf{g}' = -\nabla' \phi'$ leads to the definition $\phi' = (\textrm{DT}^2 / H^2)\phi$.
+By stipulating that we have $\nabla'^2\phi = \rho'$, we get $\rho' = \textrm{DT}^2 \cdot 4\pi G\rho$, $m' = (\textrm{DT}^2\cdot 4\pi G / H^3) m$, and $G' = 1/(4\pi)$.

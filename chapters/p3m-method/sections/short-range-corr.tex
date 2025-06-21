@@ -88,7 +88,7 @@ If we define $\xi = r^2 / \Delta^2$ and $t=\lfloor \xi \rfloor$, then
 The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, eliminating the use of the square root operations and reducing the total number of floating-point operations to just four.
 
 \subsection{Parallelization}
-In our implementation, the procedure outlined in\autoref{alg:short-range-correction} is parallelized by splitting the work done in the outmost loop between some number of threads.
+In our implementation, the procedure outlined in \autoref{alg:short-range-correction} is parallelized by splitting the work done in the outmost loop between some number of threads.
 In doing so, extra care has to be taken to avoid data races.
 A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may ``clash'' with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
 However, by the construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
@@ -99,7 +99,7 @@ Since only one thread is responsible for updates to particle $i$ coming ``from t
 This approach presents two major drawbacks.
 First, it significantly increases memory usage, requiring storage for an additional $13N$ three-dimensional vectors.
 Second, it offers no guarantee of uniform workload distribution across threads.
-This imbalance, combined with the substantial variation in operations performed by individual threads, leads to severe thread divergence, rendering the parallelization scheme unsuitable for GPU execution, making it only applicable to the CPU implementation.
+This imbalance, combined with the substantial variation in operations performed by individual threads, leads to severe thread divergence, rendering the parallelization scheme unsuitable for GPU execution and making it only applicable to the CPU implementation.
 Despite these shortcomings, tests performed on our machine (utilizing the maximum number of concurrent threads supported, equal to 12) yielded more than four-fold speedup compared to the single-threaded implementation in a typical simulation.
 The results of a performance test for a typical simulation are shown in \autoref{fig:p3m-time-threads}.
 \begin{figure}[htp]
