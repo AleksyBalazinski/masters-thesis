@@ -17,7 +17,7 @@ In our program, the chaining mesh is implemented as a \textit{head-of-chain} (HO
     \label{fig:hoc}
 \end{figure}
 The basic version of the HOC array is very cheap to build.
-Given a particle at point $\mathbf{x} = (x, y, z)$, we can determine in which chaining mesh cell $\mathbf{c}$ it lies by simply performing integer division on each of its coordinates, i.e. $\mathbf{c} = (\lfloor x / \text{HC}_1 \rfloor, \lfloor y / \text{HC}_2 \rfloor, \lfloor z / \text{HC}_3 \rfloor)$.
+Given a particle at a point $\mathbf{x} = (x, y, z)$, we can determine in which chaining mesh cell $\mathbf{c}$ it lies by simply performing integer division on each of its coordinates, i.e., $\mathbf{c} = (\lfloor x / \text{HC}_1 \rfloor, \lfloor y / \text{HC}_2 \rfloor, \lfloor z / \text{HC}_3 \rfloor)$.
 Then, to get a HOC table index $i$ corresponding to $\mathbf{c}$, standard index flattening is used.
 Subsequently, a new linked-list node is allocated and inserted at the beginning of the list HOC[$i$].
 The whole process is linear in the number of particles, and the array can be constructed anew at each time step without degrading performance.

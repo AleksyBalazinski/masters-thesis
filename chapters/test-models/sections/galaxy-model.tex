@@ -36,7 +36,7 @@ The disk particles are sampled from a radial distribution
     p(r) = \frac{3}{\pi R_D^2}\left(1 - \frac{r}{R_D}\right), \; z = 0,
 \end{equation*}
 where $R_D$ is the radius of the disk and $r \leq R_D$.
-The cumulative distribution function is therefore
+The cumulative distribution function (CDF) is therefore
 \begin{equation*}
     F(r, \phi) = \int_{0}^{\phi}\int_{0}^{r} p(r') r'dr'd\phi' = \frac{\phi}{2\pi R_D^3}(3R_D r^2-2r^3)
 \end{equation*}
@@ -44,21 +44,21 @@ and the marginal CDFs are
 \begin{equation*}
     F_R(r) = F(r, 2\pi) = \frac{1}{R_D^3}(3R_D r^2-2r^3) \quad \text{and} \quad F_\Phi(\phi) = F(R_D, \phi) = \frac{\phi}{2\pi}.
 \end{equation*}
-Now we use inverse transform sampling to generate initial positions $(r, \phi)$ for the particles, i.e. $\phi = 2\pi u$ and $r$ is given implicitly by $h(r) \equiv 2r^3 - 3R_D r^2 + uR_D^3 = 0$ with $u \sim U(0, 1)$.
-A straightforward calculation shows that $dh/dr < 0$ for $0 < r < R_D$ and $h(0)h(R_D) < 0$, implying that $h$ has exactly one zero between 0 and $R_D$ (which can be found for example using Newton's method).
+Now we use inverse transform sampling to generate initial positions $(r, \phi)$ for the particles, i.e., $\phi = 2\pi u$ and $r$ is given implicitly by $h(r) \equiv 2r^3 - 3R_D r^2 + uR_D^3 = 0$ with $u \sim U(0, 1)$.
+A straightforward calculation shows that $dh/dr < 0$ for $0 < r < R_D$ and $h(0)h(R_D) < 0$, implying that $h$ has exactly one zero between 0 and $R_D$ (which can be found, for example, using Newton's method).
 
-Strength of the gravitational field $\mathbf{g}_D$ due to the disk at point $\mathbf{x}_0$ lying in the disk is
+The strength of the gravitational field $\mathbf{g}_D$ due to the disk at point $\mathbf{x}_0$ lying in the disk is
 \begin{equation*}
     \mathbf{g}_D = G \int_{0}^{2\pi}\int_{0}^{R_D} \sigma(r) \frac{\mathbf{x} - \mathbf{x}_0}{|\mathbf{x} - \mathbf{x}_0|^3}r dr d\phi,
 \end{equation*}
 where $\sigma(r) = \sigma_0(1 - r/R_D)$ describes the density profile of the disk for $r \leq R_D$.
 If $M_D$ is the total mass of the disk, then $\sigma_0 = 3M_D / (\pi R_D^2)$.
-By symmetry, the point $\mathbf{x}_0$ may be chosen to lie on the $x$-axis, i.e. $\mathbf{x}_0 = (-x_0, 0)$, so that $\mathbf{x} - \mathbf{x}_0 = (x_0 + r\cos\phi, r\sin\phi)$.
+By symmetry, the point $\mathbf{x}_0$ may be chosen to lie on the $x$-axis, i.e., $\mathbf{x}_0 = (-x_0, 0)$, so that $\mathbf{x} - \mathbf{x}_0 = (x_0 + r\cos\phi, r\sin\phi)$.
 Letting $\bar{r} = r/R_D$ and $\bar{x}_0 = x_0 / R_D$, the integral becomes
 \begin{equation*}
     \mathbf{g}_D = G\sigma_0 \int_{0}^{2\pi} \int_{0}^{1} (1 - \bar{r}) \frac{(\bar{x}_0 + \bar{r}\cos\phi, \bar{r}\sin\phi)}{|(\bar{x}_0 + \bar{r}\cos\phi, \bar{r}\sin\phi)|^3}\bar{r} d\bar{r} d\phi.
 \end{equation*}
-By symmetry $g_{D,y} = 0$ and thus the radial component of the field $\mathbf{g}_D$ at distance $R\bar{x}_0$ from the center is
+By symmetry $g_{D,y} = 0$, and thus the radial component of the field $\mathbf{g}_D$ at distance $R\bar{x}_0$ from the center is
 \begin{equation}\label{eq:gx-disk}
     g_{D,r} = -|\mathbf{g}_D| = -G\sigma_0 \int_{0}^{2\pi} \int_{0}^{1} (1 - \bar{r})\frac{\bar{x}_0 + \bar{r}\cos\phi}{(\bar{x}_0^2+\bar{r}^2+2\bar{x}_0\bar{r}\cos\phi)^{3/2}}\bar{r}d\bar{r}d\phi.
 \end{equation}
@@ -75,7 +75,7 @@ The value of $a = -k/h^2$ can be found by setting $g_{D,r}(0) = 0$ in the approx
 \end{figure}
 
 \subsection{Halo}
-The density profile of the halo is analogous to the one used for the disk, save for the fact it is 3-dimensional, i.e.
+The density profile of the halo is analogous to the one used for the disk, save for the fact it is 3-dimensional, i.e.,
 \begin{equation*}
     \rho(r) =
     \begin{cases}

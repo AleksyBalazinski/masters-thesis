@@ -181,11 +181,11 @@ The relation between cutoff radius size $r_e$ and execution time is shown in \au
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.5]{chapters/p3m-method/img/time-vs-radius.png}
-    \caption{Execution time for different setting of cutoff radius $r_e$ in the \PThreeM{} method (single step, $N=10{,}000$).
+    \caption{Execution time for different settings of cutoff radius $r_e$ in the \PThreeM{} method (single step, $N=10{,}000$).
     The times shown in the graph do not include tabulating the Green's function and the PM step.}
     \label{fig:p3m-time-vs-radius}
 \end{figure}
-As we can see, the execution time very strongly depends on $r_e$, and this explains why choosing $r_e$ even slightly less than $a$, can lead to significant improvements in performance.
+As we can see, the execution time very strongly depends on $r_e$, and this explains why choosing $r_e$ even slightly less than $a$ can lead to significant improvements in performance.
 Another conclusion that can be drawn from \autoref{fig:reference-force-error-sub} is that the \( S_2 \)-based approximation exhibits higher mean-normalized RMSD error compared to \( S_1 \).
 However, as we remarked previously, it allows for choosing $r_e \lesssim a$ without significant loss of accuracy.
 Therefore, the choice between \( S_1 \) and \( S_2 \) shapes involves a trade-off between accuracy near the source and overall error, making the optimal choice context-dependent.

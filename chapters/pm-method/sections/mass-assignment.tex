@@ -67,7 +67,7 @@ or, in terms of density $\rho$,
 \end{equation}
 where $V = H^3$ is the volume of a cell and $i$ indexes the particles.
 
-Obviously, \autoref{eq:density-assignment} is not suitable for direct application in the actual algorithm.
+\autoref{eq:density-assignment} is not suitable for direct application in the actual algorithm as it results in $O(N N_g^3)$ time complexity, where $N_g$ is the number of grid points in one dimension.
 Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of each particle (and the neighborhood of $\mathbf{p}$) and update $\rho$.
 This process is illustrated in \autoref{alg:density-assignment}.
 \begin{algorithm}

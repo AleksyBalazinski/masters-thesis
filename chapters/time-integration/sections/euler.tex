@@ -3,9 +3,10 @@ Possibly, the simplest numerical method that could be used is Euler's method des
 \begin{equation}\label{eq:eulers-method}
     \begin{aligned}
         \mathbf{v}_i^{(k+1)} & = \mathbf{v}_i^{(k)} + \textrm{DT} \frac{\mathbf{F}^{(k+1)}_i}{m_i}, \\
-        \mathbf{x}_i^{(k+1)} & = \mathbf{x}_i^{(k)} + \textrm{DT} \mathbf{v}_i^{(k)}.
+        \mathbf{x}_i^{(k+1)} & = \mathbf{x}_i^{(k)} + \textrm{DT} \mathbf{v}_i^{(k)},
     \end{aligned}
 \end{equation}
+where $\mathrm{DT}$ is the time step length.
 The method defined in \autoref{eq:eulers-method} is not suitable for physical simulations, however.
 Its shortcomings are well illustrated by an example of an undamped pendulum of length $l$ in a gravitational field of magnitude $g$.
 Although it is a rudimentary system, it illustrates the numerical challenges faced in gravitational simulations over long timescales, particularly the issue of energy preservation.
@@ -22,7 +23,10 @@ and its kinetic and potential energy are given by $\textrm{KE} = (1/2)ml^2\dot{\
     \label{fig:euler-integrator}
 \end{figure}
 As shown in \autoref{fig:euler-integrator}, Euler's method fails to conserve total energy $(\textrm{PE} + \textrm{KE})$ and produces trajectories in phase space that are not closed, contrary to expectations for periodic systems.
-Additionally, the evolution of an area element in phase space violates Liouville's theorem, as described in \cite{taylor2005classical}, making the method unsuitable for long-term physical simulations (see \autoref{fig:area-euler-vs-leapfrog}).
+Additionally, the evolution of an area element in phase space violates Liouville's theorem,\footnote{If we represent identical systems launched at the same time with slightly different initial conditions as points in phase space, then the theorem essentially states that the volume occupied by any group of points stays constant.
+    A more complete description is given in \cite{taylor2005classical}.
+}
+making the method unsuitable for long-term physical simulations (see \autoref{fig:area-euler-vs-leapfrog}).
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.4]{chapters/time-integration/img/area-leap-vs-euler.png}

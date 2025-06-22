@@ -2,17 +2,17 @@
 The globular cluster is simulated using the Plummer model with parameters set to the values in \autoref{tab:cluster-parameters}.
 \begin{table}[htp]
     \centering
-    \begin{tabular}{|l|c|}
-        \hline
+    \caption{Globular cluster model parameters used in the simulation.}
+    \label{tab:cluster-parameters}
+    \begin{tabular}{lc}
+        \toprule
         \textbf{Parameter} & \textbf{Value}          \\
-        \hline
+        \midrule
         $a$ (spread)       & 2 pc                    \\
         Mass               & $1 \times 10^6 M_\odot$ \\
         Maximum radius     & 15 pc                   \\
-        \hline
+        \bottomrule
     \end{tabular}
-    \caption{Galaxy model parameters used in the simulation.}
-    \label{tab:cluster-parameters}
 \end{table}
 The \textit{maximum radius} parameter was introduced to confine the cluster to a predefined computational domain.
 We restrict the presentation of our results to the simulation conducted using the Barnes-Hut algorithm since other methods yielded practically the same results.
@@ -20,18 +20,18 @@ We restrict the presentation of our results to the simulation conducted using th
 The configuration of the Barnes-Hut algorithm used in the globular cluster simulation is given in \autoref{tab:bh-method-parameters-cluster}.
 \begin{table}[htp]
     \centering
-    \begin{tabular}{|l|c|}
-        \hline
+    \caption{Barnes-Hut method configuration.}
+    \label{tab:bh-method-parameters-cluster}
+    \begin{tabular}{lc}
+        \toprule
         \textbf{Parameter}            & \textbf{Value} \\
-        \hline
+        \midrule
         $\theta$ (opening angle)      & 0.5            \\
         $\epsilon$ (softening length) & 0.5 pc         \\
         DT (time step)                & $1$ kyr        \\
         Highest multipole term        & quadrupole     \\
-        \hline
+        \bottomrule
     \end{tabular}
-    \caption{Barnes-Hut method configuration.}
-    \label{tab:bh-method-parameters-cluster}
 \end{table}
 The conservation of energy, momentum, and angular momentum during the simulation is demonstrated in \autoref{fig:physical-quantities-bh-cluster}.
 \begin{figure}[htp]

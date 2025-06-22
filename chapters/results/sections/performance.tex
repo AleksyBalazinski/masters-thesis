@@ -44,9 +44,9 @@ This is in stark contrast with the results reported in \autoref{subsec:gpu-varia
 The difference between the two results stems from the fact in \autoref{subsec:gpu-variant}, we considered an ``idealized scenario'' where the data transfers from device to host and disk I/O operations were reduced to the absolute minimum, saving only the \textit{final state} of the simulation.
 Both plots (GPU and CPU variants) exhibit linear time dependence as expected.
 
-The \PThreeM{} method comes out as the least performant method among these considered in the thesis.
+The \PThreeM{} method proved to be the least performant among the methods considered in the thesis.
 The runtime per iteration was up to 8.5 times longer than the CPU variant of the PM method and up to 3.5 times longer than the Barnes-Hut algorithm in its standard variant.
-Moreover, it is apparent that the algorithm does not scale linearly but, we pointed out in \autoref{subsec:p3m-error-analysis}, the influence of the $O(N^2)$ direct summation part of the algorithm can reduced at the expense of weaker accuracy.
+Moreover, it is apparent that the algorithm does not scale linearly, but as pointed out in \autoref{subsec:p3m-error-analysis}, the influence of the $O(N^2)$ direct summation part of the algorithm can be reduced at the expense of weaker accuracy.
 
 The Barnes-Hut algorithm was timed in two configurations: with the standard tree construction and the improved one (introduced in \autoref{sec:accelerating-tree-construction}).
 The range of $ N $ considered in the test is too small to reveal the linearithmic runtime dependence on $N$ fully.

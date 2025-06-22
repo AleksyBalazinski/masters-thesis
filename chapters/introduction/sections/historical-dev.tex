@@ -19,11 +19,11 @@ The long-range force is calculated using the PM method, whereas the short-range 
 The \PThreeM{} method was developed across the papers published by the authors between 1973 and 1980 with its thorough description given in \textit{Computer Simulation Using Particles} \cite{Hockney1988}.
 
 The computational complexity of the PM and \PThreeM{} methods depends on the implementation of the potential solver used to calculate $\phi$ from \autoref{eq:poisson}.
-For instance, if a fast Fourier transform is used, then the complexity of the PM algorithm is $O(N + N_g^3\log N_g)$, where $N_g$ is the number of cells in a single dimension of the grid (note it is linear in $N$).
+For instance, if a fast Fourier transform is used, then the complexity of the PM algorithm is $O(N + N_g^3\log N_g^3)$, where $N_g$ is the number of cells in a single dimension of the grid (note that it is linear in $N$).
 For the \PThreeM{} method, the worst-case scenario happens when all particles are clustered closely together, which causes the short-range $O(N^2)$ correction part to become dominant.
 
 In 1986, Josh Barnes and Piet Hut introduced a hierarchical method for $N$-body simulations, now known as the Barnes-Hut algorithm, in the paper \textit{A hierarchical O(N log N) force-calculation algorithm} \cite{barnes1986hierarchical}.
 The method developed by the authors uses a hierarchical subdivision of space into cubical cells where the subdivision is carried out recursively until at most one body can be found in any subdivision.
-The algorithm reduces the time complexity to $O(N \log N)$ by approximating groups of distant particles as a single ``pseudo-particle''.
+The algorithm reduces the time complexity to $O(N \log N)$ by approximating groups of distant particles as a single ``pseudo-particle.''
 
 Other notable examples of $N$-body simulation algorithms include (and are not restricted to) the Fast Multipole Method and Adaptive Mesh Refinement method \cite{trenti2008nbody}.

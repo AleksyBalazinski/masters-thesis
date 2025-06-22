@@ -10,7 +10,7 @@ which has the following discrete analogue
 where $\mathcal{G}$ is the Green's function (potential due to unit mass).
 The right-hand side of \autoref{eq:poisson-discrete} is a convolution sum that runs over a finite set of mesh points.
 If we assume periodic boundary conditions, we can apply the discrete Fourier transform to both sides and use the convolution theorem to conclude that\footnote{
-    In this work, the Hockney \& Eastwood definition of DFT is used, i.e.
+    In this work, the Hockney \& Eastwood definition of DFT is used, i.e.,
     \begin{equation*}
         D(x_p) = \frac{1}{L}\sum_{l=0}^{N-1}\hat{D}(k)e^{ikx_p}, \quad \hat{D}(k) = H\sum_{p=0}^{N-1}D(x_p)e^{-ikx_p},
     \end{equation*}
@@ -101,7 +101,7 @@ Hence we have $(H^2\Delta_H \bar{\psi})_j = 4\sin^2(\pi l/N) \psi_j$ which impli
     \Delta_H \bar{\psi}(l)
     = \frac{4}{H^2} \sin^2\left( \frac{\pi l}{N} \right) \bar{\psi}(l).
 \end{equation*}
-This results tells us that for any value of $l$, $\bar{\psi}(l)$ is an eigenvector of $\Delta_H$ with eigenvalue $(4/H^2)\sin^2(\pi l/N)$.
+This result tells us that for any value of $l$, $\bar{\psi}(l)$ is an eigenvector of $\Delta_H$ with eigenvalue $(4/H^2)\sin^2(\pi l/N)$.
 For $l=0,\dots, N-1$ we get $N$ linearly independent eigenvectors $\{\bar{\psi}(l)\}$ which necessarily form the basis of $\mathbb{C}^N$.
 This fact implies that $\Delta_H$ is diagonalizable.
 The matrix $F$ of its eigenvectors is given by $F_{jl} = (1/L) \omega^{jl}$, and the inverse is easily verified to be $F^{-1} = H F^\dagger$, where the dagger denotes Hermitian adjoint.
@@ -123,8 +123,8 @@ Indeed,
     = H \sum_{j=0}^{N-1}\omega^{-lj}\phi_j
     = H \sum_{j=0}^{N-1}e^{-i2\pi jl / N}\phi_j
 \end{equation*}
-which is exactly the discrete Fourier transform of $\bar\phi$.
-Thus, we see that the DFT of the Green's function, $\hat{\mathcal{G}}(k) = \hat{\mathcal{G}}(2\pi l / L)$, derived in \autoref{eq:dft-transformed-phi} is the reciprocal of the $l$-th eigenfunction of the discretized Laplacian $(-\Delta_H)$.
+which is precisely the discrete Fourier transform of $\bar\phi$.
+Thus, we see that the DFT of the Green's function, $\hat{\mathcal{G}}(k) = \hat{\mathcal{G}}(2\pi l / L)$, derived in \autoref{eq:dft-transformed-phi}, is the reciprocal of the $l$-th eigenfunction of the discretized Laplacian $(-\Delta_H)$.
 Following the line of reasoning presented above, we observe a deep connection between the DFT and the eigendecomposition of the discretized Laplace operator.
 
 A natural question that arises in the context of this discussion is whether a similar relation holds in the continuous case.

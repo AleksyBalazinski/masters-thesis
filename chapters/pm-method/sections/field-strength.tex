@@ -1,6 +1,6 @@
 \section{Field strength calculation}
 The strength $\mathbf{g}$ of the gravitational field at mesh-point $\mathbf{x}_\mathbf{p}$ can be approximated using a central difference.
-Our implementation supports two types of finite differences, defined below as two variants of an particular operator.
+Our implementation supports two types of finite differences, defined below as two variants of a particular operator.
 \begin{enumerate}
     \item The $j$-th component ($j = x, y, z$) of the two-point finite difference operator $\mathbf{D}$ is given by
           \begin{equation}\label{eq:two-point-central-diff-def-1}
@@ -40,7 +40,7 @@ and
 \begin{equation}\label{eq:four-point-central-diff}
     D_j(\mathbf{x}) = \alpha\frac{\delta(\mathbf{x} + H\mathbf{e}_j) - \delta(\mathbf{x} - H\mathbf{e}_j)}{2H} + (1-\alpha)\frac{\delta(\mathbf{x} + 2H\mathbf{e}_j) - \delta(\mathbf{x} - 2H\mathbf{e}_j)}{4H}
 \end{equation}
-are the kernels of the two-point and four-point finite difference operators, respectively.
+are directly related to the kernels of the two-point and four-point finite difference operators, respectively.
 In symbols,
 \begin{equation*}
     \mathbf{D}(\phi)(\mathbf{x}) = \int d\mathbf{x}' \mathbf{D}(\mathbf{x} - \mathbf{x}')\phi(\mathbf{x}').

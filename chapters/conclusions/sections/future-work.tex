@@ -4,10 +4,11 @@ There are at least a few improvements and areas to investigate that we would lik
 \begin{enumerate}
       \item Implement force sharpening (see \autoref{subsubsec:pm-global-picture}) and investigate its influence on the accuracy of the PM method.
       \item Investigate if there is an improvement in the performance of the GPU implementation of the PM method if shared memory is used in the four-point finite difference variant.
-            We admittedly verified that there is no gain in the case of the two-point difference, but since more global memory reads are necessary for the four-point variant, some improvement should be expected.
-      \item More work is needed to make the \PThreeM{} up to par with performance-wise. Verify why sorting the linked lists did not bring an expected improvement in the running time.
+            We verified that there is no gain in the case of the two-point difference, but since more global memory reads are necessary for the four-point variant, some improvement should be expected.
+      \item More work on the implementation of the \PThreeM{} method is needed to put it on par with the other implemented methods in terms of performance. On a related note, it should be further investigated why sorting the linked lists in the HOC table did not bring an expected improvement in the running time.
       \item GPU implementation of the Barnes-Hut algorithm is possible and reportedly achieves ten-fold speedups over the CPU implementation (see \cite{BURTSCHER201175}).
-            Extending the program by adding this functionality would be a great improvement.
-      \item Currently the data visualization is handled by a number of Python scripts that load the data produced by the main C++ program.
-            This quite often leads to annoying errors when the format of the data produced by the main program is changed and becomes out of sync with the scripts.
+            Extending the program by adding this functionality would be a significant improvement.
+      \item Currently, the data visualization is handled by several Python scripts that load the data produced by the main C++ program.
+            This design often leads to annoying errors when the format of the data produced by the main program is changed and falls out of sync with the scripts.
+            Using a C++ library for data visualization would make further development of the program easier.
 \end{enumerate}

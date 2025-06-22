@@ -2,20 +2,20 @@
 The parameters used in the simulation of a spiral galaxy are shown in \autoref{tab:galaxy-parameters}.
 \begin{table}[htp]
     \centering
-    \begin{tabular}{|l|c|}
-        \hline
+    \caption{Galaxy model parameters used in the simulation.}
+    \label{tab:galaxy-parameters}
+    \begin{tabular}{lc}
+        \toprule
         \textbf{Parameter}   & \textbf{Value}           \\
-        \hline
+        \midrule
         Halo radius          & 3 kpc                    \\
         Halo mass            & $60 \times 10^9 M_\odot$ \\
         Disk radius          & 15 kpc                   \\
         Disk mass            & $15 \times 10^9 M_\odot$ \\
         Disk thickness       & 0.3 kpc                  \\
         Disk density profile & Uniformly decreasing     \\
-        \hline
+        \bottomrule
     \end{tabular}
-    \caption{Galaxy model parameters used in the simulation.}
-    \label{tab:galaxy-parameters}
 \end{table}
 The galaxy is simulated as an isolated system; however, in deriving \autoref{eq:poisson-fourier-product}, periodic boundary conditions were assumed.
 The simplest way (and the one used) to obtain a free-space solution from the PM method is to extend the computational domain twice in every dimension and fill the space unused in mass distribution with zeros.
@@ -27,8 +27,10 @@ Cell size $H$ and timestep length were set to $60/64=0.9375$ kpc and 1 Myr, resp
 For convenience, the full configuration of the PM method is presented in \autoref{tab:pm-method-parameters}.
 \begin{table}[htp]
     \centering
-    \begin{tabular}{|l|c|}
-        \hline
+    \caption{PM method configuration.}
+    \label{tab:pm-method-parameters}
+    \begin{tabular}{lc}
+        \midrule
         \textbf{Parameter}      & \textbf{Value}                     \\
         \hline
         Effective mesh size     & $64 \times 64 \times 32$           \\
@@ -39,10 +41,8 @@ For convenience, the full configuration of the PM method is presented in \autore
         Green's function        & Derived from discretized Laplacian \\
         Time integration method & Leapfrog                           \\
         Number of particles     & 50,000                             \\
-        \hline
+        \bottomrule
     \end{tabular}
-    \caption{PM method configuration.}
-    \label{tab:pm-method-parameters}
 \end{table}
 The system's evolution over 200 Myr is shown in \autoref{fig:spiral-galaxy-evolution-pm}.
 
@@ -131,7 +131,7 @@ is used instead (for derivation, refer to \cite{Hockney1988}).
 \end{figure}
 
 \subsection{Particle-particle particle-mesh method}
-The \PThreeM{} based simulation uses the same parameters as the PM method.
+The \PThreeM{}-based simulation uses the same parameters as the PM method.
 The reference force was calculated using the $S_1$ shape formula (\autoref{eq:s1-reference-force}) with particle diameter $a=3H$.
 The cutoff radius was set to $r_e=0.7a$.
 One extra free parameter is the \textit{softening length} $\epsilon$, which modifies the universal law of gravitation so that division by zero can be avoided, i.e., the modified law is

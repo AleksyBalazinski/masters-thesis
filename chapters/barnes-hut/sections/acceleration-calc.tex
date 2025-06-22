@@ -1,7 +1,7 @@
 \section{Acceleration calculation}
 In the Barnes-Hut algorithm, the net acceleration of a particle $p$ is calculated by summing the contributions from single particles or groups of particles while traversing the tree.
 The decision of whether the acceleration can be approximated using the information stored in an internal node $n$ depends on the relative distance from $p$ to $n.\textrm{COM}$ (the center of mass of the group represented by $n$).
-The distance is relative to the \textit{width} $H$ of the node, i.e. the side length of the cubical volume encompassed by the node.
+The distance is relative to the \textit{width} $H$ of the node, i.e., the side length of the cubical volume encompassed by the node.
 More concretely, the approximation takes place if $n.H / |n.\mathrm{COM} - p.\mathbf{x}| < \theta$, where $\theta$ is the so-called \textit{opening angle}.
 In the extreme case when $\theta$ is set to zero, no approximations take place, and the algorithm reduces to the PP method.
 The procedure described above is illustrated in \autoref{alg:bh-find-force}.
@@ -26,7 +26,7 @@ The procedure described above is illustrated in \autoref{alg:bh-find-force}.
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
-In the implementation, the \textsc{GravitySoft} function calculates the gravitational force softened by $\epsilon$, i.e. it returns the value given by \autoref{eq:softened-force}.
+In the implementation, the \textsc{GravitySoft} function calculates the gravitational force softened by $\epsilon$, i.e., it returns the value given by \autoref{eq:softened-force}.
 The pairwise potential energy associated with this force is given by
 \begin{equation}\label{eq:pe-soft}
     \Phi_{ij}^\textrm{soft} = - \frac{G m_i m_j}{\sqrt{r_{ij}^2 + \epsilon^2}}.
@@ -41,7 +41,7 @@ One possible way to quantify the quality of approximation for a given value of $
 We set the same initial conditions of the system for both the PP direct summation method and the Barnes-Hut algorithm, compute the deviation of Barnes-Hut forces from PP forces acting on each particle, and take the average over all particles.
 In other words, the error calculated is given by the \autoref{eq:force-avg-relative-err}.
 The dependence of the error on the opening angle $\theta$ and the corresponding execution time are shown in \autoref{fig:bh-analysis}.
-The figure includes plots for two cases: when only the monopole term is used in the Barnes-Hut approximation, and when both the monopole and quadrupole terms are included.
+The figure includes plots for two cases: when only the monopole term is used in the Barnes-Hut approximation and when both the monopole and quadrupole terms are included.
 As can be seen, the quadrupole-based algorithm exhibits significantly improved error scaling with increasing $\theta$.
 Naturally, this raises the question of the additional computational cost incurred by the inclusion of the quadrupole term.
 Our tests showed that this impact is minimal.

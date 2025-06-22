@@ -2,14 +2,16 @@
 A globular cluster is a formation comprising a large number of stars, closely packed in a spherically symmetric form \cite{britannica2024globular} (see \autoref{fig:messier-13}).
 \begin{figure}[!ht]
     \centering
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \vskip 0pt
         \centering
         \includegraphics[width=\textwidth]{chapters/test-models/img/globular_generated.png}
-        \caption{Generated data ($M=10^{6} M_\odot$, $a=2$ pc, $N=10,000$).}
+        \caption{Generated data ($a=2$ pc, $N=10,000$).}
         \label{fig:glob-cluster-model-generated}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[t]{0.4\textwidth}
+        \vskip 0pt
         \centering
         \includegraphics[width=\textwidth]{chapters/test-models/img/glob_cluster_m13.jpg}
         \caption{Real-world globular cluster (Messier 13).}
@@ -31,7 +33,7 @@ In the Plummer model, the density of a cluster is given by
     \rho(r) = \frac{3M}{4\pi a^2}\left(1 + \frac{r^2}{a^2} \right)^{-5/2},
 \end{equation}
 where the parameter $a$ controls the spread of the distribution (the size of the cluster core) \cite{Aarseth1974Comparison}.
-Hence, the particles are sampled from a distribution with PDF $p(r) = \rho(r) / M$.
+Hence, the particles are sampled from a distribution with probability density function (PDF) $p(r) = \rho(r) / M$.
 Similarly to the galaxy model, we use inverse transform sampling to initialize the positions of the particles.
 The marginal CDFs are easily calculated as
 \begin{equation*}
@@ -64,7 +66,7 @@ The algebraic expression that one obtains in this way is lengthy, and we will no
 The random values of $q$, consistent with the PDF in \autoref{eq:velocity-pdf}, are again obtained using inverse transform sampling;
 the equation $G(q) = u$ is solved for $q$ by finding the roots of $G(q) - u$ using Newton's method.
 Finally, the magnitude $v$ of the velocity vector $\mathbf{v}$ is set to $v = qv_e$.
-The direction of $\mathbf{v} = (v_x, v_y, v_z)$ is chosen uniformly at random, i.e.
+The direction of $\mathbf{v} = (v_x, v_y, v_z)$ is chosen uniformly at random, i.e.,
 \begin{equation*}
     v_x = v\sin\theta \cos\phi, \quad v_y = v\sin\theta\sin\phi, \quad v_z = v\cos\theta,
 \end{equation*}

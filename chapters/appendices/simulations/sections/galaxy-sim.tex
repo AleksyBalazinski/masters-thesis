@@ -3,10 +3,12 @@ The parameters of the spiral galaxy model, the configuration of the methods used
 \subsection{P3M method}
 \begin{table}[H]
     \centering
-    \begin{tabular}{|l|c|}
-        \hline
+    \caption{P3M method configuration.}
+    \label{tab:p3m-method-parameters}
+    \begin{tabular}{lc}
+        \toprule
         \textbf{Parameter}      & \textbf{Value}           \\
-        \hline
+        \midrule
         Effective mesh size     & $64 \times 64 \times 32$ \\
         $H$ (cell size)         & $60/64=0.9375$ kpc       \\
         DT (time step)          & $1$ Myr                  \\
@@ -17,10 +19,8 @@ The parameters of the spiral galaxy model, the configuration of the methods used
         $a$ (particle diameter) & $3H$                     \\
         Particle shape          & $S_1$                    \\
         $r_e$ (cutoff radius)   & $0.7a$                   \\
-        \hline
+        \bottomrule
     \end{tabular}
-    \caption{P3M method configuration.}
-    \label{tab:p3m-method-parameters}
 \end{table}
 
 \begin{figure}[H]
@@ -94,18 +94,18 @@ The parameters of the spiral galaxy model, the configuration of the methods used
 \subsection{Barnes-Hut algorithm}
 \begin{table}[H]
     \centering
-    \begin{tabular}{|l|c|}
-        \hline
+    \caption{Barnes-Hut method configuration.}
+    \label{tab:bh-method-parameters}
+    \begin{tabular}{lc}
+        \toprule
         \textbf{Parameter}            & \textbf{Value} \\
-        \hline
+        \midrule
         $\theta$ (opening angle)      & 1              \\
         $\epsilon$ (softening length) & 1 pc           \\
         DT (time step)                & $1$ Myr        \\
         Highest multipole term        & monopole       \\
-        \hline
+        \bottomrule
     \end{tabular}
-    \caption{Barnes-Hut method configuration.}
-    \label{tab:bh-method-parameters}
 \end{table}
 
 \begin{figure}[H]
