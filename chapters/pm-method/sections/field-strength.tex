@@ -38,7 +38,7 @@ Thus, we see that
 \end{equation}
 and
 \begin{equation}\label{eq:four-point-central-diff}
-    D_j(\mathbf{x}) = \frac{\delta(\mathbf{x} + H\mathbf{e}_j) - \delta(\mathbf{x} - H\mathbf{e}_j)}{2H} + (1-\alpha)\frac{\delta(\mathbf{x} + 2H\mathbf{e}_j) - \delta(\mathbf{x} - 2H\mathbf{e}_j)}{4H}
+    D_j(\mathbf{x}) = \alpha\frac{\delta(\mathbf{x} + H\mathbf{e}_j) - \delta(\mathbf{x} - H\mathbf{e}_j)}{2H} + (1-\alpha)\frac{\delta(\mathbf{x} + 2H\mathbf{e}_j) - \delta(\mathbf{x} - 2H\mathbf{e}_j)}{4H}
 \end{equation}
 are the kernels of the two-point and four-point finite difference operators, respectively.
 In symbols,

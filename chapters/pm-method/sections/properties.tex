@@ -18,7 +18,7 @@ In \autoref{fig:pm-field-properties}, the field strength calculated using the PM
 The difference between these two graphs illustrates the anisotropy of the calculated field.
 The figure also shows the field strength measured along the $x$-axis when the source was shifted by $H/2$ in the $-x$ direction (green line).
 Its deviation from the case when the source was placed at $x=H$ (the blue graph) exemplifies the inhomogeneity of the field computed using the PM method.
-\begin{figure}[htp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[scale=0.55]{chapters/pm-method/img/pm-field-combined.png}
     \caption{Anisotropy and inhomogeneity of the field as calculated by the PM method (TSC assignment, second order finite difference).}
@@ -29,7 +29,7 @@ the inverse-square law is reproduced accurately for $r \gtrsim 4H$.
 
 The single-source case analysis can be extended by considering the effect of choice of finite difference and mass assignment schemes on the relative error between the actual and approximated field strength.
 \autoref{fig:pm-combined} shows a comparison of (a) the relative error as a function of distance from the source for PM with second-order and fourth-order finite differences and (b) the field strength computed using different mass assignment schemes discussed in \autoref{sec:mass-assignment}.
-\begin{figure}[htp]
+\begin{figure}[!ht]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
@@ -50,7 +50,7 @@ The single-source case analysis can be extended by considering the effect of cho
 The conclusion that can be drawn from \autoref{fig:pm-combined} is that, as expected, the TSC mass assignment scheme and the four-point finite difference yield the best results.
 
 The field produced by the PM method using the ``poor man's'' potential solver is similar to the one obtained using the discretized Laplacian Green's function described above (see \autoref{fig:pm-poor-man-vs-laplacian}).
-\begin{figure}[htp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[scale=0.55]{chapters/pm-method/img/poor-man-vs-laplacian.png}
     \caption{Field obtained potential calculated by the ``Poor man's Poisson solver'' vs. when using \autoref{eq:dft-transformed-phi}.}
@@ -65,7 +65,7 @@ More precisely, the error was defined as
 \end{equation}
 The result for different grid resolutions is shown in \autoref{fig:pm-global-err-lap} ( $30 \leq N_g \leq 70$).
 For this test, the particle positions were generated according to the uniformly decreasing density disk model.
-\begin{figure}[htp]
+\begin{figure}[!ht]
     \centering
     \begin{subfigure}[t]{0.48\textwidth}
         \centering
