@@ -1,5 +1,5 @@
 \section{Identifying close pairs of particles}
-In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the ``potential mesh''), a second mesh (the \textit{chaining mesh}) is used.
+In the \PThreeM{} method, in addition to the mesh used in the PM algorithm (the \textit{potential mesh}), a second mesh (the \textit{chaining mesh}) is used.
 The chaining mesh is sparser than the potential mesh.
 Its sole purpose is to partition the space into cells so that particles ``close'' to the ones in a given cell can be found efficiently.
 In this context, two particles are considered to lie close to one another if their separation is less than the cutoff radius.
@@ -24,7 +24,7 @@ The whole process is linear in the number of particles, and the array can be con
 In our implementation, additional savings are made by preallocating a memory pool large enough to store $N$ nodes of the linked lists and reusing it for the HOC array initialization.
 
 A potential optimization discussed in \cite{Hockney1988} involves sorting each linked list by a selected particle coordinate, such as the $y$-coordinate.
-This ordering enables early termination of the direct summation loop when the condition $y_i - y_j > r_e$ is met, effectively reducing unnecessary pairwise computations as particle $i$ ``is looking for its neighbors'' in a cell containing particles $j$.
+This ordering enables early termination of the direct summation loop when the condition $y_j - y_i > r_e$ is met, effectively reducing unnecessary pairwise computations as particle $i$ ``is looking for its neighbors'' in a cell containing particles $j$.
 Our experiments indicate that constructing the linked lists in sorted order is substantially more expensive than the unsorted variant.
 This is to be expected; in the worst-case scenario where all particles are in a single chaining-mesh cell and are inserted into the list in decreasing order of $y$ coordinates, the complexity is $O(N^2)$.
 For a system of 50{,}000 particles, incorporating $y$-sorting increased the HOC (head-of-chain) construction time from approximately 180 milliseconds to over 13{,}000 milliseconds, a 70-fold slowdown.

@@ -2,7 +2,7 @@
 The \textit{particle-mesh} (PM) technique, introduced by Roger W. Hockney and James W. Eastwood, was a significant improvement over the PP method.
 In the PM approach, the space is divided into a rectangular grid (or mesh) of cells.
 Each cell is assigned a portion of the mass of nearby particles, creating a density distribution $\rho(\mathbf{x})$.
-The relation between the density and gravitational potential $\phi$, in the form of Poisson's equation
+The relation between the density and the gravitational potential $\phi$, in the form of Poisson's equation
 \begin{equation}\label{eq:poisson}
     \nabla^2\phi = 4\pi G \rho,
 \end{equation}
@@ -14,7 +14,7 @@ However, one of the first papers treating the problem of solving the Poisson equ
 
 The drawback of the PM method is its poor modeling of forces over short distances.
 Eastwood and Hockney proposed a remedy for this problem in the form of a hybrid approach, called the \textit{particle-particle-particle-mesh} method (or \PThreeM{} in short).
-In the \PThreeM{} method, the force on the $i$-th particle is split into two components: \textit{short-range} and \textit{long-range} force.
+In the \PThreeM{} method, the force on a given particle is split into two components: \textit{short-range} and \textit{long-range} force.
 The long-range force is calculated using the PM method, whereas the short-range force can be found by direct summation of the forces due to nearby particles.
 The \PThreeM{} method was developed across the papers published by the authors between 1973 and 1980 with its thorough description given in \textit{Computer Simulation Using Particles} \cite{Hockney1988}.
 

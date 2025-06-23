@@ -43,7 +43,7 @@ In our proposed optimization, we make the following changes to the tree construc
 The second point is a direct consequence of the first one;
 if the insertion of a particle does not start at the root but at some other node $n$, deep in the tree, the nodes lying above $n$ will not be updated, so their COM and total mass values will be incorrect.
 The first point, however, requires more explanation.
-Since the particles are z-ordered, subsequent inserts into the tree will result in traversing similar paths.
+Since the particles are Z-ordered, subsequent inserts into the tree will result in traversing similar paths.
 Because of that, the point of insertion can be found more efficiently by starting the traversal from the last seen node and backtracking up the tree until a valid insertion point is found.
 The decision whether to stop backtracking at a given node $n$ is made on the condition that the particle to be inserted is inside a cube represented by $n$.
 When the condition is met, the standard insertion procedure takes place starting at $n$.
@@ -51,7 +51,7 @@ When the condition is met, the standard insertion procedure takes place starting
 The asymptotic time complexity of the modified tree construction algorithm is the same as for the standard one.
 Sorting the particles requires $O(N\log N)$ operations, but inserting a particle into the tree starting at the last-seen node is an $O(1)$ operation.
 The last claim may raise objections since some number of backtrack steps are expected on each insert.
-To verify it, we measured the average number of backtracks per particle in typical simulations and found that it did not exceed $2.5$ (this can be compared with the number of backtracks required when the particles are not z-ordered; in such a case, we found that in the tested scenarios, on average more than 8 backtracks were typically needed).
+To verify it, we measured the average number of backtracks per particle in typical simulations and found that it did not exceed $2.5$ (this can be compared with the number of backtracks required when the particles are not Z-ordered; in such a case, we found that in the tested scenarios, on average more than 8 backtracks were typically needed).
 Even though the modified algorithm still has the $O(N\log N)$ time complexity, it leads to more predictable memory access patterns, which result in noticeably improved performance.
 The tree construction time as a function of $N$ is shown in \autoref{fig:z-order-tree-time}.
 \begin{figure}[htp]

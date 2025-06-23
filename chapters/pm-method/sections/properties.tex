@@ -88,8 +88,8 @@ a more surprising result is that the errors are most significant for the TSC ass
 This paradox is easily explained by considering the graphs in \autoref{fig:pm-mass-assignment-field-strength}.
 As can be seen there, the TSC assignment scheme gives rise to a force that accurately reproduces the inverse-square law force, but at the same time, it severely underestimates the force close to the source.
 This behavior is expected since it stems from the mass of any individual particle being spread between multiple cells.
-The CIC and NGP schemes, on the other hand, do not reproduce the actual force with the same level of accuracy, but the underestimation close to the source is not as severe as in the case of the TSC scheme.
-In some applications, for instance, in the context of a galaxy simulation, this is a favorable feature of the TSC scheme.
+The CIC and NGP schemes, on the other hand, do not reproduce the actual force with the same level of accuracy, but the underestimation close to the source is not as extreme as in the case of the TSC scheme.
+In some applications, for instance in the context of a galaxy simulation, this is a favorable feature of the TSC scheme.
 The number of stars in a galaxy can be in the order of $10^{12}$ \cite{young2006andromeda}, whereas the number of particles in our tests is in the order of tens of thousands, giving an average of around $10^{12} / 10^{4} = 10^8$ of stars per particle.
 Hence, it would be a grave mistake to model the force due to a single particle by the force due to a dimensionless point mass.
 In such a case, it is a standard practice to use a softened gravitational force instead of the one given in \autoref{eq:law-of-uni-grav} \cite{10.1046/j.1365-8711.2000.03316.x}.

@@ -12,7 +12,7 @@ Therefore, the evolution of a system of $N$ bodies is governed by $N$ equations
 for each $i = 1,\dots, N$.
 Direct application of \autoref{eq:pp-method} is the basis of the so-called \textit{particle-particle} (PP) method.
 The method is characterized by $O(N^2)$ time complexity (more precisely, it requires $(N-1)N/2$ operations if Newton's 3rd law is used in the computation).
-This running time characteristic $T(N)$ (running time of one simulation iteration) can be directly observed by running an implementation of the method (see \autoref{fig:pp-method-scaling}).
+This running time characteristic $T(N)$ (execution time of one simulation iteration) can be directly observed by running an implementation of the method (see \autoref{fig:pp-method-scaling}).
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.5]{chapters/introduction/img/pp_time.png}

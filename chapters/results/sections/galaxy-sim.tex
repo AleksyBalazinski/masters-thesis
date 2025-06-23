@@ -21,7 +21,7 @@ The galaxy is simulated as an isolated system; however, in deriving \autoref{eq:
 The simplest way (and the one used) to obtain a free-space solution from the PM method is to extend the computational domain twice in every dimension and fill the space unused in mass distribution with zeros.
 The total size of the potential mesh used was $128 \times 128 \times 64$ with the region of interest occupying a box of size $60\, \text{kpc}\times 60\, \text{kpc}\times 30\, \text{kpc}$ located in a $64 \times 64 \times 32$ octant of the mesh.
 
-\subsection{Particle-mesh method}
+\subsection{PM method}
 In the PM method, $N=50{,}000$ particles were used.
 Cell size $H$ and timestep length were set to $60/64=0.9375$ kpc and 1 Myr, respectively.
 For convenience, the full configuration of the PM method is presented in \autoref{tab:pm-method-parameters}.
@@ -130,7 +130,7 @@ is used instead (for derivation, refer to \cite{Hockney1988}).
     \label{fig:physical-quantities-pm}
 \end{figure}
 
-\subsection{Particle-particle particle-mesh method}
+\subsection{\texorpdfstring{\PThreeM{}}{P3M} method}
 The \PThreeM{}-based simulation uses the same parameters as the PM method.
 The reference force was calculated using the $S_1$ shape formula (\autoref{eq:s1-reference-force}) with particle diameter $a=3H$.
 The cutoff radius was set to $r_e=0.7a$.

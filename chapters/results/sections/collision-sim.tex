@@ -1,9 +1,9 @@
 \section{Galaxy collision simulation}
-We conclude by showcasing the applications of our program with a simulation of the collision of two galaxies.
+We conclude showcasing the applications of our program with a simulation of the collision of two galaxies.
 The parameters describing the galaxies are given in \autoref{tab:galaxy-parameters-collision}.
 \begin{table}[htp]
     \centering
-    \caption{Galaxy model parameters used in the simulation.}
+    \caption{Galaxy models parameters used in the simulation.}
     \label{tab:galaxy-parameters-collision}
     \begin{tabular}{lcc}
         \toprule
@@ -95,8 +95,8 @@ Plots of momentum, angular momentum, and energy are shown in \autoref{fig:physic
         \label{fig:physical-quantities-bh-collision-sub3}
     \end{subfigure}
 
-    \caption{Fundamental physical quantities describing the system over time in the Barnes-Hut algorithm.
-        Time is in Myr, and the quantities are expressed in units consistent with \autoref{tab:galaxy-parameters}}
+    \caption{Fundamental physical quantities describing the galaxy collision over time in the Barnes-Hut algorithm.
+        Time is in Myr, and the quantities are expressed in units consistent with \autoref{tab:galaxy-parameters-collision}}
     \label{fig:physical-quantities-bh-collision}
 \end{figure}
 
@@ -122,5 +122,5 @@ Plots of the physical quantities under consideration are displayed in \autoref{f
 The deviations of the momentum and angular momentum components from their initial values (\autoref{fig:physical-quantities-pm-collision-sub2} and \autoref{fig:physical-quantities-pm-collision-sub3}) are greater compared to the \PThreeM{} method.
 Additionally, the oscillations in the potential and total energies are significant, raising serious doubts about whether the simulation can be accepted as physically valid.
 Examination of the system at $t = 200$ and $300$ Myr (\autoref{fig:collision-pm-sub1} and \autoref{fig:collision-pm-sub2}) reveals that the interactions between the galactic center and the surrounding disk particles are not accurately captured.
-The central `hole'' in the disk begins to vanish as nearby particles collapse inward.
+The central `hole'' in the disk begins to fill up as nearby particles collapse inward.
 In contrast, the Barnes-Hut (\autoref{fig:collision-bh-sub1}, \autoref{fig:collision-bh-sub2}) and \PThreeM{} (\autoref{fig:collision-p3m-sub1}, \autoref{fig:collision-p3m-sub2}) simulations at the same time points maintain a well-defined circular hole.

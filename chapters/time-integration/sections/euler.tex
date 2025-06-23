@@ -11,11 +11,11 @@ The method defined in \autoref{eq:eulers-method} is not suitable for physical si
 Its shortcomings are well illustrated by an example of an undamped pendulum of length $l$ in a gravitational field of magnitude $g$.
 Although it is a rudimentary system, it illustrates the numerical challenges faced in gravitational simulations over long timescales, particularly the issue of energy preservation.
 
-The differential equation governs the motion of the pendulum
+The differential equation that governs the motion of the pendulum says
 \begin{equation*}
     \ddot{\theta} = -\frac{g}{l}\sin\theta,
 \end{equation*}
-and its kinetic and potential energy are given by $\textrm{KE} = (1/2)ml^2\dot{\theta}$ and $\textrm{PE} = -mgl\cos\theta$ respectively.
+and the pendulum's kinetic and potential energy are given by $\textrm{KE} = (1/2)ml^2\dot{\theta}$ and $\textrm{PE} = -mgl\cos\theta$ respectively.
 \begin{figure}[htp]
     \centering
     \includegraphics[scale=0.6]{chapters/time-integration/img/euler-pendulum.png}
@@ -23,8 +23,8 @@ and its kinetic and potential energy are given by $\textrm{KE} = (1/2)ml^2\dot{\
     \label{fig:euler-integrator}
 \end{figure}
 As shown in \autoref{fig:euler-integrator}, Euler's method fails to conserve total energy $(\textrm{PE} + \textrm{KE})$ and produces trajectories in phase space that are not closed, contrary to expectations for periodic systems.
-Additionally, the evolution of an area element in phase space violates Liouville's theorem,\footnote{If we represent identical systems launched at the same time with slightly different initial conditions as points in phase space, then the theorem essentially states that the volume occupied by any group of points stays constant.
-    A more complete description is given in \cite{taylor2005classical}.
+Additionally, the evolution of an area element in phase space violates Liouville's theorem,\footnote{If we represent identical systems launched at the same time with slightly different initial conditions as points in phase space, then the theorem essentially states that the volume occupied by any group of such points stays constant.
+    A more complete description of the theorem is given in \cite{taylor2005classical}.
 }
 making the method unsuitable for long-term physical simulations (see \autoref{fig:area-euler-vs-leapfrog}).
 \begin{figure}[htp]

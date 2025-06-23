@@ -64,7 +64,7 @@ By symmetry $g_{D,y} = 0$, and thus the radial component of the field $\mathbf{g
 \end{equation}
 If the disk had constant density, $\mathbf{g}_D$ could be expressed in terms of elliptic integrals \cite{Weiss2018}.
 However, to the best of the author's knowledge, the integral in \autoref{eq:gx-disk} cannot be further simplified.
-For this reason, a crude approximation with a quadratic function is used: $-g_{D,r} \approx a(r - h)^2 + k$, where the values $k=2.5$ and $h=0.66$ (the maximum of $g_{D,r}$ and the argument thereof) were estimated based on the graph of $g_{D,r}$ (see \autoref{fig:radial-strength-disk}).
+For this reason, we use a crude approximation with a quadratic function: $-g_{D,r} \approx a(r - h)^2 + k$, where the values $k=2.5$ and $h=0.66$ (the maximum of $g_{D,r}$ and the argument thereof) were estimated based on the graph of $g_{D,r}$ (see \autoref{fig:radial-strength-disk}).
 The value of $a = -k/h^2$ can be found by setting $g_{D,r}(0) = 0$ in the approximate formula.
 \begin{figure}[htp]
     \centering
@@ -109,8 +109,8 @@ for counter-clockwise rotation.
 
 \subsection{Disk with a hole}\label{subsec:disk-with-hole}
 While testing the implemented methods, we observed that for modeling systems comprising multiple galaxies, it may be beneficial to replace the fixed halo with a single massive particle.
-In such a case, the simulation turns out to be stable if there are no particles in close vicinity to the galaxy center.
-This means that the galactic disk ought to have a hole of radius $r_0$.
+In such cases, the simulation remains stable provided there are no particles in the immediate vicinity of the galaxy center.
+This implies that the galactic disk should contain a central hole of radius $r_0$, occupied only by the central particle.
 Using an approach analogous to the one used in \autoref{subsec:disk}, we obtain the following relations that can be used for sampling points $(\phi, r)$ in polar coordinates
 \begin{equation*}
     \phi = 2\pi u \quad \text{ and } \quad 2(r^3 - r_0^3)-3R_D(r^2 - r_0^2) + (R_D-r_0)^2(2r_0 + R_D)u = 0,

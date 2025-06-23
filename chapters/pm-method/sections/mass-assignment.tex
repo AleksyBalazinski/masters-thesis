@@ -27,11 +27,11 @@ For illustrative purposes, the shape $S_\text{CIC}$ is depicted in \autoref{fig:
     \centering
     \includegraphics[scale=0.2]{chapters/pm-method/img/CIC.png}
     \caption{The CIC shape centered at $x$ (particle position).
-        The particle is within cell $x_p$; however, the cell $x_{p+1}$ gets a non-zero density contribution from the particle.}
+        The particle is within cell $p$; however, the cell $p+1$ gets a non-zero density contribution from the particle.}
     \label{fig:cic-shape}
 \end{figure}
 
-In the one-dimensional case, the fraction of mass $W_p$ assigned to mesh-point $p$ from particle at position $x$ is given by
+In the one-dimensional case, the fraction of mass $W_p$ assigned to a mesh point $p$ at $x_p = pH$ from a particle at position $x$ is given by
 \begin{equation*}
     W(x-x_p) = W_p(x) = \int_{x_p-H/2}^{x_p+H/2} dx' S(x'-x).
 \end{equation*}
@@ -52,12 +52,12 @@ Splitting the domain of integration in the expression for $W_\text{TSC}$ into fi
     \end{cases}
 \end{equation*}
 
-Two- and three-dimensional versions of the assignment functions in \autoref{eq:assignment-functions} are products of the assignment functions in each dimension.
+The two- and three-dimensional versions of the assignment functions in \autoref{eq:assignment-functions} are products of the assignment functions in each dimension.
 For example, the three-dimensional assignment function $W$ is
 \begin{equation*}
-    W(\mathbf{x}) = W(x)W(y)W(z).
+    W(\mathbf{x})  = W(x)W(y)W(z), \qquad W_\mathbf{p}(\mathbf{x})  = W(\mathbf{x} - \mathbf{x}_\mathbf{p}).
 \end{equation*}
-Hence, the mass assigned at mesh-point at $\mathbf{x}_\mathbf{p}$ is
+Hence, the mass assigned at mesh point at $\mathbf{x}_\mathbf{p}$ is
 \begin{equation*}
     m(\mathbf{x}_\mathbf{p}) = \sum_i m_i W_\mathbf{p}(\mathbf{x}_i),
 \end{equation*}
@@ -68,7 +68,7 @@ or, in terms of density $\rho$,
 where $V = H^3$ is the volume of a cell and $i$ indexes the particles.
 
 \autoref{eq:density-assignment} is not suitable for direct application in the actual algorithm as it results in $O(N N_g^3)$ time complexity, where $N_g$ is the number of grid points in one dimension.
-Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of each particle (and the neighborhood of $\mathbf{p}$) and update $\rho$.
+Instead, we iterate over all particles, identify the parent cell $\mathbf{p}$ of each particle and the neighborhood of $\mathbf{p}$, and update $\rho$ at these cells.
 This process is illustrated in \autoref{alg:density-assignment}.
 \begin{algorithm}
     \caption{Density assignment algorithm}\label{alg:density-assignment}
@@ -80,7 +80,7 @@ This process is illustrated in \autoref{alg:density-assignment}.
         \EndFor
     \end{algorithmic}
 \end{algorithm}
-The set $\mathcal{C}_S(\mathbf{x}_i)$ of cells that have to be considered while assigning density from the $i$-th particle depends on the shape $S$ of the particle.
+The set $\mathcal{C}_S(\mathbf{x}_i)$ of cells that need to be updated while assigning density from the $i$-th particle depends on the shape $S$ of the particle.
 Specifically, we have $\mathcal{C}_\mathrm{NGP}(\mathbf{x}) = \{[\mathbf{x} / H]\}$, $\mathcal{C}_\mathrm{CIC}(\mathbf{x}) = \{\lfloor \mathbf{x}/H \rfloor + \mathbf{t} \;|\; t_i =0,1\}$, and $\mathcal{C}_\mathrm{TSC}(\mathbf{x}) = \{[\mathbf{x} / H] + \mathbf{t} \;|\; t_i = -1, 0, 1\}$.
 It follows that $|\mathcal{C}_\mathrm{NGP}(\mathbf{x})| = 1$, $|\mathcal{C}_\mathrm{CIC}(\mathbf{x})| = 8$, and $|\mathcal{C}_\mathrm{TSC}(\mathbf{x})| = 27$ which illustrates the increasing computational cost resulting from using higher-order assignment schemes.
 We note that \autoref{alg:density-assignment} is easily parallelized if atomic increments are used in line 3.

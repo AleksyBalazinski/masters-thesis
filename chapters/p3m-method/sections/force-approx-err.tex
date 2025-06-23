@@ -18,18 +18,19 @@ The result of the test is shown in \autoref{fig:reference-force-approx-different
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{chapters/p3m-method/img/err_vs_part_diam_p3m.png}
-        \caption{Mean error for different particle shapes.}
+        \caption{Mean error for different particle shapes (TSC assignment/interpolation scheme).}
         \label{fig:reference-force-approx-different-shapes-sub}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{chapters/p3m-method/img/no-cic.png}
-        \caption{Mean error for different assignment schemes.}
+        \caption{Mean error for different assignment/interpolation schemes ($S_1$ shape).}
         \label{fig:reference-force-error-different-schemes-sub}
     \end{subfigure}
-    \caption{Comparison of PM approximation using different assignment and interpolation functions.
+    \caption{Comparison of \PThreeM{} force approximation using different assignment and interpolation functions.
     In the test we set $N=10{,}000$ and used $64\times 64\times 32$ grid.
+    Also, the cutoff radius $r_e$ was set equal to the particle diameter $a$.
     }
     \label{fig:p3m-global-err-combined}
 \end{figure}

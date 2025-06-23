@@ -1,6 +1,6 @@
 \section{Optimal Green's function}
 As it is apparent from \autoref{eq:p3m}, the method's validity depends on how well the mesh force approximates the reference force.
-The average deviation between the two forces can be minimized by a suitable choice of Green's function given (in $k$ space) by
+The average deviation between the two forces can be minimized by a suitable choice of the Green's function given (in $k$ space) by
 \begin{equation}\label{eq:optimal-greens-func}
     \hat{\mathcal{G}}(\mathbf{k}) = \frac{\mathbf{\hat{D}}(\mathbf{k}) \cdot \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k_\mathbf{n}}) \mathbf{\hat{R}}(\mathbf{k}_\mathbf{n})}{|\mathbf{\hat{D}}(\mathbf{k})|^2 \left[ \sum_{\mathbf{n}}\hat{U}^2(\mathbf{k}_\mathbf{n}) \right]^2}.
 \end{equation}
@@ -79,7 +79,7 @@ and the total force is
 \begin{equation}\label{eq:reference-force-clouds}
     \mathbf{R}(\mathbf{x}) = -G \int d\mathbf{x}'S(\mathbf{x}' - \mathbf{x}) \int d\mathbf{x}'' S(\mathbf{x}'')\frac{\mathbf{x}' - \mathbf{x}''}{|\mathbf{x}' - \mathbf{x}''|^3}.
 \end{equation}
-The expression on the right-hand side of \autoref{eq:reference-force-clouds} is a double convolution, $\mathbf{R} = -S * (S * \mathbf{g})$, where $\mathbf{g}(\mathbf{x}) = \mathbf{x}/|\mathbf{x}|^3.$
+The expression on the right-hand side of \autoref{eq:reference-force-clouds} is a double convolution, $\mathbf{R} = -G S * (S * \mathbf{g})$, where $\mathbf{g}(\mathbf{x}) = \mathbf{x}/|\mathbf{x}|^3.$
 The $x$-coordinate of $\mathbf{g}$ is $x/|\mathbf{x}|^3$ which coincides with $\partial h / \partial x$ for $h(\mathbf{x}) = -1/|\mathbf{x}|.$
 The Fourier transform of $h$ is given in \cite{gelfand1964generalized} (p. 363):
 \begin{equation*}
@@ -172,7 +172,7 @@ To measure the quality of PM-approximation of a given reference force, we used m
 \end{equation*}
 in a system with a single unit mass located on the $x$-axis.
 The forces $F^\text{PM}(r_i)$ were measured along the $x$-axis in equal-length intervals, and the test was run for increasing values of particle diameter $a$.
-The result of the test is shown in \autoref{fig:reference-force-combined}\subref{fig:reference-force-error-sub}.
+The result of the test is shown in \autoref{fig:reference-force-error-sub}.
 Clearly, the approximation error becomes smaller for increasing values of $a$.
 Since $r_e$ is proportional to $a$, this implies that there is a trade-off between accuracy and the execution time.
 Increasing $a$ means that $r_e$ should increase as well, which forces more particles into short-range correction regions.

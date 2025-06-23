@@ -7,14 +7,14 @@ The entire set of particles comprises the top-level group, represented by the ro
 the eight children of the root node are representative of groups of particles residing in each of the octants of the computational domain, etc.
 The process of subdividing the space into eight smaller volumes at each node continues recursively until there is only one or zero particles left in a given volume.
 Nodes that satisfy this condition are the leaves of the tree and are sometimes called the \textit{external nodes}.
-The remaining nodes, each of which has eight children, are called \textit{internal nodes}.
+The remaining nodes, each of which has eight children, are called the \textit{internal nodes}.
 
 In the basic variant of the algorithm, the potential due to a group of particles is approximated using only the monopole term with respect to the center of mass of the group, i.e.,
 \begin{equation*}
     \phi_\text{mon}(r) = -\frac{GM}{r},
 \end{equation*}
 where $M$ is the group's total mass.
-Since the potential is expanded about the center of mass, the dipole moment $\mathbf{p} = \sum_{i} m_i \mathbf{r}_i$ vanishes.
+Since the potential is expanded about the center of mass (COM), the dipole moment $\mathbf{p} = \sum_{i} m_i \mathbf{r}_i$ vanishes.
 Hence, the next possible improvement comes from including the quadrupole term
 \begin{equation*}
     \phi_\text{quad}(r) = -\frac{G}{2r^5} \mathbf{r} \cdot (\mathbf{Q} \mathbf{r}),

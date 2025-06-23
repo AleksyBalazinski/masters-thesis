@@ -8,19 +8,20 @@ which has the following discrete analogue
     \phi(\mathbf{x}_\mathbf{p}) = V \sum_{\mathbf{p}'} \mathcal{G}(\mathbf{x}_\mathbf{p} - \mathbf{x}_{\mathbf{p}'}) \rho(\mathbf{x}_{\mathbf{p}'}),
 \end{equation}
 where $\mathcal{G}$ is the Green's function (potential due to unit mass).
-The right-hand side of \autoref{eq:poisson-discrete} is a convolution sum that runs over a finite set of mesh points.
+The right-hand side of \autoref{eq:poisson-discrete} is a convolution sum over a finite set of mesh points.
 If we assume periodic boundary conditions, we can apply the discrete Fourier transform to both sides and use the convolution theorem to conclude that\footnote{
     In this work, the Hockney \& Eastwood definition of DFT is used, i.e.,
     \begin{equation*}
         D(x_p) = \frac{1}{L}\sum_{l=0}^{N-1}\hat{D}(k)e^{ikx_p}, \quad \hat{D}(k) = H\sum_{p=0}^{N-1}D(x_p)e^{-ikx_p},
     \end{equation*}
     where $x_p = pH$ and $k=2\pi l / L$ ($L$ is the mesh period length equal to $NH$).
+    The three-dimensional transform is obtained by replacing $x \to \mathbf{x}=(x_1, x_2, x_3)$, $k \to \mathbf{k}=(k_1, k_2, k_3)$, $kx \to \mathbf{k} \cdot \mathbf{x}$, $L \to L_1 L_2 L_3$, $H \to H_1 H_2 H_3$, and so on.
 }
 \begin{equation}\label{eq:poisson-fourier-product}
     \hat{\phi}(\mathbf{k}) = \hat{\mathcal{G}}(\mathbf{k}) \hat{\rho}(\mathbf{k}).
 \end{equation}
 
-An approximation to $\hat{\mathcal{G}}$ can be found using a discretized version of the Laplacian in \autoref{eq:poisson-discrete}.
+An approximation to $\hat{\mathcal{G}}$ can be found using a discretized version of the Laplacian in \autoref{eq:poisson}.
 Specifically, for a 7-point stencil,
 \begin{equation*}
     \begin{split}
@@ -48,7 +49,7 @@ In the implementation, values of $\hat{\mathcal{G}}$ are computed only once and 
 In the one-dimensional case, the above discussion can be easily rephrased in terms of a diagonalization problem \cite{demanet2013fourier}.
 In one dimension, the Poisson equation is
 \begin{equation}\label{eq:poisson-1d}
-    \Delta \phi = \frac{d^2 \phi}{dx^2} = \rho.
+    \Delta \phi \equiv \frac{d^2 \phi}{dx^2} = \rho.
 \end{equation}
 The interval $[a, b]$ (of length $L = b-a$) on which we wish to find $\phi$ is assumed to be discretized into $N$ points $x_j = a + H/2 + jH$, where $H = L / N$ and $j=0,\dots, N-1$.
 Furthermore, we assume periodic boundary conditions so that $\phi(x_{-1}) = \phi(x_{N-1})$ and $\phi(x_{N}) = \phi(x_0)$.
@@ -61,7 +62,7 @@ Thus, the discrete version of \autoref{eq:poisson-1d} reads $-(\Delta_H \phi)_j 
     \frac{\phi_{j-1}-2\phi_j + \phi_{j+1}}{H^2} = \rho_j,
 \end{equation*}
 where $\rho_j = \rho(x_j)$.
-This gives a system of $N$ equations (one per each sampled value of $\rho$) with $N$ unknowns (values of $\phi$) of the following form
+This gives us a system of $N$ equations (one per each sampled value of $\rho$) with $N$ unknowns (values of $\phi$) of the following form
 \begin{equation}\label{eq:poisson-1d-matrix}
     -\underbrace{\frac{1}{H^2}
         \begin{bmatrix}
@@ -104,7 +105,7 @@ Hence we have $(H^2\Delta_H \bar{\psi})_j = 4\sin^2(\pi l/N) \psi_j$ which impli
 This result tells us that for any value of $l$, $\bar{\psi}(l)$ is an eigenvector of $\Delta_H$ with eigenvalue $(4/H^2)\sin^2(\pi l/N)$.
 For $l=0,\dots, N-1$ we get $N$ linearly independent eigenvectors $\{\bar{\psi}(l)\}$ which necessarily form the basis of $\mathbb{C}^N$.
 This fact implies that $\Delta_H$ is diagonalizable.
-The matrix $F$ of its eigenvectors is given by $F_{jl} = (1/L) \omega^{jl}$, and the inverse is easily verified to be $F^{-1} = H F^\dagger$, where the dagger denotes Hermitian adjoint.
+The matrix $F$ of its eigenvectors is given by $F_{jl} = (1/L) \omega^{jl}$, and the inverse is easily verified to be $F^{-1} = LH F^\dagger$, where the dagger denotes Hermitian adjoint.
 The eigendecomposition of $\Delta_H$ is therefore
 \begin{equation*}
     \Delta_H = F\Lambda F^{-1},
@@ -117,14 +118,14 @@ Substitution into \autoref{eq:poisson-1d-matrix} yields $F\Lambda F^{-1} \bar{\p
 Evaluating the left-hand side leads to the conclusion that $F^{-1}\bar\phi$ is nothing but the DFT of $\bar\phi$.
 Indeed,
 \begin{equation*}
-    (F^{-1}\phi)_l
-    = H (F^\dagger \phi)_l
-    = H \sum_{j=0}^{N-1}F^\dagger_{lj}\phi_j
-    = H \sum_{j=0}^{N-1}\omega^{-lj}\phi_j
-    = H \sum_{j=0}^{N-1}e^{-i2\pi jl / N}\phi_j
+    (F^{-1}\phi)_j
+    = LH (F^\dagger \phi)_j
+    = LH \sum_{l=0}^{N-1}F^\dagger_{jl}\phi_l
+    = H \sum_{l=0}^{N-1}\omega^{-lj}\phi_l
+    = H \sum_{l=0}^{N-1}e^{-i2\pi jl / N}\phi_l
 \end{equation*}
 which is precisely the discrete Fourier transform of $\bar\phi$.
-Thus, we see that the DFT of the Green's function, $\hat{\mathcal{G}}(k) = \hat{\mathcal{G}}(2\pi l / L)$, derived in \autoref{eq:dft-transformed-phi}, is the reciprocal of the $l$-th eigenfunction of the discretized Laplacian $(-\Delta_H)$.
+Thus, we see that the DFT of the Green's function, $\hat{\mathcal{G}}(k) = \hat{\mathcal{G}}(2\pi l / L)$, derived in \autoref{eq:dft-transformed-phi}, is the reciprocal of the $l$-th eigenvalue of the discretized Laplacian $(-\Delta_H)$.
 Following the line of reasoning presented above, we observe a deep connection between the DFT and the eigendecomposition of the discretized Laplace operator.
 
 A natural question that arises in the context of this discussion is whether a similar relation holds in the continuous case.

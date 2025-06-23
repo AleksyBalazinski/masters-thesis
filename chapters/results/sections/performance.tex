@@ -38,7 +38,7 @@ We also note that the reported running time is averaged over 100 iterations.
     \label{fig:method-running-time-comparison}
 \end{figure}
 
-The running time for the PM method is shown in \autoref{fig:method-running-time-comparison}.
+The running time of the PM method is shown in \autoref{fig:pm-running-time}.
 The GPU implementation provides, at best, a five-fold speedup over the CPU implementation.
 This is in stark contrast with the results reported in \autoref{subsec:gpu-variant} (1200\% speedup).
 The difference between the two results stems from the fact in \autoref{subsec:gpu-variant}, we considered an ``idealized scenario'' where the data transfers from device to host and disk I/O operations were reduced to the absolute minimum, saving only the \textit{final state} of the simulation.
@@ -46,9 +46,9 @@ Both plots (GPU and CPU variants) exhibit linear time dependence as expected.
 
 The \PThreeM{} method proved to be the least performant among the methods considered in the thesis.
 The runtime per iteration was up to 8.5 times longer than the CPU variant of the PM method and up to 3.5 times longer than the Barnes-Hut algorithm in its standard variant.
-Moreover, it is apparent that the algorithm does not scale linearly, but as pointed out in \autoref{subsec:p3m-error-analysis}, the influence of the $O(N^2)$ direct summation part of the algorithm can be reduced at the expense of weaker accuracy.
+Moreover, it is apparent that the algorithm does not scale linearly (see \autoref{fig:p3m-running-time}), but as pointed out in \autoref{subsec:p3m-error-analysis}, the influence of the $O(N^2)$ direct summation part of the algorithm can be reduced at the expense of weaker accuracy.
 
-The Barnes-Hut algorithm was timed in two configurations: with the standard tree construction and the improved one (introduced in \autoref{sec:accelerating-tree-construction}).
-The range of $ N $ considered in the test is too small to reveal the linearithmic runtime dependence on $N$ fully.
+The Barnes-Hut algorithm was timed in two configurations: with the standard tree construction and the improved one (introduced in \autoref{sec:accelerating-tree-construction}); see \autoref{fig:bh-running-time}.
+The range of $N$ considered in the test is too small to reveal the linearithmic runtime dependence on $N$ fully.
 In any case, the Barnes-Hut algorithm comes second in the comparison, with running times 3.5 slower than the PM method in the standard variant and only 3.2 times slower if the improved tree construction is used.
-We note that a comparison with \autoref{fig:z-order-tree-time} reveals that the tree construction is responsible for around 15\% of the total running time of the simulation.
+We note that a comparison with \autoref{fig:z-order-tree-time} reveals that the tree construction is responsible for around 20\% of the total running time of the simulation.

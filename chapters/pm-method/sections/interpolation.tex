@@ -1,5 +1,5 @@
 \section{Interpolation}
-The value of the field strength $\mathbf{g}(\mathbf{x})$ at the position particle's position $\mathbf{x}$ is calculated by interpolating the values of $\mathbf{g}$ from the neighboring mesh-points.
+The value of the field strength $\mathbf{g}(\mathbf{x})$ at the particle's position $\mathbf{x}$ is calculated by interpolating the values of $\mathbf{g}$ from the neighboring mesh points.
 Formally,
 \begin{equation*}
     \mathbf{g}(\mathbf{x}) = \sum_\mathbf{p} W(\mathbf{x} - \mathbf{x}_\mathbf{p}) \mathbf{g}(\mathbf{x}_\mathbf{p}).
@@ -18,7 +18,7 @@ The method is illustrated in \autoref{alg:interpolation}.
     \end{algorithmic}
 \end{algorithm}
 It is important to note that to retain correct physical behavior, the interpolation and mass assignment schemes must use the same shape to represent the particles.
-The procedure in \autoref{alg:interpolation} is trivially parallelized by converting the sequential loop into a parallel one.
+The procedure in \autoref{alg:interpolation} is trivially parallelized by converting the sequential outmost loop into a parallel one.
 
-The procedures of density assignment and interpolation presented in \autoref{alg:density-assignment} and \autoref{alg:interpolation} are high-level descriptions.
-More concrete formulations suitable for direct use in implementation are given in \cite{Hockney1988} and \cite{Kravtsov2002PM}.
+The procedures of density assignment and field interpolation presented in \autoref{alg:density-assignment} and \autoref{alg:interpolation} are high-level descriptions.
+More concrete formulations suitable for direct use in an implementation are given in \cite{Hockney1988} and \cite{Kravtsov2002PM}.

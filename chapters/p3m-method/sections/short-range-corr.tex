@@ -27,7 +27,7 @@ The short-range correction part of the \PThreeM{} method is shown in \autoref{al
         \ForAll {$\mathbf{q}_n \in \mathcal{N}(\mathbf{q}) \cup \{\mathbf{q}\}$}
         \ForAll {$i \in \text{HOC}(\mathbf{q})$}
         \ForAll {$j \in \text{HOC}(\mathbf{q}_n)$}
-        \If {$|y_i - y_j| > r_e$}
+        \If {$y_j - y_i > r_e$}
         \Break
         \EndIf
         \State \Call{UpdateShortRange}{$i$, $j$, $\mathbf{q}$, $\mathbf{q}_n$}
@@ -66,7 +66,7 @@ The \textsc{UpdateShortRange} procedure is defined in \autoref{alg:update-short-
     \end{algorithmic}
 \end{algorithm}
 In line 2, we exclude self-forces.
-The check in line 4 assures that the correction happens only for particles with separation less than the cutoff radius $r_e$.
+The if statement in line 4 assures that the correction happens only for particles with separation less than the cutoff radius $r_e$.
 The pairwise short-range force is calculated in lines 5--10, with the calculation in line 10 exploiting Newton's third law, as described previously.
 The accumulation of total short-range force for a given particle takes place in line 11.
 The short-range force is also added to the total short-range force of the other particle in the pair (particle $j$) but only if $\mathbf{q}_n \neq \mathbf{q}$.
@@ -88,7 +88,7 @@ If we define $\xi = r^2 / \Delta^2$ and $t=\lfloor \xi \rfloor$, then
 The value $\mathbf{f}^\text{SR}_{ij}$ can then be obtained by multiplying the interpolated quantity $f^\text{SR}(r_{ij})/r_{ij}$ by $G m_i m_j \mathbf{r}_{ij}$, eliminating the use of the square root operations and reducing the total number of floating-point operations to just four.
 
 \subsection{Parallelization}
-In our implementation, the procedure outlined in \autoref{alg:short-range-correction} is parallelized by splitting the work done in the outmost loop between some number of threads.
+In our implementation, the procedure outlined in \autoref{alg:short-range-correction} is parallelized by splitting the work done in the outmost loop between a number of threads.
 In doing so, extra care has to be taken to avoid data races.
 A thread $t$ that is currently processing cell $\mathbf{p}$ and its neighbors (we say that $t$ is \textit{assigned} to $\mathbf{p}$) may ``clash'' with a different thread assigned to a nearby cell $\mathbf{q}$ (because possibly $\mathbf{p} \in \mathcal{N}(\mathbf{q})$).
 However, by the construction of the set $\mathcal{N}$, it is possible to split the short-range force into 14 parts, each of which is accessed by only one thread.
