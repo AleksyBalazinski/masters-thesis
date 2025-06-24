@@ -13,8 +13,8 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{subcaption}
-\usepackage{ifoddpage}
 \usepackage{booktabs}
+\usepackage[final]{pdfpages}
 
 \selectlanguage{american}
 
@@ -25,34 +25,13 @@
 \newcommand{\Break}{\State \algorithmicbreak}
 \newcommand{\Continue}{\State \textbf{continue}}
 \renewcommand{\Comment}[1]{\hfill\textit{$\triangleright$ #1}}
-\newcommand{\blankpageifneeded}{
-  \newpage
-  \ifodd\value{page}
-    % Do nothing
-  \else
-  \thispagestyle{empty}
-  \null
-  %\vspace*{\fill}
-  % \begin{center}
-  %     \textit{This page intentionally left blank}
-  % \end{center}
-  %\vspace{\fill}
-  \newpage
-  \addtocounter{page}{-1}
-  \fi
-}
 
 \newcommand{\blankpage}{
   \newpage
   \thispagestyle{empty}
   \null
-  % \vspace*{\fill}
-  % \begin{center}
-  %     \textit{This page intentionally left blank}
-  % \end{center}
-  % \vspace{\fill}
   \newpage
-  \addtocounter{page}{-1}
+  \addtocounter{page}{1}
 }
 
 
@@ -60,34 +39,8 @@
 
 \newcommand{\PThreeM}{P$^3$M}
 \selectlanguage{american}
-\begin{titlepage}
-  \centering
-  \vspace*{2cm}
 
-  {\Huge\bfseries Selected Methods in $N$-body Simulations\par}
-  \vspace{1.5cm}
-
-  {\Large\bfseries Aleksy Bałaziński\par}
-  \vspace{1.5cm}
-
-  {\large
-    A thesis submitted in partial fulfillment of the requirements\\
-    for the degree of\\
-    \textbf{Master of Science in Engineering}\\
-    in \textbf{Applied Computer Science}\par
-  }
-  \vspace{0.5cm}
-
-  {\large
-    Faculty of Electrical Engineering\\
-    Warsaw University of Technology
-    \par}
-
-  \vfill
-
-  {\large \today\par}
-  \thispagestyle{empty}
-\end{titlepage}
+\includepdf[pages=-]{title_page}
 
 \blankpage
 \input{abstract-en.tex}
@@ -98,9 +51,14 @@
 
 \blankpage
 \selectlanguage{american}
-\tableofcontents
 
-\blankpageifneeded
+\pagenumbering{gobble}
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\pagenumbering{arabic}
+\setcounter{page}{9}
 
 \input{chapters/introduction/introduction.tex}
 \input{chapters/pm-method/particle-mesh-method.tex}
